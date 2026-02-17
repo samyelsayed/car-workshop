@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('work_progress', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('order_id')->constrained()->cascadeOnDelete();
+            $table->string('stage', 50);
+            $table->string('status', 20)->default('not_started');
+            $table->timestamp('started_at')->nullable();
+            $table->timestamp('completed_at')->nullable();
+            $table->text('notes')->nullable();
             $table->timestamps();
         });
     }

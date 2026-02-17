@@ -13,6 +13,17 @@ return new class extends Migration
     {
         Schema::create('order_items', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('order_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('service_id')->constrained()->cascadeOnDelete();
+
+            // Snapshot من Service:
+            $table->string('service_name', 100);
+            $table->string('service_image', 255)->nullable();
+
+            $table->integer('quantity')->default(1);
+            $table->decimal('unit_price', 10, 2);
+            $table->decimal('subtotal', 10, 2);
+            $table->text('notes')->nullable();
             $table->timestamps();
         });
     }

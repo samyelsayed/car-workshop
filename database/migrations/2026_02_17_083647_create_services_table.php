@@ -13,7 +13,13 @@ return new class extends Migration
     {
         Schema::create('services', function (Blueprint $table) {
             $table->id();
+            $table->string('name', 100);
+            $table->text('description');
+            $table->string('image', 255)->nullable();
+            $table->decimal('base_price', 10, 2);
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

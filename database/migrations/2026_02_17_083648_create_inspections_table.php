@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('inspections', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('order_id')->constrained()->cascadeOnDelete();
+            $table->string('type', 20);
+            $table->date('inspection_date');
+            $table->text('findings');
+            $table->decimal('estimated_cost', 10, 2);
+            $table->text('notes')->nullable();
             $table->timestamps();
         });
     }
