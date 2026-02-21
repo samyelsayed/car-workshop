@@ -28,4 +28,17 @@ class OrderItem extends Model
             'subtotal' => 'decimal:2',
         ];
     }
+
+                // Relationships:
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
+    }
+
+    public function service()
+    {
+        return $this->belongsTo(Service::class);
+    }
+
 }

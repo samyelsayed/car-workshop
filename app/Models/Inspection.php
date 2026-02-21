@@ -21,8 +21,15 @@ class Inspection extends Model
     protected function casts(): array{
 
      return [
-            'inspection_date' => 'datetime',
+            'inspection_date' => 'date',
             'estimated_cost' => 'decimal:2',
         ];
+    }
+
+                // Relationships:
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
     }
 }

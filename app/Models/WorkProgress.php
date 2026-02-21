@@ -24,4 +24,11 @@ class WorkProgress extends Model
             'completed_at' => 'datetime',
         ];
     }
+
+      // Relationships:
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
+    }
 }
