@@ -21,7 +21,7 @@ class Inspection extends Model
     protected function casts(): array{
 
      return [
-            'inspection_date' => 'date',
+            'inspection_date' => 'datetime',
             'estimated_cost' => 'decimal:2',
         ];
     }
