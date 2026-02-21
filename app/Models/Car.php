@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Car extends Model
-{use HasFactory, SoftDeletes;
+{
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'user_id',
@@ -18,5 +19,5 @@ class Car extends Model
         'color',
     ];
 
-    
+
 }
