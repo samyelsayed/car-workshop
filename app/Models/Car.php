@@ -30,4 +30,14 @@ class Car extends Model
     {
         return $this->hasMany(Order::class);
     }
+
+
+    protected static function boot()
+{
+    parent::boot();
+
+    static::deleting(function ($car) {
+        $car->orders()->delete();  // Soft Delete
+    });
+}
 }

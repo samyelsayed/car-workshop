@@ -65,4 +65,21 @@ class User extends Authenticatable
     {
         return $this->hasMany(Notification::class);
     }
+
+        protected static function boot()
+    {
+        parent::boot();
+
+        // لما User يتحذف (Soft Delete)
+        static::deleting(function ($user) {
+            // حذف كل العربيات (Soft Delete)
+            $user->cars()->delete();
+
+            // حذف كل الطلبات (Soft Delete)
+            $user->orders()->delete();
+
+            // حذف كل الإشعارات (Hard Delete)
+            $user->notifications()->forceDelete();
+        });
+    }
 }
