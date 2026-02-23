@@ -75,9 +75,6 @@ class User extends Authenticatable
             // حذف كل العربيات (Soft Delete)
             $user->cars()->delete();
 
-            // حذف كل الطلبات (Soft Delete)
-            $user->orders()->delete();
-
             // حذف كل الإشعارات (Hard Delete)
             $user->notifications()->forceDelete();
         });
