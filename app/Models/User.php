@@ -12,7 +12,7 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable ,SoftDeletes,HasApiTokens; 
+    use HasFactory, Notifiable ,SoftDeletes,HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -25,6 +25,9 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'email_verification_code',
+        'email_verification_expires_at',
+        'email_verification_used_at',
     ];
 
     /**
@@ -35,6 +38,9 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'email_verification_code',
+        'email_verification_expires_at',
+        'email_verification_used_at',
     ];
 
     /**
@@ -47,6 +53,8 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'email_verification_expires_at' => 'datetime',
+            'email_verification_used_at' => 'datetime',
         ];
     }
 

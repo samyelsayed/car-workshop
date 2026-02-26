@@ -22,6 +22,11 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
+
+               // OTP Fields
+            $table->string('email_verification_code')->nullable();
+            $table->timestamp('email_verification_expires_at')->nullable();
+            $table->timestamp('email_verification_used_at')->nullable();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
