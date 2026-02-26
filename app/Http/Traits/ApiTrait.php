@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\traits;
+namespace App\Http\Traits;
 
 trait ApiTrait {
     public function SuccessMessage(string $message = "",int $code = 200)
