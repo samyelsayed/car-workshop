@@ -18,11 +18,11 @@ class RegisterController extends Controller
      */
     public function __invoke(RegisterRequest $request)
     {
-        $data = $request->except('password','confirm_password','phone');
+        $data = $request->except('password','password_confirmation','phone');
         $data['password']= Hash::make($request->password);
         $user= User::create($data);
 
         $user_phone= UserMobile::create(['user_id'=>$user->id,'mobile_number'=>$request->phone]);
-         return $this->SuccessMessage('User registered successfully');
+         return $this->Data(['user_id' => $user->id],'User registered successfully');
     }
 }

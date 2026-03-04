@@ -26,7 +26,7 @@ class RegisterRequest extends FormRequest
            'last_name'=>['required','min:3','max:50'],
            'email'=>['required','unique:users','email'],
            'phone'=>['regex:/^01[0-2,5,9]{1}[0-9]{8}$/','required','unique:user_mobiles,mobile_number'],
-           'password'=>['required','confirmed','string','min:8']
+           'password'=>['required','confirmed','regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,50}$/', 'string'],
         ];
     }
 }

@@ -4,7 +4,7 @@ namespace App\Http\Requests\Api\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class VerifyCodeRequest extends FormRequest
+class loginRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,7 +23,8 @@ class VerifyCodeRequest extends FormRequest
     {
         return [
             'email'=>['required','email','exists:users,email'],
-            'code'=>['required','digits:4']
+            'password'=>['required'],
+            'device_name'=>['required','string']
         ];
     }
 }

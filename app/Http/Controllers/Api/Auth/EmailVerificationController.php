@@ -17,8 +17,8 @@ class EmailVerificationController extends Controller
     private function generateCode($user)
     {
         $code = rand(1000, 9999);
-        $user->email_verification_code = $code;
-        $user->email_verification_expires_at = now()->addMinutes(5);
+        $user->code = $code;
+        $user->code_expires_at = now()->addMinutes(5);
         $user->save();
 
         $user->notify(new SendOtpNotification($code));
@@ -26,29 +26,49 @@ class EmailVerificationController extends Controller
 
     public function sendCode(SendOtpRequest $request)
     {
-        $user = User::where('email', $request->email)->firstOrFail();
+        $user = User::where('email', $request->email)->first();
+       if (!$user) {
+     return $this->ErrorMessage(['email' => ['User not found']],'User does not exist',404 );
+
+        }elseif($user->email_verified_at) {
+        return $this->errorMessage(
+            ['email' => ['Email already verified']],
+            'Already verified',
+            400
+        );
+    }
         $this->generateCode($user);
         return $this->Data(['email' => $user->email], 'Verification code sent successfully', 200);
     }
 
     public function checkCode(VerifyCodeRequest $request)
     {
-        $user = User::where('email', $request->email)->firstOrFail();
-
-        if ($request->code != $user->email_verification_code || $user->email_verification_expires_at < now()) {
-            return $this->Data(compact('user'), 'Code is invalid or expired', 422);
+        $user = User::where('email', $request->email)->first();
+        if (!$user) {
+     return $this->ErrorMessage(['email' => ['User not found']],'User does not exist',404 );
+        }
+        if ($request->code != $user->code || $user->code_expires_at < now()) {
+            return $this->ErrorMessage(['code' => ['Invalid or expired verification code']],'Verification failed',400);
         } else {
             $user->email_verified_at = now();
-            $user->email_verification_code = null;
-            $user->email_verification_expires_at = null;
+            $user->code = null;
+            $user->code_expires_at = null;
             $user->save();
-            return $this->Data(compact('user'), 'Email verified successfully', 200);
+            $token = $user->createToken('auth_token')->plainTextToken;
+
+
+            return $this->Data(['user' => $user,'token' => $token], 'Email verified successfully');
         }
     }
 
     public function reSendCode(SendOtpRequest $request)
     {
-        $user = User::where('email', $request->email)->firstOrFail();
+        $user = User::where('email', $request->email)->first();
+        if (!$user) {
+          return $this->ErrorMessage(['email' => ['User not found']],'User does not exist',404 );
+        }elseif($user->email_verified_at) {
+           return $this->errorMessage(['email' => ['Email already verified']],'Already verified',400);
+    }
         $this->generateCode($user);
         return $this->Data(['email' => $user->email], 'Verification code re-sent successfully', 200);
     }

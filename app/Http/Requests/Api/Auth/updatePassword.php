@@ -4,7 +4,7 @@ namespace App\Http\Requests\Api\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class VerifyCodeRequest extends FormRequest
+class updatePassword extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,9 @@ class VerifyCodeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email'=>['required','email','exists:users,email'],
-            'code'=>['required','digits:4']
-        ];
+              'old_password'=>['required','string'],
+              'new_password'=>['required','confirmed','regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,50}$/', 'different:old_password'],
+              'device_name' => ['required', 'string']
+              ];
     }
 }
