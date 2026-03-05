@@ -8,7 +8,7 @@ use App\Http\Traits\ApiTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
-class UpdatePassword extends Controller
+class UpdatePasswordController extends Controller
 { use ApiTrait;
     public function updatePassword(updatePassword $request){
         $user = $request->user();

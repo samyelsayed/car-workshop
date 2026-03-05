@@ -92,23 +92,19 @@ class User extends Authenticatable
 
 
 
+
     protected function image(): Attribute
-{
-    return Attribute::make(
-        get: function ($value) {
-            // 1. لو الخانة في الداتابيز فاضية أو نال
-            if (empty($value)) {
-                return asset('assets/defaults/default-user.png'); // مسار صورتك الافتراضية
-            }
+    {
+        return Attribute::make(
+            get: function ($value) {
+                if (empty($value)) {
+                    return asset('assets/defaults/default-user.png');
+                }
+                return asset('storage/' . $value);
+            },
+        );
+    }
 
-            // 2. لو الصورة عبارة عن رابط خارجي (لو بتستخدم Social Login مثلاً)
-            if (filter_var($value, FILTER_VALIDATE_URL)) {
-                return $value;
-            }
 
-            // 3. لو الصورة مرفوعة عندك على السيرفر
-            return asset('storage/' . $value);
-        },
-    );
-}
+
 }
