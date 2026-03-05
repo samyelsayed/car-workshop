@@ -25,4 +25,7 @@ class UpdatePasswordController extends Controller
         }
 
     }
+  
+
+
 }
