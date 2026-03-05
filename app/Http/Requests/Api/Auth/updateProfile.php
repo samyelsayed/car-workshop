@@ -24,7 +24,7 @@ class updateProfile extends FormRequest
         return [
            'first_name'=>['required','min:3','max:50'],
            'last_name'=>['required','min:3','max:50'],
-           'phone'=>['regex:/^01[0-2,5,9]{1}[0-9]{8}$/','required','unique:user_mobiles,mobile_number'],
+        //    'phone'=>['regex:/^01[0-2,5,9]{1}[0-9]{8}$/','required','unique:user_mobiles,mobile_number'],
            'image'=>['image','mimes:jpg,png,jpeg','max:2048'],
            ];
     }
