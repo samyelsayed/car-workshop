@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\Auth\UpdatePasswordController;
+use App\Http\Controllers\Api\Auth\UserPhoneController;
 use App\Http\Controllers\Api\Auth\UserProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -69,7 +70,7 @@ Route::prefix('auth')->group(function () {
 // ========================================
 // Protected Auth Routes
 // ========================================
-Route::middleware('auth:sanctum')->prefix('auth')->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
 
     // Logout
     Route::delete('/logout', [LoginController::class, 'logout']);
@@ -80,4 +81,12 @@ Route::middleware('auth:sanctum')->prefix('auth')->group(function () {
      Route::put('/update-profile', [UserProfileController::class, 'update']);
     // Change Password
     Route::post('/change-password', [UpdatePasswordController::class, 'updatePassword']);
+
+   // User Phones
+    Route::prefix('phones')->group(function () {
+        Route::get('/index', [UserPhoneController::class, 'index']);
+        Route::post('/create', [UserPhoneController::class, 'store']);
+        Route::delete('/{phone}', [UserPhoneController::class, 'destroy']);
+    });
+
 });

@@ -23,17 +23,22 @@ return $this->Data(compact('phones'),'Data retrieved successfully');
 }
 
 
-public function store(PhoneRequest $request){
-$user = $request->user();
-// $add_phone = new UserMobile();
-// $add_phone->user_id =$user->id;
-// $add_phone->mobile_number =$request->phone;
-// $add_phone ->save();
+    public function store(PhoneRequest $request){
+    $user = $request->user();
+    // $add_phone = new UserMobile();
+    // $add_phone->user_id =$user->id;
+    // $add_phone->mobile_number =$request->phone;
+    // $add_phone ->save();
 
-$add_phone =$user->phones()->create(['mobile_number'=>$request->phone]);
-return $this->SuccessMessage('Phone number added successfully');
-}
+    $add_phone =$user->phones()->create(['mobile_number'=>$request->phone]);
+    return $this->SuccessMessage('Phone number added successfully');
+    }
 
-public function (PhoneRequest $request){
-$user = $request->user();
+    public function destroy($phone, Request $request){
+    $user = $request->user();
+    $userPhone =$user->phones()->where('mobile_number',$phone)->firstOrFail();
+    $userPhone->delete();
+    return $this->SuccessMessage('Phone number deleted successfully');
+    }
+
 }
