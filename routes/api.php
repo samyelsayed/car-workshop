@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\Auth\UpdatePasswordController;
 use App\Http\Controllers\Api\Auth\UserPhoneController;
 use App\Http\Controllers\Api\Auth\UserProfileController;
+use App\Http\Controllers\Api\Profile\UserAddressController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -70,7 +71,7 @@ Route::prefix('auth')->group(function () {
 // ========================================
 // Protected Auth Routes
 // ========================================
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth:sanctum')->prefix('user')->group(function () {
 
     // Logout
     Route::delete('/logout', [LoginController::class, 'logout']);
@@ -86,7 +87,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('phones')->group(function () {
         Route::get('/index', [UserPhoneController::class, 'index']);
         Route::post('/create', [UserPhoneController::class, 'store']);
-        Route::delete('/{phone}', [UserPhoneController::class, 'destroy']);
+        Route::delete('/{id}', [UserPhoneController::class, 'destroy']);
+    });
+
+
+ // User Addresses
+     Route::prefix('addresses')->group(function () {
+        Route::get('/index', [UserAddressController::class, 'index']);
+        Route::post('/create', [UserAddressController::class, 'store']);
+        Route::put('/{id}', [UserAddressController::class, 'update']);
+        Route::delete('/{id}', [UserAddressController::class, 'destroy']);
+
     });
 
 });

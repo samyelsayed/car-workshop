@@ -39,12 +39,9 @@ class UserAddressController extends Controller
 
     $add_address = DB::transaction(function () use ($user, $request) {
 
-        // 1. لو العنوان الجديد مطلوب يكون الأساسي، هنلغي الأساسي من القديم
         if ($request->is_default) {
             $user->addresses()->update(['is_default' => false]);
         }
-
-        // 2. إضافة العنوان الجديد
         return $user->addresses()->create($request->validated());
     });
 
@@ -64,6 +61,27 @@ class UserAddressController extends Controller
           });
 
           return $this->Data(compact('address'), 'Address updated successfully');
+
+    }
+
+
+    public function destroy(Request $request, $id){
+        $user = $request->user();
+        $address = $user->addresses()->where('id', $id)->firstOrFail();
+
+        DB::transaction(function() use($user ,$address,$request ){
+        if($address->is_default){
+            $nextAddress = $user->addresses()->where('id', '!=' , $address->id)->first();
+            if($nextAddress){
+                $nextAddress->update(['is_default' => true]);
+            }
+        }
+        $address->delete();
+        });
+
+
+       return $this->SuccessMessage('Address deleted successfully');
+
 
     }
 }
