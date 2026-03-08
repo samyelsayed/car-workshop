@@ -76,6 +76,11 @@ class User extends Authenticatable
         return $this->hasMany(Notification::class);
     }
 
+    public function addresses()
+    {
+        return $this->hasMany(UserAddress::class);
+    }
+
         protected static function boot()
     {
         parent::boot();
