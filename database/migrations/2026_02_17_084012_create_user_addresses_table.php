@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('street', 100);
             $table->string('city', 50);
             $table->string('country', 50);
+            $table->boolean('is_default')->default(false);
             $table->timestamps();
         });
     }

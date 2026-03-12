@@ -81,6 +81,11 @@ class User extends Authenticatable
         return $this->hasMany(UserAddress::class);
     }
 
+    public function mobiles()
+{
+    return $this->hasMany( UserMobile::class);
+}
+
         protected static function boot()
     {
         parent::boot();
@@ -88,10 +93,11 @@ class User extends Authenticatable
         // لما User يتحذف (Soft Delete)
         static::deleting(function ($user) {
             // حذف كل العربيات (Soft Delete)
-            $user->cars()->delete();
-
-            // حذف كل الإشعارات (Hard Delete)
-            $user->notifications()->forceDelete();
+        $user->cars()->delete();
+        // Hard Delete (واضح)
+        $user->mobiles()->delete();
+        $user->addresses()->delete();
+        $user->notifications()->delete();
         });
     }
 

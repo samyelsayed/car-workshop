@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\Auth\updatePassword;
+use App\Http\Requests\Api\User\updatePassword;
 use App\Http\Traits\ApiTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -25,7 +25,7 @@ class UpdatePasswordController extends Controller
         }
 
     }
-  
+
 
 
 }

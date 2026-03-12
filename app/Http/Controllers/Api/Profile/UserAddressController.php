@@ -13,6 +13,7 @@ class UserAddressController extends Controller
 {
     use ApiTrait;
 
+
     public function index(Request $request){
        $user =$request->user();
     //    $addresses = $user->addresses;
@@ -26,6 +27,9 @@ class UserAddressController extends Controller
        return $this->Data(compact('addresses'),'Data retrieved successfully');
     }
 
+
+
+
     public function store(UserAddressRequest $request){
        $user =$request->user();
     //    $add_address =$user->addresses()->create([
@@ -35,8 +39,6 @@ class UserAddressController extends Controller
     //         'country' => $request->country ,
     //         'is_default' => $request->is_default
     //     ]);
-
-
     $add_address = DB::transaction(function () use ($user, $request) {
 
         if ($request->is_default) {
@@ -44,9 +46,11 @@ class UserAddressController extends Controller
         }
         return $user->addresses()->create($request->validated());
     });
-
          return $this->Data(compact('add_address'),'Address added successfully');
     }
+
+
+
 
     public function update(UserAddressRequest $request, $id){
           $user =$request->user();
@@ -61,13 +65,14 @@ class UserAddressController extends Controller
           });
 
           return $this->Data(compact('address'), 'Address updated successfully');
-
     }
+
+
 
 
     public function destroy(Request $request, $id){
         $user = $request->user();
-        $address = $user->addresses()->where('id', $id)->firstOrFail();
+        $address = $user->addresses()->findOrFail($id);
 
         DB::transaction(function() use($user ,$address,$request ){
         if($address->is_default){
@@ -78,10 +83,7 @@ class UserAddressController extends Controller
         }
         $address->delete();
         });
-
-
        return $this->SuccessMessage('Address deleted successfully');
-
-
     }
+    
 }

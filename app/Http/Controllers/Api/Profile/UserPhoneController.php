@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Api\Auth;
+namespace App\Http\Controllers\Api\Profile;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\Auth\PhoneRequest;
+use App\Http\Requests\Api\Phone\PhoneRequest;
 use App\Http\Traits\ApiTrait;
 use App\Models\UserMobile;
 use Illuminate\Http\Request;
@@ -15,29 +15,29 @@ class UserPhoneController extends Controller
 
 public function index(Request $request){
 $user = $request->user();
-// $phones = UserMobile::where('user_id',$user->id)->get();          //elqoant
-// $phones = DB::table('user_mobiles')->where('user_id',$user->id)->get();       //query builder
-$phones = $user->phones;
-return $this->Data(compact('phones'),'Data retrieved successfully');
+// $mobiles = UserMobile::where('user_id',$user->id)->get();          //elqoant
+// $mobiles = DB::table('user_mobiles')->where('user_id',$user->id)->get();       //query builder
+$mobiles = $user->mobiles;
+return $this->Data(compact('mobiles'),'Data retrieved successfully');
 
 }
 
 
     public function store(PhoneRequest $request){
     $user = $request->user();
-    // $add_phone = new UserMobile();
-    // $add_phone->user_id =$user->id;
-    // $add_phone->mobile_number =$request->phone;
-    // $add_phone ->save();
+    // $add_mobile = new UserMobile();
+    // $add_mobile->user_id =$user->id;
+    // $add_mobile->mobile_number =$request->phone;
+    // $add_mobile ->save();
 
-    $add_phone =$user->phones()->create(['mobile_number'=>$request->phone]);
-    return $this->SuccessMessage('Phone number added successfully');
+    $add_mobile =$user->mobiles()->create($request->validated());
+    return $this->Data(compact('add_mobile'),'Phone number added successfully');
     }
 
-    public function destroy($phone, Request $request){
+    public function destroy($id , Request $request){
     $user = $request->user();
-    $userPhone =$user->phones()->where('mobile_number',$phone)->firstOrFail();
-    $userPhone->delete();
+    $userMobile =$user->mobiles()->findOrFail($id);
+    $userMobile->delete();
     return $this->SuccessMessage('Phone number deleted successfully');
     }
 

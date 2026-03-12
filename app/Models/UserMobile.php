@@ -10,4 +10,9 @@ class UserMobile extends Model
         'user_id',
         'mobile_number',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

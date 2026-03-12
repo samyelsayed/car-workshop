@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Api\Auth;
+namespace App\Http\Requests\Api\Phone;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -22,7 +22,7 @@ class PhoneRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'mobile' => ['required','regex:/^01[0-2,5,9]{1}[0-9]{8}$/', 'unique:user_mobiles,mobile_number'] // التشييك على جدول الموبايلات
+            'mobile_number' => ['required','regex:/^01[0-2,5,9]{1}[0-9]{8}$/', 'unique:user_mobiles,mobile_number'] // التشييك على جدول الموبايلات
         ];
     }
 }

@@ -5,9 +5,10 @@ use App\Http\Controllers\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\Auth\UpdatePasswordController;
-use App\Http\Controllers\Api\Auth\UserPhoneController;
-use App\Http\Controllers\Api\Auth\UserProfileController;
 use App\Http\Controllers\Api\Profile\UserAddressController;
+use App\Http\Controllers\Api\Profile\UserCarController;
+use App\Http\Controllers\Api\Profile\UserPhoneController;
+use App\Http\Controllers\Api\Profile\UserProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -97,6 +98,16 @@ Route::middleware('auth:sanctum')->prefix('user')->group(function () {
         Route::post('/create', [UserAddressController::class, 'store']);
         Route::put('/{id}', [UserAddressController::class, 'update']);
         Route::delete('/{id}', [UserAddressController::class, 'destroy']);
+
+    });
+
+
+     // User Cars
+     Route::prefix('cars')->group(function () {
+        Route::get('/index', [UserCarController::class, 'index']);
+        Route::post('/create', [UserCarController::class, 'store']);
+        Route::put('/{id}', [UserCarController::class, 'update']);
+        Route::delete('/{id}', [UserCarController::class, 'destroy']);
 
     });
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Api\Auth;
+namespace App\Http\Controllers\Api\Profile;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\Auth\updateProfile;
+use App\Http\Requests\Api\User\updateProfile;
 use App\Http\Traits\ApiTrait;
 use App\Models\User;
 use Illuminate\Http\Request;
