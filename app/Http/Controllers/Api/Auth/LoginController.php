@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Auth\loginRequest;
+use App\Http\Resources\UserResource;
 use App\Http\Traits\ApiTrait;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -23,6 +24,25 @@ class LoginController extends Controller
          return $this->Data(compact('user'));
 
     }
+
+        public function adminLogin(loginRequest $request){
+            $user =User::where('email',$request->email)->first();
+            if(!$user || !Hash::check($request->password ,$user->password )){
+                return $this->ErrorMessage([],'Invalid Credentials',401);
+            }
+
+            if(is_null($user->email_verified_at)){
+                return $this->ErrorMessage([],'Your email is not verified. Please verify your email first',401);
+            }
+            if($user->role != 'admin'){
+                return $this->ErrorMessage([],'Unauthorized Access',403);
+            }
+        $deviceName = $request->device_name ?? 'web_admin_panel';
+        $user->token = 'Bearer ' . $user->createToken($deviceName)->plainTextToken;
+         return $this->Data(new UserResource($user), 'Admin logged in successfully');
+
+
+        }
 
     public function logoutAllDevices(Request $request){
 

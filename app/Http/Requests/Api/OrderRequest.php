@@ -26,12 +26,12 @@ class OrderRequest extends FormRequest
         return [
 
             // 'car_id' => 'required|exists:cars,id,user_id,' . auth()->id(),
-            'car_id' => ['required',Rule::exists('cars','id')->where('user_id', auth()->id())->whereNull('deleted_at')],
-            'services' => 'required|array|min:1',
+            'car_id' => ['sometimes','required',Rule::exists('cars','id')->where('user_id', auth()->id())->whereNull('deleted_at')],
+            'services' => 'sometimes','required|array|min:1',
             'services.*' =>  ['required',Rule::exists('services', 'id')->where('is_active', 1)],
             'pickup_required' => 'required|boolean',
-            'pickup_location' => 'required_if:pickup,true|string|max:255',
-            'pickup_datetime' => 'required_if:pickup,true|date|after:now'
+            'pickup_location' => 'required_if:pickup_required,true|string|max:255',
+            'pickup_datetime' => 'required_if:pickup_required,true|date|after:now'
 
         ];
     }

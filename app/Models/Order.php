@@ -51,7 +51,7 @@ class Order extends Model
         return $this->hasMany(Inspection::class);
     }
 
-        public function orderItems()
+        public function items()
     {
         return $this->hasMany(OrderItem::class);
     }
