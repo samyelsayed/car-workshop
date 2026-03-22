@@ -110,5 +110,21 @@ Route::middleware('auth:sanctum')->prefix('user')->group(function () {
         Route::delete('/{id}', [UserCarController::class, 'destroy']);
 
     });
+    });
 
-});
+
+
+
+// جروب اليوزر
+Route::middleware('auth:sanctum')->prefix('user')->group(function () {
+    // ... كل الروتس هنا ...
+}); // <--- تأكد من وجود القوس والفاصلة المنقوطة هنا
+
+// جروب الآدمن اللي ضفناه
+Route::middleware(['auth:sanctum', 'isAdmin'])->prefix('admin')->group(function () {
+
+    Route::prefix('services')->group(function () {
+        // روتس السيرفس
+    }); // قفلة السيرفس
+
+}); // <--- تأكد من قفلة جروب الآدمن الرئيسي هنا
