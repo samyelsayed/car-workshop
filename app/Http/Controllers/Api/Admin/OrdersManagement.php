@@ -4,6 +4,9 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\Admin\Order\updateStatus;
+use App\Http\Resources\Admin\OrderDetailsResource;
+use App\Http\Resources\OrderResource;
 use App\Http\Traits\ApiTrait;
 use App\Models\Order;
 use Illuminate\Http\Request;
@@ -61,7 +64,7 @@ class OrdersManagement extends Controller
             $orders = $query->paginate(10);
 
             return $this->Data(
-                OrderResource::collection($orders)->response()->getData(true), 
+                OrderResource::collection($orders)->response()->getData(true),
                 'Orders retrieved successfully'
             );
         }
@@ -69,7 +72,7 @@ class OrdersManagement extends Controller
 
        public function show(Request $request ,$id){
 
-        $query= Order::with(['user','car','inspections','workProgress','orderItems.service'])->findOrFail($id);
+        $$order= Order::with(['user','car','inspections','workProgress','orderItems.service'])->findOrFail($id);
         return $this->Data(new OrderDetailsResource($order), 'Order details have been successfully retrieved');
        }
 
@@ -77,14 +80,14 @@ class OrdersManagement extends Controller
       public function updateStatus(updateStatus $request , $id){
         $order =Order::findOrFail($id);
         if($order->status == 'completed' || $order->status == 'cancelled'){
-            return $this->ErrorMassege('you cannt updated this order',201); 
+            return $this->ErrorMassege('you cannt updated this order',201);
             }
         $order->status= $request->status;
         $order->save();
         return $this->Data(new OrderDetailsResource($order), 'Order status has been successfully modified');
 
 
-    
+
       }
 
 
@@ -96,5 +99,11 @@ class OrdersManagement extends Controller
       }
         $order->status ='cancelled';
         $order->save();
-return $this->Data(new OrderDetailsResource($order), 'Order canceled successfully');      }
-    }
+     return $this->Data(new OrderDetailsResource($order), 'Order canceled successfully');
+   }
+
+
+
+
+
+}

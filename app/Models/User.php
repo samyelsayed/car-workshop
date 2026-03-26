@@ -99,6 +99,14 @@ class User extends Authenticatable
         $user->addresses()->delete();
         $user->notifications()->delete();
         });
+
+
+
+        static::restoring(function ($user) {
+        // بننادي على الحاجات اللي كانت ممسوحة بسببه ونرجعها
+        $user->cars()->withTrashed()->restore();
+
+    });
     }
 
 

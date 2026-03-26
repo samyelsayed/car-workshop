@@ -19,6 +19,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password', 255);
             $table->enum('role', ['user', 'admin'])->default('user');
+            $table->boolean('is_blocked')->default(false); // 0 = active, 1 = blocked
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
@@ -26,7 +27,7 @@ return new class extends Migration
                // OTP Fields
             $table->string('code')->nullable();
             $table->timestamp('code_expires_at')->nullable();
-  
+
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
@@ -42,6 +43,7 @@ return new class extends Migration
             $table->text('user_agent')->nullable();
             $table->longText('payload');
             $table->integer('last_activity')->index();
+
         });
     }
 
