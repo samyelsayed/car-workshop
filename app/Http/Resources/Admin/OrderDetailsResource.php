@@ -2,6 +2,9 @@
 
 namespace App\Http\Resources\Admin;
 
+use App\Http\Resources\OrderItemResource;
+use App\Http\Resources\UserCarResource;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -43,5 +46,5 @@ class OrderDetailsResource extends JsonResource
     }
 
 
-    public func
+
 }

@@ -59,6 +59,7 @@ class UserCarController extends Controller
         $car =$user->cars()->findOrFail($id);
         $car ->delete();
 
+
         return $this->SuccessMessage('Car deleted successfully');
       }
 

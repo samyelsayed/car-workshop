@@ -19,12 +19,22 @@ class loginRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
-    {
-        return [
-            'email'=>['required','email','exists:users,email'],
-            'password'=>['required'],
-            'device_name'=>['required','string']
-        ];
-    }
+    // public function rules(): array
+    // {
+    //     return [
+    //         'email'=>['required','email','exists:users,email'],
+    //         'password'=>['required'],
+    //         'device_name'=>['required','string']
+    //     ];
+    // }
+
+
+            public function rules(): array
+        {
+            return [
+                'email'      => ['required', 'email', 'exists:users,email'],
+                'password'   => ['required'],
+                'deviceName' => ['required', 'string'] // تحويل لكامل كيس
+            ];
+        }
 }

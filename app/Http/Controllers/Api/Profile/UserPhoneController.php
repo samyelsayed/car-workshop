@@ -35,10 +35,13 @@ return $this->Data(compact('mobiles'),'Data retrieved successfully');
     }
 
     public function destroy($id , Request $request){
-    $user = $request->user();
-    $userMobile =$user->mobiles()->findOrFail($id);
-    $userMobile->delete();
-    return $this->SuccessMessage('Phone number deleted successfully');
+        $user = $request->user();
+        $userMobile =$user->mobiles()->find($id);
+        if (!$userMobile) {
+         return $this->ErrorMessage([], 'Phone not found', 404);
+        }
+        $userMobile->delete();
+        return $this->SuccessMessage('Phone number deleted successfully');
     }
 
 }

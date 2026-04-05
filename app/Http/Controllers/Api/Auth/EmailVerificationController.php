@@ -41,6 +41,9 @@ class EmailVerificationController extends Controller
         return $this->Data(['email' => $user->email], 'Verification code sent successfully', 200);
     }
 
+
+
+
     public function checkCode(VerifyCodeRequest $request)
     {
         $user = User::where('email', $request->email)->first();
@@ -49,7 +52,7 @@ class EmailVerificationController extends Controller
         }
         if ($request->code != $user->code || $user->code_expires_at < now()) {
             return $this->ErrorMessage(['code' => ['Invalid or expired verification code']],'Verification failed',400);
-        } else {
+        } elseif($request->code == $user->code && $user->code_expires_at >= now()) {
             $user->email_verified_at = now();
             $user->code = null;
             $user->code_expires_at = null;
@@ -60,6 +63,11 @@ class EmailVerificationController extends Controller
             return $this->Data(['user' => $user,'token' => $token], 'Email verified successfully');
         }
     }
+
+
+
+
+
 
     public function reSendCode(SendOtpRequest $request)
     {

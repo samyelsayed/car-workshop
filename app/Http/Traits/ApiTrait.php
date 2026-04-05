@@ -27,7 +27,7 @@ trait ApiTrait {
         );
     }
 
-    public function Data(Array $data,string $message = "",int $code = 200)
+    public function Data( $data,string $message = "",int $code = 200)
     {
         return response()->json(
             [
