@@ -1,15 +1,16 @@
 <?php
 
-// namespace App\Http\Controllers\Api\Auth;
+namespace App\Http\Controllers\Api\Auth;
 
-// use App\Http\Controllers\Controller;
-// use App\Http\Requests\Api\Auth\loginRequest;
-// use App\Http\Resources\UserResource;
-// use App\Http\Traits\ApiTrait;
-// use App\Models\User;
-// use Illuminate\Http\Request;
-// use Illuminate\Support\Facades\Auth;
-// use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\Auth\loginRequest;
+use App\Http\Resources\UserResource;
+use App\Http\Traits\ApiTrait;
+use App\Models\User;
+use App\Services\Auth\LoginService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 
 
@@ -79,51 +80,95 @@
 
 
 
-namespace App\Http\Controllers\Api\Auth;
+// namespace App\Http\Controllers\Api\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\Auth\loginRequest;
-use App\Http\Resources\UserResource;
-use App\Http\Traits\ApiTrait;
-use App\Services\Auth\LoginService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+// use App\Http\Controllers\Controller;
+// use App\Http\Requests\Api\Auth\loginRequest;
+// use App\Http\Resources\UserResource;
+// use App\Http\Traits\ApiTrait;
+// use App\Services\Auth\LoginService;
+// use Illuminate\Http\Request;
+// use Illuminate\Support\Facades\Auth;
+
+// class LoginController extends Controller
+// {
+//     use ApiTrait;
+
+//     protected $loginService;
+
+//     public function __construct(LoginService $loginService)
+//     {
+//         $this->loginService = $loginService;
+//     }
+
+//     public function login(loginRequest $request)
+//     {
+//         // سطر واحد بيخلص الليلة
+//         $user = $this->loginService->login($request->validated());
+
+//         return $this->Data(compact('user'), 'Logged in successfully');
+//     }
+
+//     public function adminLogin(loginRequest $request)
+//     {
+//         $user = $this->loginService->adminLogin($request->validated());
+
+//         return $this->Data(new UserResource($user), 'Admin logged in successfully');
+//     }
+
+//     public function logout(Request $request)
+//     {
+//         Auth::guard('sanctum')->user()->currentAccessToken()->delete();
+//         return $this->SuccessMessage('Logged out successfully');
+//     }
+
+//     public function logoutAllDevices(Request $request)
+//     {
+//         Auth::guard('sanctum')->user()->tokens()->delete();
+//         return $this->SuccessMessage('Logged out of all devices');
+//     }
+// }
+
 
 class LoginController extends Controller
 {
     use ApiTrait;
 
     protected $loginService;
-
     public function __construct(LoginService $loginService)
-    {
-        $this->loginService = $loginService;
-    }
+        {
+            $this->loginService = $loginService;
+        }
 
     public function login(loginRequest $request)
-    {
-        // سطر واحد بيخلص الليلة
-        $user = $this->loginService->login($request->validated());
+        {
+            $user = $this->loginService->login($request->validated());
 
-        return $this->Data(compact('user'), 'Logged in successfully');
-    }
+            return $this->Data(new UserResource($user), 'Logged in successfully');
+        }
 
     public function adminLogin(loginRequest $request)
-    {
-        $user = $this->loginService->adminLogin($request->validated());
+        {
+            $user = $this->loginService->adminLogin($request->validated());
 
-        return $this->Data(new UserResource($user), 'Admin logged in successfully');
+            return $this->Data(new UserResource($user), 'Admin logged in successfully');
+        }
+    public function logout()
+        {
+            // Auth::user() بيرجع اليوزر اللي عامل لوجن حالياً
+            $this->loginService->logout(Auth::user());
+
+            return $this->SuccessMessage('Logged out from this device');
+        }
+
+    public function logoutAllDevices()
+    {
+        $this->loginService->logoutAllDevices(Auth::user());
+
+        return $this->SuccessMessage('Logged out from all devices successfully');
     }
 
-    public function logout(Request $request)
-    {
-        Auth::guard('sanctum')->user()->currentAccessToken()->delete();
-        return $this->SuccessMessage('Logged out successfully');
-    }
-
-    public function logoutAllDevices(Request $request)
-    {
-        Auth::guard('sanctum')->user()->tokens()->delete();
-        return $this->SuccessMessage('Logged out of all devices');
-    }
 }
+
+
+
