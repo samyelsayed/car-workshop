@@ -16,7 +16,8 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class ForgotPasswordController extends Controller
-{use ApiTrait;
+{
+    use ApiTrait;
        public function sendCode(SendOtpRequest $request){
             $user = User::where('email',$request->email)->first();
             if(! $user){
