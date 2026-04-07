@@ -24,18 +24,21 @@ class ForgotPasswordService
     }
 
 //القانشكن الكبيرة  الي هجمع فيها الميثود الي دورها تعمل تشيك كود
- public function verifyOtpFlow(array $data , int $code): User
+ public function verifyOtpFlow(array $data , int $code): array
     {
         $user= $this->findUserByEmail($data['email']);
         $this->checkCode($user,$code);
         $this->clearOtp($user);
         $token = $this->generateToken($user);
-
+        return [
+        'user'  => $user,
+        'token' => $token
+    ];
     }
 
 
 //القانشكن الكبيرة  الي هجمع فيها الميثود الي دورها تعمل ريسيت باسورد
-public function resetPasswordFlow(array $data , int $code): User
+public function resetPasswordFlow(array $data ): User
     {
         $user= $this->findUserByEmail($data['email']);
         $this->checkToken($user,$data['token']);
@@ -69,12 +72,12 @@ public function resetPasswordFlow(array $data , int $code): User
        }
 
 
-        Protected function sendOtp(User $user, int $code): void
+        protected function sendOtp(User $user, int $code): void
     {
         Mail::to($user->email)->send(new ResetPasswordMail($user->first_name, $code));
     }
 
-        Protected function checkCode(User $user, int $code): void
+        protected function checkCode(User $user, int $code): void
     {
         if($user->code != $code || now()->greaterThan($user->code_expires_at) ){
         throw new \Exception('Invalid or expired verification code', 400);  }
@@ -82,7 +85,7 @@ public function resetPasswordFlow(array $data , int $code): User
 
 
 
-    Protected function verifyEmail(User $user): void
+    protected function verifyEmail(User $user): void
     {
         $user->update([
             'email_verified_at' => now()
@@ -91,7 +94,7 @@ public function resetPasswordFlow(array $data , int $code): User
 
 
 
-     Protected function clearOtp(User $user): void
+     protected function clearOtp(User $user): void
     {
         $user->update([
             'code' => null,
@@ -99,7 +102,7 @@ public function resetPasswordFlow(array $data , int $code): User
         ]);
     }
 
-    Protected function generateToken(User $user): void
+    protected function generateToken(User $user): string
     {
                 $token = Str::random(60);
                 DB::table('password_reset_tokens')->where('email', $user->email)->delete();
@@ -114,7 +117,7 @@ public function resetPasswordFlow(array $data , int $code): User
     }
 
 
-     Protected function checkToken(User $user , $token): void{
+     protected function checkToken(User $user , $token): void{
 
        $resetData =   DB::table('password_reset_tokens')->where('email', $user->email)->first();
 
@@ -123,7 +126,7 @@ public function resetPasswordFlow(array $data , int $code): User
     }
 
 
-    Protected function hashNewPassword(User $user, string $password): void{
+    protected function hashNewPassword(User $user, string $password): void{
 
             $user->password = Hash::make($password);
             DB::table('password_reset_tokens')->where('email', $user->email)->delete();
@@ -137,7 +140,7 @@ public function resetPasswordFlow(array $data , int $code): User
 $user->token = $token;
 $user->save();
         return $token;
-        
+
     }
 
 
