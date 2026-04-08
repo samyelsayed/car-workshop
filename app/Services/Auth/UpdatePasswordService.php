@@ -4,6 +4,7 @@ namespace App\Services\Auth;
 
 
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 
@@ -13,10 +14,12 @@ class UpdatePasswordService
 //الميثود المجمعه الي هتعمل ابديت للباسورد
 public function updatePasswordFlow(User $user, array $data): array
     {
+         return DB::transaction(function () use ($user, $data) {
         $this->verifyCurrentPassword($user,$data['currentPassword']);
         $this->updatePassword($user,$data['newPassword']);
         $this->deleteTokens($user);
         return $this->generateNewToken($user, $data['deviceName']);
+    });
     }
 
 
@@ -24,7 +27,7 @@ public function updatePasswordFlow(User $user, array $data): array
 // -ميثود تتشيك ع الباسورد تقرانه ب الي ف الداتا بيز
 protected function verifyCurrentPassword($user, $currentPassword): void
     {
-       if(!Hash::check($data['currentPassword'],$user->password)){
+       if(!Hash::check( $currentPassword,$user->password)){
         throw new \Exception('Incorrect password', 400);
         }
 
