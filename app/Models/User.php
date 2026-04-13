@@ -29,6 +29,7 @@ class User extends Authenticatable
         'image',
         'code',
         'code_expires_at',
+        'code_purpose',
 
     ];
 
@@ -42,6 +43,7 @@ class User extends Authenticatable
         'remember_token',
         'code',
         'code_expires_at',
+        'code_purpose',
 
     ];
 

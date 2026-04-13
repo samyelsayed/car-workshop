@@ -2,85 +2,58 @@
 <?php
 
 
-//الميثود المجمعه الخاص بعرض العنلوين بتاع اليوزر
-
-//الميثود المجمعه الخاص باضافة عنوان جديد لليوزر
-
-//الميثود المجمعه الخاصة بالايديت بتعديل عنوان معين لليوزر
 
 
-//الميثود المجمعه الخاصة بالابديت بتعديل عنوان معين لليوزر
+// // --- الميثودز المجمعة (s) ---
 
-//الميثود المجمعه الخاص بحذف عنوان معين لليوزر
-
-//الميثود المجمعه الخاص بتعيين عنوان معين كعنوان افتراضي لليوزر
-
-
-
-
-
-
-//الميثودز الصغيرة
-
-//االميثود الي بتجيب الادريسيز بتاع اليوزر بنأن علي الايدي بتاعه ولا مفيش هترجع رساله "No addresses found for this user yet, Add your first address'
-
-//اليمثود الي هتتشيك هل العوان الي اليوزر عاوز يضيفه ديفولت ولو ديفولت تعمل ابديت علي باقي العناوين عناوين بتاع اليوز تخاي الديفولت بفولص
+// // ميثود العرض: تنادي getUserAddresses
+// public function getAddresses(User $user) : array
+//  {
+//     return $user->addresses()->get();
+//     // $addresses = $this->getUserAddresses($user);
+//     // return $addresses;
 
 
-//الميثود الي هتعمل كريت للداتا الي راجعه من الريكويست بعد ما اتعملها فالديشن وتخزن عنوان جديدفي الداتا بيز
+//  }
 
-//الميثود الي هتاخد ال id بتاع العنوان وترجعه بيانات العنوان لاي اليوزر عاوز يعمله ايديت
+// // ميثود الإضافة: تنادي (resetOtherDefaults لو محتاج) + StoreAddress
+// public function createAddress(User $user, array $data) {
+//     return::transaction(function () use ($user, $data) {
+//         if ($data['is_default']) {
+//             $this->resetOtherDefaults($user, $data);
+//         }
+//        $address= $this->StoreAddress($user, $data);
+//         return [
+//     'address' => $address,
+//     'user' => $user];
+//     });
+//  }
 
-//الميثود الي هتتشيك هل العوان الي اليوزر عاوز يعمله ايديت ديفولت ولو ديفولت تعمل ابديت علي باقي العناوين عناوين بتاع اليوز تخاي الديفولت بفولص
+// // ميثود التعديل: تنادي (findUserAddressOrFail) + (resetOtherDefaults لو محتاج) + UpdateAddress
+// public function updateAddress(User $user, $addressId, array $data) {
+//     return::transaction(function () use ($user, $data ,$addressId) {
 
+//         $oldAddress =$this->findUserAddressOrFail($addressId, $user);
+//         if ($data['is_default']) {
+//             $this->UpdateDefaultAddress($user, $data);
+//         }
+//         $address= $this->UpdateAddress($oldAddress, $data);
+//         return [
+//     'address' => $address,
+//     'user' => $user];
+//     });
+//  }
 
-//الميثود الي هتعمل ابديت للداتا الي راجعه من الريكويست بعد ما اتعملها فالديشن وتخزن التعديلات في الداتا بيز
+// // ميثود الحذف: تنادي (findUserAddressOrFail) + DeleteAddress
+// public function deleteAddress(User $user, $addressId) {
+//     return::transaction(function () use ($user, $addressId) {
+//         $address = $this->findUserAddressOrFail($addressId, $user);
+//         $this->DeleteAddress($address);
 
-//الميثود الي هتاخد ال id بتاع العنوان وترجعه بيانات العنوان لاي اليوزر عاوز يعمله حذف
+//     });
 
-
-
-
-// --- الميثودز المجمعة (Flows) ---
-
-// ميثود العرض: تنادي getUserAddresses
-public function listAddressesFlow(User $user) : array
- { 
-    $addresses = $this->getUserAddresses($user);
-    return $addresses;
-
-
- }
-
-// ميثود الإضافة: تنادي (resetOtherDefaults لو محتاج) + dbStoreAddress
-public function storeAddressFlow(User $user, array $data) { 
-    DB::transaction(function () use ($user, $data) {
-        if ($data['is_default']) {
-            $this->resetOtherDefaults($user, $data);
-        }
-        $this->dbStoreAddress($user, $data);
-    });
- }
-
-// ميثود التعديل: تنادي (findUserAddressOrFail) + (resetOtherDefaults لو محتاج) + dbUpdateAddress
-public function updateAddressFlow(User $user, $addressId, array $data) { 
-    DB::transaction(function () use ($user, $data ,$addressId) {
-        if ($data['is_default']) {
-            $this->dbUpdateDefaultAddress($user, $data);
-        }
-        $address= $this->dbUpdateAddress($address, $data);
-        return $address;
-    });
- }
-
-// ميثود الحذف: تنادي (findUserAddressOrFail) + dbDeleteAddress
-public function deleteAddressFlow(User $user, $addressId) {  
-    DB::transaction(function () use ($user, $addressId) {
-        $address = $this->findUserAddressOrFail($addressId, $user);
-        $this->dbDeleteAddress($address);
-    });
- }
-}
+//  }
+// }
 
 
 
@@ -88,56 +61,169 @@ public function deleteAddressFlow(User $user, $addressId) {
 
 
 
-// --- الميثودز الصغيرة (Actions) ---
+// // --- الميثودز الصغيرة (Actions) ---
 
-// 1. تجيب كل عناوين المستخدم
-protected function getUserAddresses($user) { 
-    $addresses =$user->addresses()->get();
-    return $addresses;
- }
+// // 1. تجيب كل عناوين المستخدم
+// // protected function getUserAddresses($user) {
+// //     $addresses =$user->addresses()->get();
+// //     return $addresses;
+// //  }
 
-// 2. تجيب عنوان واحد بالـ ID وتتأكد إنه موجود (وإنه يخص المستخدم)
-protected function findUserAddressOrFail($addressId, $user) { 
-    $address =$user->addresses()->find($addressId);
-    if (!$address) {
-        throw new \Exception('Address not found', 404);
+// // 2. تجيب عنوان واحد بالـ ID وتتأكد إنه موجود (وإنه يخص المستخدم)
+// protected function findUserAddressOrFail($addressId, $user) {
+//     $address =$user->addresses()->find($addressId);
+//     if (!$address) {
+//         throw new \Exception('Address not found', 404);
+//     }
+//     return $address;
+//  }
+
+// // 3. لو العنوان الجديد ديفولت، تخلي باقي عناوين المستخدم مش ديفولت
+// protected function resetOtherDefaults($user, $data) {
+//             if ($data['is_default']) {
+//             $user->addresses()->update(['is_default' => false]);
+//         }
+//  }
+
+// // 4. الحفظ الفعلي (Create)
+// protected function StoreAddress($user, array $data) {
+
+//     $newAddress = $user->addresses()->create($data);
+//     return $newAddress;
+//  }
+
+// // 5. التعديل الفعلي (Update)
+// protected function UpdateAddress($address, array $data) {
+//     $address->update($data);
+//     return $address;
+//  }
+
+// // 6. الحذف الفعلي (Delete)
+// protected function DeleteAddress($address) {
+//     $address->delete();
+//  }
+
+
+//  // 5. التعديل الديفولت لو الي هيتحذف كلن ديفولت (Update)
+// protected function UpdateDefaultAddress($user,$address, array $data) {
+//            if($address->is_default){
+//             $nextAddress = $user->addresses()->where('id', '!=' , $address->id)->first();
+//             if($nextAddress){
+//                 $nextAddress->update(['is_default' => true]);
+//             }
+//         }
+//  }
+
+
+
+<?php
+
+namespace App\Services\User;
+
+use App\Models\User;
+use App\Models\UserAddress;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
+
+class UserAddressService
+{
+    /**
+     * Get all user addresses
+     */
+    public function getAddresses(User $user): Collection
+    {
+        return $user->addresses()->get();
     }
- }
 
-// 3. لو العنوان الجديد ديفولت، تخلي باقي عناوين المستخدم مش ديفولت
-protected function resetOtherDefaults($user, $data) { 
-            if ($data['is_default']) {
-            $user->addresses()->update(['is_default' => false]);
-        }
- }
-
-// 4. الحفظ الفعلي (Create)
-protected function dbStoreAddress($user, array $data) { 
-  
-    $user->addresses()->create($data);
- }
-
-// 5. التعديل الفعلي (Update)
-protected function dbUpdateAddress($address, array $data) { 
-    $address->update($data['validated']);
- }
-
-// 6. الحذف الفعلي (Delete)
-protected function dbDeleteAddress($addressId) { 
-    $address->where('id', $addressId)->delete();
- }
-
-
- // 5. التعديل الديفولت لو الي هيتحذف كلن ديفولت (Update)
-protected function dbUpdateDefaultAddress($address, array $data) { 
-           if($address->is_default){
-            $nextAddress = $user->addresses()->where('id', '!=' , $address->id)->first();
-            if($nextAddress){
-                $nextAddress->update(['is_default' => true]);
+    /**
+     * Create new address
+     */
+    public function createAddress(User $user, array $data): UserAddress
+    {
+        return DB::transaction(function () use ($user, $data) {
+            // Reset other defaults if needed
+            if ($data['is_default'] ?? false) {
+                $this->resetOtherDefaults($user);
             }
+
+            // Create address
+            return $user->addresses()->create($data);
+        });
+    }
+
+    /**
+     * Update address
+     */
+    public function updateAddress(User $user, int $addressId, array $data): UserAddress
+    {
+        return DB::transaction(function () use ($user, $addressId, $data) {
+            // Find address
+            $address = $this->findUserAddressOrFail($addressId, $user);
+
+            // Reset other defaults if needed
+            if ($data['is_default'] ?? false) {
+                $this->resetOtherDefaults($user);
+            }
+
+            // Update
+            $address->update($data);
+
+            return $address->fresh();
+        });
+    }
+
+    /**
+     * Delete address
+     */
+    public function deleteAddress(User $user, int $addressId): void
+    {
+        DB::transaction(function () use ($user, $addressId) {
+            // Find address
+            $address = $this->findUserAddressOrFail($addressId, $user);
+
+            // If default, set next as default
+            if ($address->is_default) {
+                $this->setNextAddressAsDefault($user, $address->id);
+            }
+
+            // Delete
+            $address->delete();
+        });
+    }
+
+    /**
+     * Find user address or fail
+     */
+    protected function findUserAddressOrFail(int $addressId, User $user): UserAddress
+    {
+        $address = $user->addresses()->find($addressId);
+
+        if (!$address) {
+            throw new \Exception('Address not found', 404);
         }
- }
 
+        return $address;
+    }
 
+    /**
+     * Reset other addresses to non-default
+     */
+    protected function resetOtherDefaults(User $user): void
+    {
+        $user->addresses()->update(['is_default' => false]);
+    }
 
+    /**
+     * Set next address as default (when deleting default address)
+     */
+    protected function setNextAddressAsDefault(User $user, int $excludeId): void
+    {
+        $nextAddress = $user->addresses()
+            ->where('id', '!=', $excludeId)
+            ->first();
 
+        if ($nextAddress) {
+            $nextAddress->update(['is_default' => true]);
+        }
+    }
+}
