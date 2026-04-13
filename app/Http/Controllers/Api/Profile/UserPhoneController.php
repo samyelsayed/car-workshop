@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Profile;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Phone\PhoneRequest;
+use App\Http\Resources\UserMobileResource;
 use App\Http\Traits\ApiTrait;
 use App\Models\UserMobile;
 use App\Services\User\UserMobileService;
@@ -61,7 +62,7 @@ public function __construct( UserMobileService $userMobileService)
      if ($mobiles->isEmpty()) {
         return $this->SuccessMessage('No mobiles found for this user yet, Add your first mobile');
       }
-    return $this->Data(['mobiles' => $mobiles], 'Data retrieved successfully');
+    return $this->Data(['mobiles' => UserMobileResource::collection($mobiles)], 'Data retrieved successfully');
 
     }
 
@@ -69,7 +70,7 @@ public function __construct( UserMobileService $userMobileService)
 
     public function store(PhoneRequest $request){
         $mobile =$this->userMobileService->createMobile($request->user(), $request->validated());
-        return $this->Data(['mobile' => $mobile], 'Phone number added successfully');
+        return $this->Data(['mobiles' => new UserMobileResource($mobile)], 'Phone number added successfully');
     }
 
 
