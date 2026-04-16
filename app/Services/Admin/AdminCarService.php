@@ -10,8 +10,18 @@ public function getAllCars(array $filters, int $perPage = 10)
 {
     // بنطلع الـ search من الـ filters عشان يبقا عندنا parameter واحد
     $search = $filters['search'] ?? null;
+    $status = $filters['status'] ?? null;
 
-    $query = Car::withTrashed()->with(['user'])
+    $query = Car::query()->with(['user']);
+
+        if ($status === 'trashed') {
+            $query->onlyTrashed(); // المحذوف بس
+        } elseif ($status === 'all') {
+            $query->withTrashed(); // الكل
+        }
+
+
+      return $query
         // لو brand موجودة، نفذ الـ function دي
         ->when($filters['brand'] ?? null, function ($query, $brand) {
             $query->where('brand', $brand);
@@ -35,7 +45,7 @@ public function getAllCars(array $filters, int $perPage = 10)
             });
         })
         ->paginate($perPage);
-        return $query;
+
 }
 
     public function getCarById(int $id)
