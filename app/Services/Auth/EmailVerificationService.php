@@ -22,8 +22,6 @@ public function sendOtpFlow(array $data): User {
 }
 
 
-
-
 //القانشكن الكبيرة  الي هجمع فيها الميثود الي دورها تعمل تتشيك ع الكود ولو تمام تخلي الاميل مفعل
 
 public function verifyOtpFlow(array $data, int $code): array {
@@ -38,7 +36,7 @@ return [
 }
 //القانشكن الكبيرة  الي هجمع فيها الميثود الي دورها تعمل  اعادة ارسال الكود بتشوف الاميل مفعل ولا لا ولو لا تعيد ارسال الكود
 
-public function resendOtpFlow(array $data): User 
+public function resendOtpFlow(array $data): User
     {
         return $this->sendOtpFlow($data);
     }
@@ -82,12 +80,12 @@ public function resendOtpFlow(array $data): User
     }
 //ميثود تبعت الكود ع الاميل
     protected function sendCode(User $user ,int $code ) :void
-    { 
+    {
         $user->notify(new SendOtpNotification($code));
     }
 //ميثود تشيك الكود
     protected function checkCode(User $user , $code) :void
-    { 
+    {
         if($code != $user->code || $user->code_expires_at < now()) {
             throw new \Exception('Invalid or expired code', 400);
         }
@@ -96,13 +94,13 @@ public function resendOtpFlow(array $data): User
 
 //ميثود تمسح الكود من الداتا بيز وتخلي الاميل مفعل
    protected function verifyEmail(User $user ) :void
-    { 
-      
+    {
+
             $user->email_verified_at = now();
             $user->code = null;
             $user->code_expires_at = null;
             $user->save();
-    
+
 
     }
 

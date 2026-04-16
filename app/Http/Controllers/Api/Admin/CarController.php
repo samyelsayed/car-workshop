@@ -3,59 +3,43 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use App\Http\Traits\ApiTrait;
-use App\Models\Car;
+use App\Services\Admin\AdminCarService;
 use Illuminate\Http\Request;
 
 class CarController extends Controller
 {
-     use ApiTrait;
-     public function index(Request $request){
+    use ApiTrait;
 
-        $query =Car::withTrashed()->with([ 'user']);
+    protected $adminCarService;
 
-        if($request->filled('brand')){
-            $query->where('brand',$request->brand);
-        }
-        if($request->filled('year')){
-            $query->where('year',$request->year);
-        }
-        if($request->filled('user_id')){
-            $query->where('user_id',$request->user_id);
-        }
+    // حقن السيرفس في الكنترولر (Dependency Injection)
+    public function __construct(AdminCarService $adminCarService)
+    {
+        $this->adminCarService = $adminCarService;
+    }
+    public function index(Request $request){
 
+     $cars =$this->adminCarService->getAllCars($request->all());
+     $carsData= UserResource::collection($cars)->response()->getData(true);
 
+     return $this->Data($carsData,'cars retrieved successfully',200);
 
-        if($request->filled('search')){
-            $search =$request->search;
-            $query->where(function ($q) use($search){
-
-         $q->where('plate_number','like', "%$search%")
-            ->orWhere('model','like', "%$search%")
-                ->orWhereHas('user', function ($q) use($search) {
-                    $q->where('first_name', 'like', "%$search%")
-                    ->orWhere('last_name', 'like', "%$search%");
-            });
-            });
-        }
-        $cars =$query->paginate(10);
-        return $this->Data($cars , 'Cars retrieved successfully');
      }
 
 
 
 
-     public function show(Request $request , $id){
-      $car =Car::withTrashed()
-                ->with(['user','orders'=> function ($query) {$query->latest();}])
-                ->findOrFail($id);
-      return $this->Data($car , 'Car details retrieved successfully');
+     public function show( $id){
+      $car = $this->adminCarService->getCarById($id);
+       return $this->Data( new UserResource($car), 'Car details retrieved successfully', 201);
      }
 
 
     public function destroy(Request $request , $id){
-      $car = Car::findOrfail($id);
-      $car->delete();
+        $this->adminCarService->deleteCar($id);
+
         return $this->SuccessMessage('Car deleted successfully');
 
      }

@@ -12,8 +12,7 @@ class UserResource extends JsonResource
      *
      * @return array<string, mixed>
      */
-    public function toArray(Request $request): array
-    {
+
         // return [
         //     'id'         => $this->id,
         //     'first_name' => $this->first_name,
@@ -25,16 +24,25 @@ class UserResource extends JsonResource
         //     'joined_at'  => $this->created_at->format('Y-m-d'),
         // ];
 
-        return [
-            'id'        => $this->id,
-            'firstName' => $this->first_name, // حولناها لـ camelCase
-            'lastName'  => $this->last_name,  // حولناها لـ camelCase
-            'fullName'  => $this->first_name . ' ' . $this->last_name,
-            'email'     => $this->email,
-            'role'      => $this->role,
-            // التوكن هيظهر بس لو موجود (زي في حالة اللوجن أو الريجيستر)
-            'token'     => $this->when(isset($this->token), $this->token),
-            'joinedAt'  => $this->created_at->format('Y-m-d'),
-        ];
-    }
+public function toArray(Request $request): array
+{
+    return [
+        'id'        => $this->id,
+        'firstName' => $this->first_name,
+        'lastName'  => $this->last_name,
+        'fullName'  => $this->first_name . ' ' . $this->last_name,
+        'email'     => $this->email,
+        'phone'     => $this->phone, // مهم جداً لمشروع الورشة
+        'role'      => $this->role,
+
+        // التوكن يظهر فقط في اللوجن/ريجيستر
+        'token'     => $this->when(isset($this->token), $this->token),
+
+        // لو بنعرض اليوزر في صفحة الـ Admin، ممكن نحتاج الـ Cars بتاعته
+        'cars'      => UserResource::collection($this->whenLoaded('cars')),
+
+        'joinedAt'  => $this->created_at->format('Y-m-d'),
+    ];
 }
+    }
+
