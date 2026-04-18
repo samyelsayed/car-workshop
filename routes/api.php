@@ -152,7 +152,6 @@ Route::middleware(['auth:sanctum', 'isAdmin'])->prefix('admin')->group(function 
     // 🛠️ 4. Services Management (Full CRUD)
     Route::apiResource('services', ServiceController::class);
     Route::patch('services/{id}/toggle-status', [ServiceController::class, 'toggleStatus']);
-
     // 📋 5. Orders Management
     Route::prefix('orders')->group(function () {
         Route::get('/', [OrdersManagement::class, 'index']);
