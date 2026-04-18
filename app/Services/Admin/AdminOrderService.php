@@ -1,6 +1,8 @@
 <?php
 namespace App\Services\Admin;
 
+use App\Exceptions\Orders\OrderNotFoundException;
+use App\Exceptions\Orders\OrderLockedException;
 use App\Models\Order;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
@@ -57,10 +59,15 @@ class AdminOrderService
      */
     public function getOrderDetails(int $id): Order
     {
-        $order = Order::with(['user', 'car', 'inspections', 'workProgress', 'orderItems.service'])->find($id);
+         $order = Order::with(['user', 'car', 'inspections', 'workProgress', 'orderItems.service'])->find($id);
+        // if (!$order) {
+        //     throw new \Exception('Order not found');
+        // }
         if (!$order) {
-            throw new \Exception('Order not found');
+            // بنرمي الإكسيبشن المخصوص بتاعنا
+            throw new OrderNotFoundException();
         }
+
         return $order;
     }
 
@@ -106,14 +113,22 @@ class AdminOrderService
     /**
      * ميثود مساعدة للتأكد إذا كان الطلب "مغلق" ولا يقبل التعديل
      */
-    private function getOpenOrder(int $id): Order
-    {
-          $order = Order::find($id);
-        if (!$order) {
-            throw new \Exception('Order not found');
-        }elseif ($order->status == 'completed' || $order->status == 'cancelled') {
-            // أضفنا [] لأن الميثود في الـ Trait بتستقبل Array أولاً
-            throw new \Exception('Cannot modify this order');        }
-            return $order;
+private function getOpenOrder(int $id): Order
+{
+    $order = Order::find($id);
+
+    // 2. إذا لم يوجد، ارمي Exception "عدم الوجود" الخاص بالأوردرات
+    if (!$order) {
+        throw new OrderNotFoundException();
     }
+
+    // 3. التحقق من حالة الطلب (هل هو مغلق؟)
+    if (in_array($order->status, ['completed', 'cancelled'])) {
+        // ارمي Exception "الطلب مغلق" الخاص بالأوردرات
+        throw new OrderLockedException();
+    }
+
+    return $order;
 }
+}
+
