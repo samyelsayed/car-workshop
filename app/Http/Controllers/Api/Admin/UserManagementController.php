@@ -52,9 +52,6 @@ class UserManagementController extends Controller
            return $this->Data(AdminUserResource::collection($users), 'Users retrieved successfully');
            }
 
-
-
-
             public function show(Request $request , $id){
                 $user =User::withTrashed()->with(['user_mobiles', 'addresses', 'cars', 'orders'])->findOrFail($id);
                 if($user->trashed()){
@@ -73,9 +70,6 @@ class UserManagementController extends Controller
 
            return $this->SuccessMessage('User updated successfully',200);
             }
-
-
-
 
 
         public function destroy(Request $request , $id){
