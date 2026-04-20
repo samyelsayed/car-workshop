@@ -11,42 +11,55 @@ class AdminUserService
     /**
      * جلب كل المستخدمين مع الفلترة والبحث
      */
-    public function getAllUsers(array $filters, int $perPage = 10): LengthAwarePaginator
-    {
-       return User::withTrashed()->with([ 'user_mobiles'])
-
-          ->when(filled($filters['role'] ?? null), function ($query) use ($filters)){
-            $query->where('role',$filters['role']);
-          }
-           ->when(filled($filters['email_verified'] ?? null), function ($query) use ($filters)){
-            $query->where('email_verified',$filters['email_verified']);
-          }
-           ->when(filled($filters['deleted_at'] ?? null), function ($query) use ($filters)){
-            $query->where('deleted_at',$filters['deleted_at']);
-          }
-            ->when(filled($filters['search'] ?? null), function ($query) use ($filters) {
-                $search = $filters['search']
-                   $query->where(function ($q) use ($search) 
-                    $q->where('first_name', 'like', "%$search%")
-                    ->orWhere('last_name', 'like', "%$search%")
-                    ->orWhere('email', 'like', "%$search%")
-                    // البحث في جدول الموبايلات (العلاقة)
-                    ->orWhereHas('user_mobiles', function ($mobileQuery) use ($search) {
-                        $mobileQuery->where('number', 'like', "%$search%");
-                        // تأكد من اسم العمود في جدول الموبايلات (غالباً هو number أو phone)
-                    });
-                });
-                        ->latest()
+public function getAllUsers(array $filters, int $perPage = 10): LengthAwarePaginator
+{
+    return User::withTrashed()->with(['user_mobiles'])
+        ->when(filled($filters['trashed_status'] ?? null), function ($query) use ($filters) {
+        if ($filters['trashed_status'] === 'only') {
+            // يجلب المحذوفين فقط
+            $query->onlyTrashed();
+        } elseif ($filters['trashed_status'] === 'without') {
+            // يجلب غير المحذوفين فقط (يلغي تأثير withTrashed)
+            $query->withoutTrashed();
+        }
+        // لو مبعتش حاجة أو بعت قيمة تانية، هيفضل شغال بالـ withTrashed اللي فوق ويجيب الكل
+        })
+        // فلتر الرتبة
+        ->when(filled($filters['role'] ?? null), function ($query) use ($filters) {
+            $query->where('role', $filters['role']);
+        })
+        // فلتر المفعلين (اللي إيميلهم مش null)
+        ->when(filled($filters['email_verified_at'] ?? null), function ($query) {
+            $query->whereNotNull('email_verified_at');
+        })
+        // البحث الشامل
+        ->when(filled($filters['search'] ?? null), function ($query) use ($filters) {
+            $search = $filters['search'];
+            $query->where(function ($q) use ($search) {
+                $q->where('first_name', 'like', "%$search%")
+                  ->orWhere('last_name', 'like', "%$search%")
+                  ->orWhere('email', 'like', "%$search%")
+                  ->orWhereHas('user_mobiles', function ($mobileQuery) use ($search) {
+                      $mobileQuery->where('number', 'like', "%$search%");
+                  });
+            });
+        })
+        ->latest()
         ->paginate($perPage);
+}
 
-    }
 
     /**
      * جلب مستخدم واحد بالتفاصيل
      */
     public function getUserById(int $id): User
     {
-        // هنا ابحث عن المستخدم وارمي UserNotFoundException لو مش موجود
+        $user =User::withTrashed()->with(['user_mobiles', 'addresses', 'cars', 'orders'])->find($id);
+        if(! $user){
+          throw new UserNotFoundException();
+            }
+        return $user;
+
     }
 
     /**
@@ -54,7 +67,15 @@ class AdminUserService
      */
     public function updateUser(int $id, array $data): User
     {
-        // هنا حدث البيانات واهتم بموضوع الـ email_verified_at
+     $user = $this->getUserById($id);
+
+        // إذا تم تغيير الإيميل، نجعل الحالة غير مفعلة
+        if (isset($data['email']) && $user->email !== $data['email']) {
+            $user->email_verified_at = null;
+        }
+
+        $user->update($data);
+        return $user;
     }
 
     /**
@@ -62,7 +83,8 @@ class AdminUserService
      */
     public function deleteUser(int $id): bool
     {
-        // امسح اليوزر هنا
+        $user = $this->getUserById($id);
+        return $user->delete();
     }
 
     /**
@@ -70,14 +92,25 @@ class AdminUserService
      */
     public function restoreUser(int $id): bool
     {
-        // رجع اليوزر المحذوف (استخدم onlyTrashed)
+        $user = User::onlyTrashed()->find($id);
+
+        if (!$user) {
+            throw new UserNotFoundException();
+        }
+
+        return $user->restore();
     }
 
     /**
      * تبديل حالة الحظر (Block/Unblock)
      */
-    public function toggleUserBlock(int $id): string
+    public function toggleUserBlock(int $id): User
     {
-        // اعكس حالة الحظر ورجع رسالة مناسبة
+        $user = $this->getUserById($id);
+        
+        $user->is_blocked = !$user->is_blocked;
+        $user->save();
+
+        return $user->fresh();
     }
 }
