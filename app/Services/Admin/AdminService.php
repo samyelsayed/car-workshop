@@ -12,10 +12,10 @@ class AdminService
     {
 
       return Service::query()
-      ->when(isset($filters['is_active']), function ($query) use($filters)){
+      ->when(filled($filters['is_active'] ?? null) , function ($query) use($filters){
        $active = filter_var($filters['is_active'],FILTER_VALIDATE_BOOLEAN);
        $query->where('is_active',$active);
-      }
+      })
       ->latest()->paginate($perPage);
 
     }

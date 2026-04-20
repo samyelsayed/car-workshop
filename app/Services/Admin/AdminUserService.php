@@ -13,7 +13,32 @@ class AdminUserService
      */
     public function getAllUsers(array $filters, int $perPage = 10): LengthAwarePaginator
     {
-        // اكتب هنا لوجيك الفلترة والبحث واستخدم withTrashed
+       return User::withTrashed()->with([ 'user_mobiles'])
+
+          ->when(filled($filters['role'] ?? null), function ($query) use ($filters)){
+            $query->where('role',$filters['role']);
+          }
+           ->when(filled($filters['email_verified'] ?? null), function ($query) use ($filters)){
+            $query->where('email_verified',$filters['email_verified']);
+          }
+           ->when(filled($filters['deleted_at'] ?? null), function ($query) use ($filters)){
+            $query->where('deleted_at',$filters['deleted_at']);
+          }
+            ->when(filled($filters['search'] ?? null), function ($query) use ($filters) {
+                $search = $filters['search']
+                   $query->where(function ($q) use ($search) 
+                    $q->where('first_name', 'like', "%$search%")
+                    ->orWhere('last_name', 'like', "%$search%")
+                    ->orWhere('email', 'like', "%$search%")
+                    // البحث في جدول الموبايلات (العلاقة)
+                    ->orWhereHas('user_mobiles', function ($mobileQuery) use ($search) {
+                        $mobileQuery->where('number', 'like', "%$search%");
+                        // تأكد من اسم العمود في جدول الموبايلات (غالباً هو number أو phone)
+                    });
+                });
+                        ->latest()
+        ->paginate($perPage);
+
     }
 
     /**

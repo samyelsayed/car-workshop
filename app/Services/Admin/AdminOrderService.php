@@ -11,42 +11,47 @@ class AdminOrderService
     /**
      * جلب كل الطلبات مع الفلترة والبحث
      */
-    public function getAllOrders(array $filters, int $perPage = 10): LengthAwarePaginator
-    {
-        return Order::with(['user', 'car'])
-        //فلتر الحالة
-        ->when(isset($filters['status']),function ($query) use ($filters){
-            $query->where('status',$filters['status']);
+public function getAllOrders(array $filters, int $perPage = 10): LengthAwarePaginator
+{
+    return Order::with(['user', 'car'])
+        // فلتر الحالة - باستخدام filled للتعامل الذكي مع البيانات
+        ->when(filled($filters['status'] ?? null), function ($query) use ($filters) {
+            $query->where('status', $filters['status']);
         })
-        //فلتر المستخدم
-        ->when(isset($filters['user_id']),function ($query) use ($filters){
-            $query->where('user_id',$filters['user_id']);
+
+        // فلتر المستخدم
+        ->when(filled($filters['user_id'] ?? null), function ($query) use ($filters) {
+            $query->where('user_id', $filters['user_id']);
         })
-        //فلتر التاريخ من
-        ->when(isset($filters['from_date']),function ($query) use ($filters){
+
+        // فلتر التاريخ من
+        ->when(filled($filters['from_date'] ?? null), function ($query) use ($filters) {
             $query->whereDate('created_at', '>=', $filters['from_date']);
         })
-        //فلتر التاريخ الي
-        ->when(isset($filters['to_date']),function ($query) use ($filters){
+
+        // فلتر التاريخ إلى
+        ->when(filled($filters['to_date'] ?? null), function ($query) use ($filters) {
             $query->whereDate('created_at', '<=', $filters['to_date']);
         })
 
-
-        //البحث الشامل
-        ->when(isset($filters['search']), function ($query) use ($filters) {
+        // البحث الشامل - الـ filled هنا بتحميك لو اليوزر بعت مسافات في خانة البحث
+        ->when(filled($filters['search'] ?? null), function ($query) use ($filters) {
             $search = $filters['search'];
 
             $query->where(function ($q) use ($search) {
                 $q->where('id', $search)
-                ->orWhereHas('user', function ($q2) use ($search) {
-                    $q2->where('first_name', 'like', "%$search%")
-                        ->orWhere('last_name', 'like', "%$search%");
-                })
-                ->orWhereHas('car', function ($q3) use ($search) {
-                    $q3->where('plate_number', 'like', "%$search%");
-                });
+                    ->orWhereHas('user', function ($q2) use ($search) {
+                        $q2->where('first_name', 'like', "%$search%")
+                            ->orWhere('last_name', 'like', "%$search%");
+                    })
+                    ->orWhereHas('car', function ($q3) use ($search) {
+                        $q3->where('plate_number', 'like', "%$search%");
+                    });
             });
         })
+        ->latest()
+        ->paginate($perPage);
+}
 
 
 
