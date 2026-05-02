@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\Admin\CarController;
 use App\Http\Controllers\Api\Admin\DashboardController;
 use App\Http\Controllers\Api\Admin\InspectionController;
+use App\Http\Controllers\Api\Admin\NotificationController;
 use App\Http\Controllers\Api\Admin\NotifyController;
 use App\Http\Controllers\Api\Admin\OrdersManagement;
 use App\Http\Controllers\Api\Admin\ServiceController;
@@ -19,6 +20,7 @@ use App\Http\Controllers\Api\Profile\UserPhoneController;
 use App\Http\Controllers\Api\Profile\UserProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -168,11 +170,17 @@ Route::middleware(['auth:sanctum', 'isAdmin'])->prefix('admin')->group(function 
     });
 
     // 🔔 8. Notifications
-    Route::prefix('notifications')->group(function () {
-        Route::post('/send-to-user', [NotifyController::class, 'sendToUser']);
-        Route::post('/broadcast', [NotifyController::class, 'broadcast']);
-        Route::get('/', [NotifyController::class, 'index']);
-        Route::delete('/{id}', [NotifyController::class, 'destroy']);
-    });
+        
+        // مسارات المستخدم العادي
+        Route::get('notifications/mine', [NotificationController::class, 'myNotifications']);
+        Route::patch('notifications/{id}/read', [NotificationController::class, 'markAsRead']);
+
+        // مسارات الأدمن
+        Route::middleware('admin')->prefix('admin/notifications')->group(function () {
+            Route::post('send-to-user', [NotificationController::class, 'sendToUser']);
+            Route::post('broadcast', [NotificationController::class, 'broadcast']);
+            Route::delete('{id}', [NotificationController::class, 'destroy']);
+        
+});
 
 });

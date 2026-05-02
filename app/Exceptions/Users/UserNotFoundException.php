@@ -9,5 +9,4 @@ class UserNotFoundException extends BaseException
     protected $message = 'The user does not exist or has been permanently deleted.';
     protected $code = 404;
 
-
 }
