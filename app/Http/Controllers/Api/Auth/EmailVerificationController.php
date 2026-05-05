@@ -24,7 +24,7 @@ class EmailVerificationController extends Controller
     {
         // لازم تنادي السيرفس الأول
         $this->emailVerificationService->sendOtpFlow($request->validated());
-        
+
         return $this->SuccessMessage('OTP sent successfully to your email');
     }
 
@@ -32,8 +32,8 @@ class EmailVerificationController extends Controller
     {
         // نداء السيرفس مع تمرير الداتا والكود
         $result = $this->emailVerificationService->verifyOtpFlow($request->validated(), $request->code);
-        
-        return $this->Data([ 
+
+        return $this->Data([
             'email' => $result['user']->email,
             'token' => $result['token']
         ], 'Code verified successfully. Your email is now verified.');
@@ -43,7 +43,7 @@ class EmailVerificationController extends Controller
     {
         // نداء السيرفس لإعادة الإرسال
         $this->emailVerificationService->resendOtpFlow($request->validated());
-        
+
         return $this->SuccessMessage('OTP re-sent successfully to your email');
     }
 }
@@ -116,4 +116,4 @@ class EmailVerificationController extends Controller
     //     $this->generateCode($user);
     //     return $this->Data(['email' => $user->email], 'Verification code re-sent successfully', 200);
     // }
-}
+

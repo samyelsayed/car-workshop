@@ -2,9 +2,10 @@
 
 namespace App\Services\Admin;
 
+use App\Exceptions\Inspections\NotificationNotFoundException;
 use App\Models\Notification;
-use App\Models\User;
 use App\Models\Order;
+use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
@@ -71,12 +72,12 @@ public function broadcastNotification(array $data): void
 public function getAllNotifications(array $filters, int $perPage = 15): LengthAwarePaginator
     {
         return Notification::with(['user', 'order'])
-        ->when(!empty(filled['user_id']), function ($query) use ($filters) {
+        ->when(filled($filters['user_id']), function ($query) use ($filters) {
                 $query->where('user_id', $filters['user_id']);
         })
         ->when(filled($filters['type']), function ($query) use ($filters) {
                 $query->where('type', $filters['type']);
-        })    
+        })
         ->when(filled($filters['is_read']), function ($query) use ($filters) {
                 $query->where('is_read', $filters['is_read']);
         })
@@ -100,8 +101,11 @@ public function getAllNotifications(array $filters, int $perPage = 15): LengthAw
 
     public function markAsRead(int $id): bool
     {
-        $notification = Notification::findOrFail($id);
-        if(@)
+        $notification = Notification::find($id);
+        if(!$notification){
+            throw new NotificationNotFoundException();
+
+        }
         return $notification->update(['is_read' => true]);
     }
 }
