@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\Admin\Notification\BroadcastNotificationRequest;
 use App\Http\Requests\Api\Admin\Notification\NotificationRequest;
 use App\Http\Resources\Admin\NotificationResource;
 use App\Http\Traits\ApiTrait;
@@ -28,7 +29,7 @@ class NotificationController extends Controller
     /**
      * للأدمن: إرسال إشعار جماعي (Broadcast) لكل المستخدمين أو لدور معين
      */
-    public function broadcast(NotificationRequest $request)
+    public function broadcast(BroadcastNotificationRequest $request)
     {
         $this->notificationService->broadcastNotification($request->validated());
         
