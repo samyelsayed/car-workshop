@@ -97,7 +97,11 @@ public function getAllNotifications(array $filters, int $perPage = 15): LengthAw
 
     }
 
-
+   public function deleteNotification(int $id): void
+    {
+        $notification = Notification::findOrFail($id);
+        $notification->delete();
+    }
 
     public function markAsRead(int $id): bool
     {

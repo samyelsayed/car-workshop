@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+
 use App\Http\Requests\Api\Admin\Notification\BroadcastNotificationRequest;
-use App\Http\Requests\Api\Admin\Notification\NotificationRequest;
+use App\Http\Requests\Api\Admin\Notification\SendNotificationRequest;
 use App\Http\Resources\Admin\NotificationResource;
 use App\Http\Traits\ApiTrait;
 use App\Services\Admin\NotificationService;
@@ -19,7 +20,7 @@ class NotificationController extends Controller
     /**
      * للأدمن: إرسال إشعار لمستخدم واحد محدد
      */
-    public function sendToUser(NotificationRequest $request)
+    public function sendToUser(SendNotificationRequest $request)
     {
         $notification = $this->notificationService->sendNotificationToUser($request->validated());
         
@@ -33,7 +34,7 @@ class NotificationController extends Controller
     {
         $this->notificationService->broadcastNotification($request->validated());
         
-        return $this->Success('Broadcast notification initiated successfully');
+        return $this->SuccessMessage('Broadcast notification initiated successfully');
     }
 
     /**
@@ -57,7 +58,7 @@ class NotificationController extends Controller
     {
         $this->notificationService->markAsRead($id);
         
-        return $this->Success('Notification marked as read');
+        return $this->SuccessMessage('Notification marked as read');
     }
 
     /**
@@ -67,6 +68,6 @@ class NotificationController extends Controller
     {
         $this->notificationService->deleteNotification($id);
         
-        return $this->Success('Notification deleted successfully');
+        return $this->SuccessMessage('Notification deleted successfully');
     }
 }

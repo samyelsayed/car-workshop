@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Auth\SendOtpRequest;
 use App\Http\Requests\Api\Auth\VerifyCodeRequest;
+use App\Http\Resources\Api\Auth\AuthResource;
 use App\Http\Traits\ApiTrait;
+use App\Notifications\SendOtpNotification;
 use App\Services\Auth\EmailVerificationService;
 
 class EmailVerificationController extends Controller
@@ -28,15 +30,18 @@ class EmailVerificationController extends Controller
         return $this->SuccessMessage('OTP sent successfully to your email');
     }
 
-    public function checkCode(VerifyCodeRequest $request)
+
+
+        public function checkCode(VerifyCodeRequest $request)
     {
-        // نداء السيرفس مع تمرير الداتا والكود
+        // نداء السيرفس كالعادة
         $result = $this->emailVerificationService->verifyOtpFlow($request->validated(), $request->code);
 
-        return $this->Data([
-            'email' => $result['user']->email,
-            'token' => $result['token']
-        ], 'Code verified successfully. Your email is now verified.');
+        // بنمرر الـ result للريسورس قبل ما نبعته للـ Data method
+        return $this->Data(
+            new AuthResource($result), 
+            'Code verified successfully. Your email is now verified.'
+        );
     }
 
     public function reSendCode(SendOtpRequest $request)

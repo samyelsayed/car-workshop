@@ -80,51 +80,52 @@
 
 // }
 
-
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Auth\ResetPasswordRequest;
 use App\Http\Requests\Api\Auth\SendOtpRequest;
 use App\Http\Requests\Api\Auth\VerifyCodeRequest;
+use App\Http\Resources\Api\Auth\AuthResource; // نستخدم الريسورس الموحد
 use App\Http\Resources\UserResource;
 use App\Http\Traits\ApiTrait;
 use App\Services\Auth\ForgotPasswordService;
-use Illuminate\Http\Request;
 
 class ForgotPasswordController extends Controller
 {
     use ApiTrait;
-    protected $forgotPasswordService;
-        public function __construct(ForgotPasswordService $forgotPasswordService)
-        {
-            $this->ForgotPasswordService = $forgotPasswordService;
-        }
 
+    protected ForgotPasswordService $forgotPasswordService;
 
-        public function sendCode(SendOtpRequest $request)
+    public function __construct(ForgotPasswordService $forgotPasswordService)
     {
-        $this->ForgotPasswordService->sendOtpFlow($request->validated());
+        // تصليح اسم المتغير ليتطابق مع التعريف فوق
+        $this->forgotPasswordService = $forgotPasswordService;
+    }
 
+    public function sendCode(SendOtpRequest $request)
+    {
+        $this->forgotPasswordService->sendOtpFlow($request->validated());
         return $this->SuccessMessage('OTP sent successfully to your email');
-
     }
 
     public function checkCode(VerifyCodeRequest $request)
     {
-        $result = $this->ForgotPasswordService->verifyOtpFlow($request->validated(), $request->code);
-        return $this->Data([
-            'email'=>$result ['user']->email,
-            'token'=>$result ['token']
-        ], 'Code verified successfully. Use this token to reset your password.');
-    }
+        $result = $this->forgotPasswordService->verifyOtpFlow($request->validated(), $request->code);
 
+        // تطبيق النقطة رقم 2: استخدام Resource بدل الـ Array
+        return $this->Data(
+            new AuthResource($result), 
+            'Code verified successfully. Use this token to reset your password.'
+        );
+    }
 
     public function resetPassword(ResetPasswordRequest $request)
     {
-        $user->$this->ForgotPasswordService->resetPasswordFlow($request->validated());
+        // نبعت الداتا للسيرفس ونستقبل اليوزر اللي تم تحديث باسورده
+        $user = $this->forgotPasswordService->resetPasswordFlow($request->validated());
+
+        // نرجعه في UserResource عشان نحافظ على توحيد الردود
         return $this->Data(new UserResource($user), 'Password reset successfully');
-
     }
-
 }

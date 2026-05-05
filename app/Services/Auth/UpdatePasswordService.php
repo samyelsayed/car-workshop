@@ -54,6 +54,6 @@ protected function updatePassword(User $user, string $newPassword): void
     }
 
 
-// -ميثود تمسح القديم وتحفظ الجديد في الداتا بيز
+
 
 }

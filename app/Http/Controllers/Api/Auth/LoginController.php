@@ -134,7 +134,7 @@ class LoginController extends Controller
 {
     use ApiTrait;
 
-    protected $loginService;
+    protected LoginService $loginService;
     public function __construct(LoginService $loginService)
         {
             $this->loginService = $loginService;

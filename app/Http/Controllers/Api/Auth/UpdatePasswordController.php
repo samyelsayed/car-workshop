@@ -28,7 +28,7 @@ class UpdatePasswordController extends Controller
 
     // }
 
-        protected $updatePasswordService;
+        protected UpdatePasswordService $updatePasswordService;
 
     public function __construct(UpdatePasswordService $updatePasswordService)
     {
