@@ -21,7 +21,9 @@ class UpdateAddressRequest extends FormRequest
     {
         return [
             // أضفنا sometimes عشان مش لازم يبعت كل الداتا في التعديل
-            'address_type' => 'sometimes|required|string|in:home,work,other',
+             'address_type' => ['required','sometimes' 'string', 
+                Rule::in(['home', 'work', 'other'])
+            ],
             'street'       => 'sometimes|required|string|max:255',
             'city'         => 'sometimes|required|string|max:255',
             'country'      => 'sometimes|required|string|max:255',

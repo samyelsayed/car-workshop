@@ -54,10 +54,7 @@ public function getAllOrders(array $filters, int $perPage = 10): LengthAwarePagi
 }
 
 
-
-        ->latest()
-        ->paginate($perPage);
-    }
+    
 
     /**
      * جلب تفاصيل طلب واحد بكل علاقاته

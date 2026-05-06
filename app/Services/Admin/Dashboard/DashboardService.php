@@ -36,7 +36,7 @@ class DashboardService
             ->whereDate('created_at',today())
             ->count(),
             'new_users_this_month' => User::where('role','user')
-            ->whereDate('created_at','>=',now()->startMonth())
+            ->whereDate('created_at','>=',now()->startOfMonth())
             ->count(),
 
         ];
@@ -84,7 +84,7 @@ class DashboardService
             ])
             ->sum('total_cost'),
         'this_month'=> (float)(clone $completedOrders)
-            ->where('created_at','>=',now()->statOFMonth())
+            ->where('created_at','>=',now()->startOfMonth())
             ->sum('total_cost'),
         ];
     }

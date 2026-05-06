@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Api\Address;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreAddressRequest extends FormRequest
 {
@@ -11,14 +12,17 @@ class StoreAddressRequest extends FormRequest
         return true;
     }
 
-    public function rules(): array
+public function rules(): array
     {
         return [
-            'address_type' => 'required|string|in:home,work,other',
-            'street' => 'required|string|max:255',
-            'city' => 'required|string|max:255',
-            'country' => 'required|string|max:255',
-            'is_default' => 'sometimes|boolean',
+            'address_type' => ['required', 'string', 
+                Rule::in(['home', 'work', 'other'])
+            ],
+            
+            'street'     => ['required', 'string', 'max:255'],
+            'city'       => ['required', 'string', 'max:255'],
+            'country'    => ['required', 'string', 'max:255'],
+            'is_default' => ['sometimes', 'boolean'],
         ];
     }
 
