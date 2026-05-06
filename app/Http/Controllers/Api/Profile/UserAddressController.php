@@ -7,10 +7,9 @@ use App\Http\Requests\Api\Address\StoreAddressRequest;
 use App\Http\Requests\Api\Address\UpdateAddressRequest;
 use App\Http\Resources\UserAddressResource;
 use App\Http\Traits\ApiTrait;
-use App\Models\UserAddress;
 use App\Services\User\UserAddressService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+
 
 class UserAddressController extends Controller
 {
@@ -92,7 +91,7 @@ class UserAddressController extends Controller
 
 
 
-        protected $addressService;
+        protected UserAddressService $addressService;
     public function __construct( UserAddressService $addressService)
         {
             $this->addressService = $addressService;
@@ -126,17 +125,12 @@ public function update(UpdateAddressRequest $request, int $id){
 }
 
 
-public function destroy(Request $request, $id){
+public function destroy(Request $request,int $id){
 $this->addressService->deleteAddress($request->user(),$id);
 
 return $this->SuccessMessage('Address deleted successfully');
 
 }
-
-
-
-
-
 
 
 }

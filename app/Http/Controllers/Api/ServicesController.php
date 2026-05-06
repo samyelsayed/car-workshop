@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ServiceResource;
 use App\Http\Traits\ApiTrait;
-use App\Models\Service;
 use Illuminate\Http\Request;
 use App\Services\Workshop\WorkshopService;
 
@@ -40,7 +39,7 @@ class ServicesController extends Controller
     // }
 
 
-    protected $workshopService;
+    protected WorkshopService $workshopService;
      public function __construct( WorkshopService $workshopService)
     {
         $this->workshopService = $workshopService;
@@ -60,7 +59,7 @@ class ServicesController extends Controller
 
 
 
-    public function show(Request $request, $id){
+    public function show(Request $request,int $id){
 
     $service = $this->workshopService->findActiveServiceById($id);
      $transformedService =new ServiceResource($service);

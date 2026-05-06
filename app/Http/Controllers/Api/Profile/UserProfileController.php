@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Profile;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\User\updateProfile;
+use App\Http\Resources\UserDetailedResource;
 use App\Http\Resources\UserResource;
 use App\Http\Traits\ApiTrait;
 use App\Models\User;
@@ -59,7 +60,7 @@ class UserProfileController extends Controller
 
     public function view(Request $request){
      $user = $request->user();
-     return $this->Data(['user' => $user],'This is the user data');
+     return $this->Data(['user' => new UserDetailedResource($user)],'This is the user data');
     }
 
 
@@ -67,7 +68,7 @@ class UserProfileController extends Controller
         $user = $request->user();
         $updatedUser = $this->userProfileService->update($user, $request->validated());
 
-        return $this->Data(['user' => new UserResource($updatedUser)],'update user data has been modified');
+        return $this->Data(['user' => new UserDetailedResource($updatedUser)],'update user data has been modified');
 
 
     }

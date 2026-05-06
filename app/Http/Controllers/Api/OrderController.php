@@ -8,18 +8,15 @@ use App\Http\Requests\Api\StoreOrderRequest;
 use App\Http\Requests\Api\UpdateOrderRequest;
 use App\Http\Resources\OrderResource;
 use App\Http\Traits\ApiTrait;
-use App\Models\Order;
-use App\Models\OrderItem;
-use App\Models\Service;
 use App\Services\Order\OrderService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+
 
 class OrderController extends Controller
 {
   use ApiTrait;
 
-    protected $orderService;
+    protected OrderService $orderService;
           public function __construct( OrderService $orderService)
         {
             $this->orderService = $orderService;
@@ -40,15 +37,15 @@ public function index(Request $request ){
 }
 
 
-public function edit(Request $request, $id) {
+public function edit(Request $request,int $id) {
     $order = $this->orderService->show($request->user(), $id);
-    
+
     return $this->Data(new OrderResource($order), 'Order data for editing retrieved');
 }
 
 
 
-public function update(UpdateOrderRequest $request, $id) {
+public function update(UpdateOrderRequest $request,int $id) {
     $user = $request->user();
     $order = $this->orderService->updateOrder($user,$id,$request->validated());
       return $this->Data( new OrderResource($order), 'Order updated successfully', 200);
@@ -56,9 +53,9 @@ public function update(UpdateOrderRequest $request, $id) {
 
 }
 
-public function destroy(Request $request, $id) {
+public function destroy(Request $request, int $id) {
     $user = $request->user();
-      $order = $this->orderService->deleteOrder($user,$id);
+     $this->orderService->deleteOrder($user,$id);
       return $this->SuccessMessage('Order deleted successfully',200);
 
 }

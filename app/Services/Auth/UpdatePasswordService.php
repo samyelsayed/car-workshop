@@ -2,58 +2,58 @@
 
 namespace App\Services\Auth;
 
-
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
-
 class UpdatePasswordService
 {
-
-//الميثود المجمعه الي هتعمل ابديت للباسورد
-public function updatePasswordFlow(User $user, array $data): array
+    /**
+     * Change user password
+     */
+    public function changePassword(User $user, array $data): string
     {
-         return DB::transaction(function () use ($user, $data) {
-        $this->verifyCurrentPassword($user,$data['currentPassword']);
-        $this->updatePassword($user,$data['newPassword']);
-        $this->deleteTokens($user);
-        return $this->generateNewToken($user, $data['deviceName']);
-    });
+        return DB::transaction(function () use ($user, $data) {
+            $this->verifyCurrentPassword($user, $data['current_password']);
+            $this->updatePassword($user, $data['new_password']);
+            $this->revokeAllTokens($user);
+
+            return $this->generateNewToken($user, $data['device_name']);
+        });
     }
 
-
-
-// -ميثود تتشيك ع الباسورد تقرانه ب الي ف الداتا بيز
-protected function verifyCurrentPassword($user, $currentPassword): void
+    /**
+     * Verify current password
+     */
+    protected function verifyCurrentPassword(User $user, string $currentPassword): void
     {
-       if(!Hash::check( $currentPassword,$user->password)){
-        throw new \Exception('Incorrect password', 400);
+        if (!Hash::check($currentPassword, $user->password)) {
+            throw new \Exception('Current password is incorrect', 400);
         }
-
     }
 
-protected function updatePassword(User $user, string $newPassword): void
+    /**
+     * Update user password
+     */
+    protected function updatePassword(User $user, string $newPassword): void
     {
-        $user->password= Hash::make($newPassword);
+        $user->password = $newPassword;  // Model cast will hash it
         $user->save();
-
     }
 
-    protected function deleteTokens(User $user): void{
+    /**
+     * Revoke all user tokens
+     */
+    protected function revokeAllTokens(User $user): void
+    {
         $user->tokens()->delete();
     }
 
-    protected function generateNewToken(User $user,string $deviceName): array{
-        $token = $user->createToken($deviceName)->plainTextToken;
-        $user->token = $token;
-        return [
-            'user' => $user,
-            'token' => $token
-        ];
+    /**
+     * Generate new access token
+     */
+    protected function generateNewToken(User $user, string $deviceName): string
+    {
+        return $user->createToken($deviceName)->plainTextToken;
     }
-
-
-
-
 }

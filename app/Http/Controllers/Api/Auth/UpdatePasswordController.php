@@ -3,49 +3,33 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\User\updatePassword;
+use App\Http\Requests\Api\Auth\UpdatePasswordRequest;
 use App\Http\Traits\ApiTrait;
-use App\Models\User;
+use App\Http\Resources\UserResource;
 use App\Services\Auth\UpdatePasswordService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\JsonResponse;
 
 class UpdatePasswordController extends Controller
-{ use ApiTrait;
-    // public function updatePassword(updatePassword $request){
-    //     $user = $request->user();
-    //     if(!Hash::check($request->old_password,$user->password)){
-    //     return $this->ErrorMessage(['old_password' => ['Incorrect password']],'the old password is error try again',400);
-    //     }
-    //     else{
-    //         $user->password= Hash::make($request->new_password);
-    //         $user->save();
-    //         $user->tokens()->delete();
-    //         $token = $user->createToken($request->device_name)->plainTextToken;
-    //         $user->token = $token;
-    //         return $this->Data(['user'=>$user],'password updated successfully');
-    //     }
+{
+    use ApiTrait;
 
-    // }
-
-        protected UpdatePasswordService $updatePasswordService;
+    protected UpdatePasswordService $updatePasswordService;
 
     public function __construct(UpdatePasswordService $updatePasswordService)
     {
         $this->updatePasswordService = $updatePasswordService;
     }
 
-  public function updatePassword( updatePassword $request)
+    public function __invoke(UpdatePasswordRequest $request): JsonResponse
     {
-        $user = $request->user();
-        $result = $this->updatePasswordService->updatePasswordFlow($user, $request->validated());
-        return $this->Data($result, 'Password updated successfully');
+        $token = $this->updatePasswordService->changePassword(
+            $request->user(),
+            $request->validated()
+        );
 
+        return $this->data([
+            'user' => new UserResource($request->user()->fresh()),
+            'token' => $token
+        ], 'Password changed successfully');
     }
-
-
-
-
-
-
 }
