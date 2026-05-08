@@ -2,10 +2,23 @@
 
 namespace App\Http\Requests\Api\Admin\Inspection;
 
+use App\Http\Traits\MapsCamelCase;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CreateInspectionRequest extends FormRequest
 {
+    use MapsCamelCase;
+
+    /**
+     * تعريف خريطة التحويل
+     */
+    protected array $map = [
+        'orderId'        => 'order_id',
+        'inspectionDate' => 'inspection_date',
+        'estimatedCost'  => 'estimated_cost',
+    ];
+
     public function authorize(): bool
     {
         return true;
@@ -14,21 +27,37 @@ class CreateInspectionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'orderId' => 'required|exists:orders,id',
-            'type' => 'required|string|in:initial,detailed,follow_up',
-            'inspectionDate' => 'required|date',
-            'findings' => 'required|string',
-            'estimatedCost' => 'nullable|numeric|min:0',
-            'notes' => 'nullable|string',
+            // 1. استخدام Rule::exists للتأكد من وجود الطلب في قاعدة البيانات
+            'order_id' => [
+                'required',
+                Rule::exists('orders', 'id')
+            ],
+
+            // 2. استخدام Rule::in للأنواع المحددة
+            'type' => [
+                'required',
+                'string',
+                Rule::in(['initial', 'detailed', 'follow_up'])
+            ],
+
+            'inspection_date' => ['required', 'date'],
+            'findings'        => ['required', 'string'],
+
+            // 3. التحقق من التكلفة التقديرية
+            'estimated_cost'  => ['nullable', 'numeric', 'min:0'],
+
+            'notes'           => ['nullable', 'string'],
         ];
     }
 
-    protected function prepareForValidation()
+    /**
+     * التعامل مع القيم الافتراضية (بدل ما كانت في الـ merge القديم)
+     */
+    protected function passedValidation(): void
     {
-        $this->merge([
-            'order_id' => $this->orderId,
-            'inspection_date' => $this->inspectionDate,
-            'estimated_cost' => $this->estimatedCost ?? 0,
-        ]);
+        // لو التكلفة مبعوتة null أو مش موجودة، بنخليها 0 في الـ request
+        if (!$this->filled('estimated_cost')) {
+            $this->merge(['estimated_cost' => 0]);
+        }
     }
 }

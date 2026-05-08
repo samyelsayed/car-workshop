@@ -2,10 +2,20 @@
 
 namespace App\Http\Requests\Api\Admin\WorkProgress;
 
+use App\Http\Traits\MapsCamelCase;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CreateWorkProgressRequest extends FormRequest
 {
+    use MapsCamelCase;
+
+    protected array $map = [
+        'orderId'     => 'order_id',
+        'startedAt'   => 'started_at',
+        'completedAt' => 'completed_at',
+    ];
+
     public function authorize(): bool
     {
         return true;
@@ -14,23 +24,34 @@ class CreateWorkProgressRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'orderId' => 'required|exists:orders,id',
-            'stage' => 'required|string|max:50',
-            'status' => 'sometimes|in:not_started,in_progress,completed',
-            'startedAt' => 'nullable|date',
-            'completedAt' => 'nullable|date|after_or_equal:startedAt',
-            'notes' => 'nullable|string',
+            'order_id' => [
+                'required',
+                Rule::exists('orders', 'id')
+            ],
+
+            'stage' => ['required', 'string', 'max:50'],
+
+            'status' => [
+                'sometimes',
+                Rule::in(['not_started', 'in_progress', 'completed'])
+            ],
+
+            'started_at' => ['nullable', 'date'],
+
+            'completed_at' => [
+                'nullable',
+                'date',
+                'after_or_equal:started_at'
+            ],
+
+            'notes' => ['nullable', 'string'],
         ];
     }
 
-    protected function prepareForValidation()
+    protected function passedValidation(): void
     {
-        $this->merge([
-            'order_id' => $this->orderId,
-            'started_at' => $this->startedAt,
-            'completed_at' => $this->completedAt,
-        ]);
+        if (!$this->filled('status')) {
+            $this->merge(['status' => 'not_started']);
+        }
     }
-
-
 }

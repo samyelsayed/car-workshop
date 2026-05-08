@@ -2,10 +2,19 @@
 
 namespace App\Http\Requests\Api\Admin\Inspection;
 
+use App\Http\Traits\MapsCamelCase;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateInspectionRequest extends FormRequest
 {
+    use MapsCamelCase;
+
+    protected array $map = [
+        'inspectionDate' => 'inspection_date',
+        'estimatedCost'  => 'estimated_cost',
+    ];
+
     public function authorize(): bool
     {
         return true;
@@ -14,25 +23,16 @@ class UpdateInspectionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'type' => 'sometimes|string|in:initial,detailed,follow_up',
-            'inspectionDate' => 'sometimes|date',
-            'findings' => 'sometimes|string',
-            'estimatedCost' => 'sometimes|numeric|min:0',
-            'notes' => 'sometimes|string|nullable',
+            'type' => [
+                'sometimes',
+                'string',
+                Rule::in(['initial', 'detailed', 'follow_up'])
+            ],
+
+            'inspection_date' => ['sometimes', 'date'],
+            'findings'        => ['sometimes', 'string'],
+            'estimated_cost'  => ['sometimes', 'numeric', 'min:0'],
+            'notes'           => ['sometimes', 'nullable', 'string'],
         ];
-    }
-
-    protected function prepareForValidation()
-    {
-        $mapped = [];
-
-        if ($this->has('inspectionDate')) {
-            $mapped['inspection_date'] = $this->inspectionDate;
-        }
-        if ($this->has('estimatedCost')) {
-            $mapped['estimated_cost'] = $this->estimatedCost;
-        }
-
-        $this->merge($mapped);
     }
 }

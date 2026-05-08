@@ -2,10 +2,20 @@
 
 namespace App\Http\Requests\Api\Admin\Notification;
 
+use App\Http\Traits\MapsCamelCase;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class SendNotificationRequest extends FormRequest
 {
+    use MapsCamelCase;
+
+    protected array $map = [
+        'orderId'        => 'order_id',
+        'inspectionDate' => 'inspection_date',
+        'estimatedCost'  => 'estimated_cost',
+    ];
+
     public function authorize(): bool
     {
         return true;
@@ -14,21 +24,26 @@ class SendNotificationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'orderId' => 'required|exists:orders,id',
-            'type' => 'required|string|in:initial,detailed,follow_up',
-            'inspectionDate' => 'required|date',
-            'findings' => 'required|string',
-            'estimatedCost' => 'nullable|numeric|min:0',
-            'notes' => 'nullable|string',
+            'order_id' => [
+                'required',
+                Rule::exists('orders', 'id')
+            ],
+            'type' => [
+                'required',
+                'string',
+                Rule::in(['initial', 'detailed', 'follow_up'])
+            ],
+            'inspection_date' => ['required', 'date'],
+            'findings'        => ['required', 'string'],
+            'estimated_cost'  => ['nullable', 'numeric', 'min:0'],
+            'notes'           => ['nullable', 'string'],
         ];
     }
 
-    protected function prepareForValidation()
+    protected function passedValidation(): void
     {
-        $this->merge([
-            'order_id' => $this->orderId,
-            'inspection_date' => $this->inspectionDate,
-            'estimated_cost' => $this->estimatedCost ?? 0,
-        ]);
+        if (!$this->filled('estimated_cost')) {
+            $this->merge(['estimated_cost' => 0]);
+        }
     }
 }

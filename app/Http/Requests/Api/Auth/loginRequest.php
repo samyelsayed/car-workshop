@@ -2,39 +2,33 @@
 
 namespace App\Http\Requests\Api\Auth;
 
+use App\Http\Traits\MapsCamelCase;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class loginRequest extends FormRequest
+class LoginRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
+    use MapsCamelCase;
+
+    protected array $map = [
+        'deviceName' => 'device_name',
+    ];
+
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
-    // public function rules(): array
-    // {
-    //     return [
-    //         'email'=>['required','email','exists:users,email'],
-    //         'password'=>['required'],
-    //         'device_name'=>['required','string']
-    //     ];
-    // }
-
-
-            public function rules(): array
-        {
-            return [
-                'email'      => ['required', 'email', 'exists:users,email'],
-                'password'   => ['required'],
-                'deviceName' => ['required', 'string'] // تحويل لكامل كيس
-            ];
-        }
+    public function rules(): array
+    {
+        return [
+            'email' => [
+                'required',
+                'email',
+                Rule::exists('users', 'email')
+            ],
+            'password' => ['required'],
+            'device_name' => ['required', 'string']
+        ];
+    }
 }

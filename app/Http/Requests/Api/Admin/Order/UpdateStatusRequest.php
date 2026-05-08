@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Api\Auth;
+namespace App\Http\Requests\Api\Admin\Order;
 
 use App\Http\Traits\MapsCamelCase;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class VerifyCodeRequest extends FormRequest
+class UpdateStatusRequest extends FormRequest
 {
     use MapsCamelCase;
 
@@ -18,13 +18,10 @@ class VerifyCodeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => [
+            'status' => [
                 'required',
-                'email',
-                Rule::exists('users', 'email')
+                Rule::in(['pending', 'in_progress', 'completed', 'cancelled'])
             ],
-
-            'code' => ['required', 'digits:4'],
         ];
     }
 }
