@@ -20,7 +20,7 @@ class StoreAddressRequest extends FormRequest
         return true;
     }
 
-    public function rules(): array
+public function rules(): array
     {
         return [
             'address_type' => ['required', 'string', Rule::in(['home', 'work', 'other'])],

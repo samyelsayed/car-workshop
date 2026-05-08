@@ -12,10 +12,10 @@ class OrderService
 {
 
 
-public function getUserOrders(User $user, int $perPage = 10): LengthAwarePaginator
+public function getUserOrders(User $user, int $perPage = 10): CursorPaginator
     {
 
-       return $user->orders()->with(['items','car'])->latest()->paginate($perPage);
+       return $user->orders()->with(['items','car'])->latest()->cursorPaginate($perPage);
 
 
     }

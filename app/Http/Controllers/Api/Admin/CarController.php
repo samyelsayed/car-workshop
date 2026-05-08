@@ -12,7 +12,7 @@ class CarController extends Controller
 {
     use ApiTrait;
 
-    protected $adminCarService;
+    protected AdminCarService $adminCarService;
 
     // حقن السيرفس في الكنترولر (Dependency Injection)
     public function __construct(AdminCarService $adminCarService)
