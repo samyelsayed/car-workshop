@@ -47,7 +47,7 @@ class UserPhoneController extends Controller
 //     }
 
 
-    protected $userMobileService;
+    protected UserMobileService $userMobileService;
 public function __construct( UserMobileService $userMobileService)
     {
         $this->userMobileService = $userMobileService;

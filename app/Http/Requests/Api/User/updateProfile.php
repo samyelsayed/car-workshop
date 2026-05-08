@@ -2,30 +2,46 @@
 
 namespace App\Http\Requests\Api\User;
 
+use App\Http\Traits\MapsCamelCase;
 use Illuminate\Foundation\Http\FormRequest;
 
-class updateProfile extends FormRequest
+class UpdateProfileRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
+    use MapsCamelCase;
+
+    // خريطة التحويل من camelCase لـ snake_case
+    protected array $map = [
+        'firstName' => 'first_name',
+        'lastName'  => 'last_name',
+    ];
+
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
-           'first_name'=>['required','min:3','max:50'],
-           'last_name'=>['required','min:3','max:50'],
-        //    'phone'=>['regex:/^01[0-2,5,9]{1}[0-9]{8}$/','required','unique:user_mobiles,mobile_number'],
-           'image'=>['image','mimes:jpg,png,jpeg','max:2048'],
-           ];
+            'first_name' => ['required', 'string', 'min:3', 'max:50'],
+            'last_name'  => ['required', 'string', 'min:3', 'max:50'],
+
+            // التحقق من الصورة ومساحتها (2MB كحد أقصى)
+            'image' => [
+                'nullable',
+                'image',
+                'mimes:jpg,png,jpeg',
+                'max:2048'
+            ],
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'firstName' => 'first name',
+            'lastName'  => 'last name',
+            'image'     => 'profile picture',
+        ];
     }
 }

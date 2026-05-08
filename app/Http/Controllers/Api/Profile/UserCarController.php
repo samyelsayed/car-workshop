@@ -3,64 +3,79 @@
 namespace App\Http\Controllers\Api\Profile;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\User\UserCarRequest;
+use App\Http\Requests\Api\User\Car\StoreCarRequest;
+use App\Http\Requests\Api\User\Car\UpdateCarRequest;
 use App\Http\Resources\UserCarResource;
 use App\Http\Traits\ApiTrait;
+use App\Services\User\UserCarService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class UserCarController extends Controller
 {
-     use ApiTrait;
+    use ApiTrait;
 
-      public function index(Request $request){
-        $user = $request->user();
-        $cars = $user->cars;
-        if($cars->isEmpty()){
-            return $this->SuccessMessage('No cars found for this user yet, Add your first car', 200);
-        }
-        $transformedCars = UserCarResource::collection($cars);
-        return $this->Data(['cars' => $transformedCars],'Data retrieved successfully');
-      }
+    protected UserCarService $carService;
 
+    public function __construct(UserCarService $carService)
+    {
+        $this->carService = $carService;
+    }
 
+    /**
+     * Get all user cars
+     */
+    public function index(Request $request): JsonResponse
+    {
+        $cars = $this->carService->getUserCars($request->user());
 
-      public function store(UserCarRequest $request){
-        $user = $request->user();
+        return $this->data(
+            ['cars' => UserCarResource::collection($cars)],
+            'Cars retrieved successfully'
+        );
+    }
 
-        // $add_car =$user->cars()->create([
-        //     'plate_number' => $request->plate_number,
-        //     'brand'        => $request->brand,
-        //     'model'        => $request->model,
-        //     'year'         => $request->year,
-        //     'color'        => $request->color,
-        // ]);
-        $add_car =$user->cars()->create($request->validated());
-        $transformedCar = new UserCarResource($add_car);
+    /**
+     * Create new car
+     */
+    public function store(StoreCarRequest $request): JsonResponse
+    {
+        $car = $this->carService->createCar(
+            $request->user(),
+            $request->validated()
+        );
 
-        return $this->Data(['car' => $transformedCar], 'Car added successfully', 201);
+        return $this->data(
+            ['car' => new UserCarResource($car)],
+            'Car added successfully',
+            201
+        );
+    }
 
-      }
+    /**
+     * Update car
+     */
+    public function update(UpdateCarRequest $request, int $id): JsonResponse
+    {
+        $car = $this->carService->updateCar(
+            $request->user(),
+            $id,
+            $request->validated()
+        );
 
+        return $this->data(
+            ['car' => new UserCarResource($car)],
+            'Car updated successfully'
+        );
+    }
 
+    /**
+     * Delete car
+     */
+    public function destroy(Request $request, int $id): JsonResponse
+    {
+        $this->carService->deleteCar($request->user(), $id);
 
-
-      public function update(UserCarRequest $request, $id){
-        $user = $request->user();
-        $car =$user->cars()->findOrFail($id);
-        $car ->update($request->validated());
-
-        $transformedCar = new UserCarResource($car);
-        return $this->Data(['car' => $transformedCar], 'Car updated successfully', 200);
-      }
-
-
-        public function destroy(Request $request, $id){
-        $user = $request->user();
-        $car =$user->cars()->findOrFail($id);
-        $car ->delete();
-
-
-        return $this->SuccessMessage('Car deleted successfully');
-      }
-
+        return $this->successMessage('Car deleted successfully');
+    }
 }

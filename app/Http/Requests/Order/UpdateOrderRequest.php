@@ -2,41 +2,72 @@
 
 namespace App\Http\Requests\Api;
 
+use App\Http\Traits\MapsCamelCase;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class UpdateOrderRequest extends FormRequest
 {
-    public function authorize(): bool { 
-        return true; 
-        }
+    use MapsCamelCase;
 
-    protected function prepareForValidation()
+    // الخريطة ثابتة والترايت هيتعامل مع الـ sometimes تلقائياً
+    protected array $map = [
+        'carId'          => 'car_id',
+        'pickupRequired' => 'pickup_required',
+        'pickupLocation' => 'pickup_location',
+        'pickupDatetime' => 'pickup_datetime',
+    ];
+
+    public function authorize(): bool
     {
-        // بنعمل merge فقط لو الحقل مبعوث فعلياً (عشان الـ Update جزئي)
-        $map = [
-            'carId'          => 'car_id',
-            'pickupRequired' => 'pickup_required',
-            'pickupLocation' => 'pickup_location',
-            'pickupDatetime' => 'pickup_datetime',
-        ];
-
-        foreach ($map as $camel => $snake) {
-            if ($this->has($camel)) {
-                $this->merge([$snake => $this->{$camel}]);
-            }
-        }
+        return true;
     }
 
     public function rules(): array
     {
         return [
-            'car_id'          => ['sometimes', 'required', Rule::exists('cars', 'id')->where('user_id', auth()->id())->whereNull('deleted_at')],
-            'services'        => ['sometimes', 'required', 'array', 'min:1'],
-            'services.*'      => ['sometimes', 'required', Rule::exists('services', 'id')->where('is_active', 1)],
+            // استخدام sometimes يضمن إن الـ Validation يشتغل فقط لو الحقل مبعوث
+            'car_id' => [
+                'sometimes',
+                'required',
+                Rule::exists('cars', 'id')
+                    ->where('user_id', auth()->id())
+                    ->whereNull('deleted_at')
+            ],
+
+            'services'   => ['sometimes', 'required', 'array', 'min:1'],
+            'services.*' => [
+                'sometimes',
+                'required',
+                Rule::exists('services', 'id')->where('is_active', 1)
+            ],
+
             'pickup_required' => ['sometimes', 'required', 'boolean'],
-            'pickup_location' => ['required_if:pickup_required,true', 'nullable', 'string', 'max:255'],
-            'pickup_datetime' => ['required_if:pickup_required,true', 'nullable', 'date', 'after:now'],
+
+            'pickup_location' => [
+                'required_if:pickup_required,true',
+                'nullable',
+                'string',
+                'max:255'
+            ],
+
+            'pickup_datetime' => [
+                'required_if:pickup_required,true',
+                'nullable',
+                'date',
+                'after:now'
+            ],
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'carId'          => 'car',
+            'pickupRequired' => 'pickup service',
+            'pickupLocation' => 'pickup location',
+            'pickupDatetime' => 'pickup time',
+            'services'       => 'selected services',
         ];
     }
 }

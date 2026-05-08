@@ -50,7 +50,7 @@ class UserProfileController extends Controller
 
 
 
-    protected $userProfileService;
+    protected UserProfileService $userProfileService;
         public function __construct( UserProfileService $userProfileService)
     {
         $this->userProfileService = $userProfileService;

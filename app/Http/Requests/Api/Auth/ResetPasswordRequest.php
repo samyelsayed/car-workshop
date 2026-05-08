@@ -4,14 +4,15 @@ namespace App\Http\Requests\Api\Auth;
 
 use App\Http\Traits\MapsCamelCase;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules\Password; // استدعاء كلاس الباسورد
+use Illuminate\Validation\Rules\Password;
 
-class ResetPasswordRequest extends FormRequest
+class RegisterRequest extends FormRequest
 {
     use MapsCamelCase;
 
     protected array $map = [
+        'firstName' => 'first_name',
+        'lastName' => 'last_name',
         'deviceName' => 'device_name',
     ];
 
@@ -23,26 +24,37 @@ class ResetPasswordRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'first_name' => ['required', 'string', 'min:3', 'max:50'],
+            'last_name' => ['required', 'string', 'min:3', 'max:50'],
             'email' => [
                 'required',
                 'email',
-                Rule::exists('users', 'email')
+                'unique:users,email'
             ],
-
             'password' => [
                 'required',
                 'confirmed',
-                // استخدام الـ Rule Object بدل الـ Regex المعقد
                 Password::min(8)
-                    ->letters()      // لازم حروف
-                    ->mixedCase()    // حروف كبيرة وصغيرة
-                    ->numbers()      // أرقام
-                    ->symbols()      // رموز خاصة (@$!%*?&#)
-                    ->uncompromised() // اختياري: بيشيك لو الباسورد ده اتسرب قبل كدة في اختراقات عالمية
+                    ->letters()
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols()
             ],
+            'phone' => [
+                'required',
+                'regex:/^01[0-2,5,9]{1}[0-9]{8}$/',
+                'unique:user_mobiles,mobile_number'
+            ],
+            'device_name' => ['nullable', 'string', 'max:100']
+        ];
+    }
 
-            'device_name' => ['required', 'string'],
-            'token' => ['required', 'string']
+    public function attributes(): array
+    {
+        return [
+            'first_name' => 'first name',
+            'last_name' => 'last name',
+            'device_name' => 'device name',
         ];
     }
 }

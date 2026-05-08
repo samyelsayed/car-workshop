@@ -2,11 +2,21 @@
 
 namespace App\Http\Requests\Api\Auth;
 
+use App\Http\Traits\MapsCamelCase;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Password;
 
 class UpdatePasswordRequest extends FormRequest
 {
+    use MapsCamelCase;
+
+    // تعريف الخريطة لتحويل الحقول تلقائياً
+    protected array $map = [
+        'currentPassword' => 'current_password',
+        'newPassword'     => 'new_password',
+        'deviceName'      => 'device_name',
+    ];
+
     public function authorize(): bool
     {
         return true;
@@ -15,31 +25,36 @@ class UpdatePasswordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'currentPassword' => 'required|string',
-            'newPassword' => [
+            'current_password' => ['required', 'string'],
+
+            'new_password' => [
                 'required',
                 'string',
                 'confirmed',
-                Password::min(8)->mixedCase()->numbers()
+                Password::min(8)
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols() // يفضل إضافة الرموز لزيادة الأمان
+                    ->uncompromised(), // حماية إضافية ضد التسريبات
             ],
-            'deviceName' => 'nullable|string',
+
+            'device_name' => ['nullable', 'string'],
         ];
     }
 
-    protected function prepareForValidation()
+    protected function passedValidation()
     {
-        $this->merge([
-            'current_password' => $this->currentPassword,
-            'new_password' => $this->newPassword,
-            'device_name' => $this->deviceName ?? 'web',
-        ]);
+        // وضع قيمة افتراضية للـ device_name في حالة كان فارغاً
+        if (!$this->has('device_name')) {
+            $this->merge(['device_name' => 'web']);
+        }
     }
 
     public function attributes(): array
     {
         return [
             'currentPassword' => 'current password',
-            'newPassword' => 'new password',
+            'newPassword'     => 'new password',
         ];
     }
 }
