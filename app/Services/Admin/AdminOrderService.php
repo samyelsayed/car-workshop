@@ -62,30 +62,15 @@ public function getAllOrders(array $filters, int $perPage = 10): LengthAwarePagi
     public function getOrderDetails(int $id): Order
     {
          $order = Order::with(['user', 'car', 'inspections', 'workProgress', 'orderItems.service'])->find($id);
-        // if (!$order) {
-        //     throw new \Exception('Order not found');
-        // }
+ 
         if (!$order) {
-            // بنرمي الإكسيبشن المخصوص بتاعنا
             throw new OrderNotFoundException();
         }
 
         return $order;
     }
 
-    /**
-     * تعيين فني للطلب وتغيير حالته
-     */
-    public function assignOrderToTechnician(int $id, int $technicianId): Order
-    {
-         $order =$this->getOpenOrder($id);
-         $order->assigned_to = $technicianId;
-        $order->status = 'assigned';
-        $order->save();
 
-     return $order;
-        // تأكد من حالة الطلب أولاً
-    }
 
     /**
      * تحديث حالة الطلب (مثلاً: pending -> in_progress)
