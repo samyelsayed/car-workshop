@@ -35,6 +35,19 @@ class UserCarController extends Controller
         );
     }
 
+      /**
+     * Show car
+     */
+        public function show(int $id,Request $request): JsonResponse
+        {
+            $car = $this->carService->getCarById($request->user(), $id);
+
+            return $this->data(
+                ['car' => new UserCarResource($car)],
+                'Car details retrieved successfully'
+            );
+
+
     /**
      * Create new car
      */

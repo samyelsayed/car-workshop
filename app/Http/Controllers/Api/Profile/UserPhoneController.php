@@ -67,6 +67,11 @@ public function __construct( UserMobileService $userMobileService)
     }
 
 
+    public function show(int $id, Request $request){
+        $mobile = $this->userMobileService->getMobileById($request->user(), $id);
+        return $this->Data(['mobile' => new UserMobileResource($mobile)], 'Phone details retrieved successfully');
+    }
+
 
     public function store(PhoneRequest $request){
         $mobile =$this->userMobileService->createMobile($request->user(), $request->validated());

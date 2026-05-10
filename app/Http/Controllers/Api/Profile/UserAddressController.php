@@ -110,6 +110,13 @@ class UserAddressController extends Controller
 
       }
 
+
+        public function show(int $id,Request $request){
+
+      $addresse = $this->addressService->showAddresses($id, $request->user());
+        return $this->Data(['address' => new UserAddressResource($addresse)], 'Address details retrieved successfully');
+      }
+
     public function store(StoreAddressRequest $request){
      $add_address =$this->addressService->createAddress($request->user(), $request->validated());
 

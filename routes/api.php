@@ -170,7 +170,7 @@ Route::middleware(['auth:sanctum', 'isAdmin'])->prefix('admin')->group(function 
     });
 
     // 🔔 8. Notifications
-        
+
         // مسارات المستخدم العادي
         Route::get('notifications/mine', [NotificationController::class, 'myNotifications']);
         Route::patch('notifications/{id}/read', [NotificationController::class, 'markAsRead']);
@@ -180,7 +180,30 @@ Route::middleware(['auth:sanctum', 'isAdmin'])->prefix('admin')->group(function 
             Route::post('send-to-user', [NotificationController::class, 'sendToUser']);
             Route::post('broadcast', [NotificationController::class, 'broadcast']);
             Route::delete('{id}', [NotificationController::class, 'destroy']);
-        
+
 });
 
+});
+Route::prefix('admin')->middleware(['auth:sanctum', 'admin'])->group(function () {
+
+    // Notifications Management
+    Route::get('notifications', [Admin\NotificationController::class, 'index']);
+    Route::post('notifications/send', [Admin\NotificationController::class, 'sendToUser']);
+    Route::post('notifications/broadcast', [Admin\NotificationController::class, 'broadcast']);
+    Route::delete('notifications/{id}', [Admin\NotificationController::class, 'destroy']);
+});
+
+
+
+// ========================================
+// User Routes
+// ========================================
+Route::prefix('user')->middleware(['auth:sanctum'])->group(function () {
+
+    // My Notifications
+    Route::get('notifications', [User\NotificationController::class, 'index']);
+    Route::get('notifications/unread-count', [User\NotificationController::class, 'unreadCount']);
+    Route::post('notifications/{id}/read', [User\NotificationController::class, 'markAsRead']);
+    Route::post('notifications/read-all', [User\NotificationController::class, 'markAllAsRead']);
+    Route::delete('notifications/{id}', [User\NotificationController::class, 'destroy']);
 });

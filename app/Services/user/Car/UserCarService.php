@@ -46,6 +46,15 @@ class UserCarService
         $car->delete();
     }
 
+
+    //get car by id for user
+public function getCarById(User $user, int $carId): Car
+    {
+         $car = $this->findUserCarOrFail($carId, $user);
+         return $car;
+    }
+
+
     /**
      * Find user car or fail
      */

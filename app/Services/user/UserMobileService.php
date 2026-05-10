@@ -12,6 +12,11 @@ class UserMobileService
         return $user->mobiles()->get();
     }
 
+        public function getMobileById(User $user, int $mobileId): UserMobile
+        {
+            return $this->findUserMobileOrFail($mobileId, $user);
+        }
+
     public function createMobile(User $user, array $data): UserMobile {
 
         return $user->mobiles()->create($data);

@@ -31,13 +31,13 @@ class CarController extends Controller
 
 
 
-     public function show( $id){
+     public function show(int $id){
       $car = $this->adminCarService->getCarById($id);
        return $this->Data( new UserResource($car), 'Car details retrieved successfully', 201);
      }
 
 
-    public function destroy(Request $request , $id){
+    public function destroy(Request $request , int $id){
         $this->adminCarService->deleteCar($id);
 
         return $this->SuccessMessage('Car deleted successfully');

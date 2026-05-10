@@ -17,6 +17,11 @@ class UserAddressService
         return $user->addresses()->get();
     }
 
+
+  public function showAddresses(int $addressId,User $user): UserAddress
+    {
+        return $this->findUserAddressOrFail( $addressId, $user);
+    }
     /**
      * Create new address
      */

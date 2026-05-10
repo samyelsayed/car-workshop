@@ -41,7 +41,7 @@ class ServiceController extends Controller
 
     }
 
-public function show($id)
+public function show(int $id)
     {
         $service = $this->adminService->getServiceById($id);
 

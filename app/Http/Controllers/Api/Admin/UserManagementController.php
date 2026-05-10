@@ -31,7 +31,7 @@ class UserManagementController extends Controller
     }
 
 
-    public function show($id)
+    public function show(int $id)
     {
         $user = $this->userService->getUserById($id);
 
