@@ -2,9 +2,10 @@
 
 namespace App\Services\Admin;
 
+use App\Exceptions\Service\ServiceNotFoundException;
 use App\Models\Service;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 class AdminService
 {
@@ -25,11 +26,10 @@ class AdminService
 {
     $service = $this->getServiceById($id);
 
-    // عكس القيمة الحالية
     $service->update([
         'is_active' => !$service->is_active
     ]);
-
+    $service->refresh();
     return $service;
 }
 
@@ -49,8 +49,8 @@ class AdminService
     {
 
         $service = Service::find($id);
-        if(!$service){
-            throw new \Exception('Service not found');
+       if (!$service) {
+            throw new ServiceNotFoundException();
         }
         return $service;
     }
@@ -58,10 +58,8 @@ class AdminService
 
     public function updateService(int $id, array $data)
     {
-          $service = Service::find($id);
-        if(!$service){
-            throw new \Exception('Service not found');
-        }
+         $service = $this->getServiceById($id);
+
         if(isset($data['image'])){
             $this->deleteOldImage($service->getRawOriginal('image'));
         $data['image'] = $this->uploadImage($data['image']);
@@ -88,7 +86,7 @@ private function uploadImage($image)
 
 
 
-    private function deleteOldImage($imageName)
+    private function deleteOldImage(int $imageName)
     {
        if($imageName && $imageName !=='default.png'){
         $path = public_path('images/services/' . $imageName);
@@ -98,16 +96,18 @@ private function uploadImage($image)
        }
     }
 
+    public function restoreService(int $id): Service
+    {
+        $service = Service::withTrashed()->find($id);
 
-    public function toggleServiceStatus(int $id)
-{
-    $service = $this->getServiceById($id);
+        if (!$service) {
+            throw new ServiceNotFoundException();
+        }
 
-    $service->update([
-        'is_active' => !$service->is_active
-    ]);
-    $service->refresh();
-    return $service;
-}
+        $service->restore();
+
+        return $service->fresh();
+    }
+
 
 }

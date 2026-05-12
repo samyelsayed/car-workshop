@@ -4,6 +4,8 @@ namespace App\Services\Order;
 
 use App\Exceptions\Car\CarNotFoundException;
 use App\Exceptions\Car\CarNotOwnedByUserException;
+use App\Exceptions\Service\ServiceInactiveException;
+use App\Exceptions\Service\ServiceNotFoundException;
 use App\Models\Car;
 use App\Models\Order;
 use App\Models\Service;
@@ -32,6 +34,9 @@ public function getUserOrders(User $user, int $perPage = 10): CursorPaginator
             $car = $this->verifyUserCar($user, $data['car_id']);
             // 1. إنشاء الأوردر الأساسي
             $order = $this->storeOrder($user, $data);
+
+               // 2. Verify services (active + exist)
+            $services = $this->verifyServices($data['service_ids']);
 
             // 2. جلب الخدمات وحساب التكلفة وإنشاء العناصر (اللوجيك الدسم)
             $totalCost = $this->processOrderItems($order, $data['services']);
@@ -135,6 +140,31 @@ private function getOrderById(int $orderId, User $user): Order
         if ($order->status !== 'pending') {
             throw new \Exception('You cannot modify the order after it has started');
         }
+    }
+
+
+
+    /**
+     * Verify services exist and are active
+     */
+    protected function verifyServices(array $serviceIds)
+    {
+        $services = Service::whereIn('id', $serviceIds)->get();
+
+        // Check if all services exist
+        if ($services->count() !== count($serviceIds)) {
+            throw new ServiceNotFoundException('One or more services not found');
+        }
+
+        // Check if all services are active
+        $inactiveServices = $services->where('is_active', false);
+
+        if ($inactiveServices->isNotEmpty()) {
+            $names = $inactiveServices->pluck('name')->join(', ');
+            throw new ServiceInactiveException("The following services are not available: {$names}");
+        }
+
+        return $services;
     }
 
 

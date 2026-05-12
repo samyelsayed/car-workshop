@@ -2,6 +2,7 @@
 
 namespace App\Services\Workshop;
 
+use App\Exceptions\Service\ServiceNotFoundException;
 use App\Models\Service; // الـ Use ثانياً
 use Illuminate\Database\Eloquent\Collection;
 
@@ -29,7 +30,7 @@ public function getActiveServices(?string $searchTerm = null): Collection
 public function findActiveServiceById(int $id){
     $service = Service::active()->find($id);
     if (!$service) {
-        throw new \Exception('Service not found or inactive', 404);
+        throw new ServiceNotFoundException();
     }
     return $service;
 }

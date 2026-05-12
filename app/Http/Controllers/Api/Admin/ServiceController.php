@@ -70,4 +70,11 @@ public function toggleStatus($id)
     return $this->Data(new ServiceResource($service),"Service $statusMessage Successfully",200);
 }
 
+
+public function restore($id)
+{
+    $service = $this->adminService->restoreService($id);
+
+    return $this->Data(new ServiceResource($service), 'Service Restored Successfully', 200);
+
 }
