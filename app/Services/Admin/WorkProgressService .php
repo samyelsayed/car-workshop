@@ -11,18 +11,29 @@ use Illuminate\Support\Facades\DB;
 
 class WorkProgressService
 {
+
+
+
+
     /**
      * Get all work progress stages for an order
      */
     public function getWorkProgressByOrder(int $orderId): Collection
     {
-              $workProgress = WorkProgress::where('order_id', $orderId)->get();
-        if ($workProgress->isEmpty()) {
-        throw new WorkProgressNotFoundException();
+        // Verify order exists
+        $order = Order::find($orderId);
+        
+        if (!$order) {
+            throw new OrderNotFoundException();
+        }
+        
+        // Return stages (can be empty)
+        return WorkProgress::where('order_id', $orderId)
+            ->orderBy('id')
+            ->get();
     }
-        return $workProgress;
+    
 
-    }
 
     /**
      * Create new work progress stage
@@ -71,10 +82,10 @@ class WorkProgressService
 
     }
 
-     public function getWorkProgressById($id):WorkProgress
+     public function getWorkProgressById(int $id):WorkProgress
     { $workProgress =WorkProgress::find($id);
     if(!$workProgress ){
-throw new WorkProgressNotFoundException();
+     throw new WorkProgressNotFoundException();
     }
     return $workProgress;
     }
@@ -113,6 +124,19 @@ throw new WorkProgressNotFoundException();
     }
 
 
+    /**
+     * Delete work progress stage
+     */
+    public function deleteWorkProgress(int $id): void
+    {
+        $workProgress = WorkProgress::find($id);
+        
+        if (!$workProgress) {
+            throw new WorkProgressNotFoundException();
+        }
+        
+        $workProgress->delete();
+    }
 
 
 

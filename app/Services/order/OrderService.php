@@ -2,6 +2,8 @@
 
 namespace App\Services\Order;
 
+use App\Exceptions\Address\AddressNotFoundException;
+use App\Exceptions\Address\AddressNotOwnedByUserException;
 use App\Exceptions\Car\CarNotFoundException;
 use App\Exceptions\Car\CarNotOwnedByUserException;
 use App\Exceptions\Service\ServiceInactiveException;
@@ -35,6 +37,12 @@ public function getUserOrders(User $user, int $perPage = 10): CursorPaginator
             // 1. إنشاء الأوردر الأساسي
             $order = $this->storeOrder($user, $data);
 
+            // 2. التحقق من العنوان في حالة طلب استلام من البيت
+                if ($data['pickup_required'] ?? false) {
+                    // بنبعت id العنوان والـ user نفسه للتأكد
+                    $this->requestHomePickup($data['address_id'], $user);
+                }
+
                // 2. Verify services (active + exist)
             $services = $this->verifyServices($data['service_ids']);
 
@@ -47,6 +55,23 @@ public function getUserOrders(User $user, int $perPage = 10): CursorPaginator
             return $order->load(['items', 'car']);
         });
     }
+
+    protected function requestHomePickup(int $addressId, User $user): Address
+{
+    $address = Address::find($addressId);
+
+    // 1. هل العنوان موجود؟
+    if (!$address) {
+        throw new AddressNotFoundException();
+    }
+
+    // 2. هل العنوان ده فعلاً يخص اليوزر اللي باعت الطلب؟
+    if ($address->user_id !== $user->id) {
+        throw new AddressNotOwnedByUserException();
+    }
+
+   return $address;
+}
 
 
     public function updateOrder(User $user,int $orderId, array $data): Order
@@ -187,5 +212,10 @@ protected function verifyUserCar(User $user, int $carId): Car
 
     return $car;
 }
+
+
+
+
+
 
 }
