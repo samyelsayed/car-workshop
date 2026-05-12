@@ -1,6 +1,8 @@
 <?php
 namespace App\Services\User;
 
+use App\Exceptions\User\UserBlockedException;
+use App\Exceptions\User\UserNotVerifiedException;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
@@ -8,6 +10,18 @@ use Illuminate\Support\Facades\DB;
 class UserProfileService
 {
 
+
+
+    public function checkUserHealth(User $user)
+{
+    if ($user->status === 'blocked') {
+        throw new UserBlockedException();
+    }
+
+    if (!$user->hasVerifiedEmail()) {
+        throw new UserNotVerifiedException();
+    }
+}
     protected $imagePath = 'images/users';
 
 
@@ -15,7 +29,7 @@ class UserProfileService
     {
 
         return DB::transaction(function () use ($user, $data) {
- 
+
         if(isset($data['image'])){
             $this->deleteOldImage($user);
             $data['image']= $this->uploadImage($user,$data);
@@ -27,7 +41,7 @@ class UserProfileService
     }
 
     protected function uploadImage(User $user , array $data){
-        
+
             // رفع الصورة الجديدة
         $image = $data['image'];
         $imageName = time().'.'.$image->getClientOriginalExtension();
@@ -35,14 +49,15 @@ class UserProfileService
 
 
         return $imageName;
-        
+
     }
+
 
 
 
     protected function deleteOldImage(User $user): void{
         $oldImage = $user->getRawOriginal('image');
-        
+
         $fullPath = public_path($this->imagePath.'/'.$oldImage);
         if ($oldImage && file_exists($fullPath) && $oldImage != 'default.png') {
             unlink($fullPath);

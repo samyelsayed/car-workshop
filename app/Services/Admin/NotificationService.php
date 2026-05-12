@@ -3,6 +3,8 @@
 namespace App\Services\Admin;
 
 use App\Exceptions\Inspections\NotificationNotFoundException;
+use App\Exceptions\Order\OrderNotFoundException;
+use App\Exceptions\User\UserNotFoundException;
 use App\Models\Notification;
 use App\Models\Order;
 use App\Models\User;
@@ -15,14 +17,14 @@ class NotificationService
     {
         $user =User::find($data['user_id']);
         if(!$user){
-            //arme el ekseption error
+           throw new UserNotFoundException();
         }
 
 
         if(filled($data['order_id'])){
             $order = Order::find($data['order_id']);
             if(!$order){
-                //arme el ekseption error
+               throw new OrderNotFoundException();
             }
         }
 
@@ -112,4 +114,8 @@ public function getAllNotifications(array $filters, int $perPage = 15): LengthAw
         }
         return $notification->update(['is_read' => true]);
     }
+
+
+
+
 }

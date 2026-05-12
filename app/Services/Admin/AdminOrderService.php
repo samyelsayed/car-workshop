@@ -1,8 +1,9 @@
 <?php
 namespace App\Services\Admin;
 
-use App\Exceptions\Orders\OrderNotFoundException;
-use App\Exceptions\Orders\OrderLockedException;
+use App\Exceptions\Order\OrderAlreadyCompletedException;
+use App\Exceptions\Order\OrderCannotBeModifiedException;
+use App\Exceptions\Order\OrderNotFoundException;
 use App\Models\Order;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
@@ -54,7 +55,7 @@ public function getAllOrders(array $filters, int $perPage = 10): LengthAwarePagi
 }
 
 
-    
+
 
     /**
      * جلب تفاصيل طلب واحد بكل علاقاته
@@ -62,7 +63,7 @@ public function getAllOrders(array $filters, int $perPage = 10): LengthAwarePagi
     public function getOrderDetails(int $id): Order
     {
          $order = Order::with(['user', 'car', 'inspections', 'workProgress', 'orderItems.service'])->find($id);
- 
+
         if (!$order) {
             throw new OrderNotFoundException();
         }
@@ -96,26 +97,29 @@ public function getAllOrders(array $filters, int $perPage = 10): LengthAwarePagi
 
           return $order;
          }
-
-    /**
-     * ميثود مساعدة للتأكد إذا كان الطلب "مغلق" ولا يقبل التعديل
+/**
+     * ميثود مساعدة مطورة للتأكد من حالة الطلب وصلاحية التعديل
      */
-private function getOpenOrder(int $id): Order
-{
-    $order = Order::find($id);
+    private function getOpenOrder(int $id): Order
+    {
+        $order = Order::find($id);
 
-    // 2. إذا لم يوجد، ارمي Exception "عدم الوجود" الخاص بالأوردرات
-    if (!$order) {
-        throw new OrderNotFoundException();
+        // 1. التأكد من الوجود أولاً
+        if (!$order) {
+            throw new OrderNotFoundException();
+        }
+
+        // 2. إذا كان الطلب مكتمل (حالة نجاح نهائية)
+        if ($order->status === 'completed') {
+            throw new OrderAlreadyCompletedException();
+        }
+
+        // 3. إذا كان الطلب ملغي (حالة فشل نهائية تمنع التعديل)
+        if ($order->status === 'cancelled') {
+            throw new OrderCannotBeModifiedException();
+        }
+
+        return $order;
     }
-
-    // 3. التحقق من حالة الطلب (هل هو مغلق؟)
-    if (in_array($order->status, ['completed', 'cancelled'])) {
-        // ارمي Exception "الطلب مغلق" الخاص بالأوردرات
-        throw new OrderLockedException();
-    }
-
-    return $order;
-}
 }
 

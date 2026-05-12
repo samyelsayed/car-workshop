@@ -5,6 +5,7 @@ namespace App\Http\Requests\Api\Auth;
 use App\Http\Traits\MapsCamelCase;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Password;
 
 class LoginRequest extends FormRequest
 {
@@ -27,7 +28,16 @@ class LoginRequest extends FormRequest
                 'email',
                 Rule::exists('users', 'email')
             ],
-            'password' => ['required'],
+            'password' => [
+                'required',
+                'string',
+                'confirmed',
+                Password::min(8)
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols() // يفضل إضافة الرموز لزيادة الأمان
+                    ->uncompromised(), // حماية إضافية ضد التسريبات
+            ],
             'device_name' => ['required', 'string']
         ];
     }

@@ -44,5 +44,10 @@ class CarController extends Controller
 
      }
 
+    public function restore(Request $request , int $id){
+       $car=  $this->adminCarService->restoreCar($id);
+        return $this->Data(new UserResource($car), 'Car restored successfully', 200);
+
+     }
 
 }

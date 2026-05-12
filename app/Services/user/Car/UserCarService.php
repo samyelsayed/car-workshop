@@ -2,8 +2,10 @@
 
 namespace App\Services\User;
 
-use App\Models\User;
+use App\Exceptions\Car\CarNotFoundException;
+use App\Exceptions\Car\CarNotOwnedByUserException;
 use App\Models\Car;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 
 class UserCarService
@@ -60,10 +62,16 @@ public function getCarById(User $user, int $carId): Car
      */
     protected function findUserCarOrFail(int $carId, User $user): Car
     {
-        $car = $user->cars()->find($carId);
+         // 1. Check if car exists
+        $car = Car::find($carId);
 
         if (!$car) {
-            throw new \Exception('Car not found', 404);
+            throw new CarNotFoundException();
+        }
+
+        // 2. Check ownership
+        if ($car->user_id !== $user->id) {
+            throw new CarNotOwnedByUserException();
         }
 
         return $car;

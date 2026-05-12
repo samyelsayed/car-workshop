@@ -2,6 +2,8 @@
 
 namespace App\Services\Auth;
 
+use App\Exceptions\User\UserBlockedException;
+use App\Exceptions\User\UserNotVerifiedException;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
@@ -15,6 +17,9 @@ class LoginService
         // 2. التحقق من البيانات (بترمي Exception لو فيه غلط)
         $this->verifyCredentials($user, $data['password']);
         $this->checkEmailVerification($user);
+        if ($user->blocked_at) {
+            throw new UserBlockedException();
+        }
 
         // 3. توليد التوكن (استخدمنا ميثود خاصة عشان لو حبيت تغير شكل التوكن مستقبلاً)
         $user->token = $this->createDeviceToken($user, $data['deviceName']);
@@ -26,6 +31,7 @@ class LoginService
     {
         // بدل ما نكرر الكود.. بننادي الـ login العادية
         $user = $this->login($data);
+
 
         // وبنزود شرط الأدمن بس
         $this->checkAdminRole($user);
@@ -52,7 +58,7 @@ class LoginService
     protected function checkEmailVerification(User $user): void
     {
         if (is_null($user->email_verified_at)) {
-            throw new \Exception('Your email is not verified. Please verify your email first', 401);
+             throw new UserNotVerifiedException();
         }
     }
 

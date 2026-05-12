@@ -2,11 +2,14 @@
 
 namespace App\Services\Order;
 
+use App\Exceptions\Car\CarNotFoundException;
+use App\Exceptions\Car\CarNotOwnedByUserException;
+use App\Models\Car;
 use App\Models\Order;
-use App\Models\User;
 use App\Models\Service;
+use App\Models\User;
+use Illuminate\Pagination\CursorPaginator;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 class OrderService
 {
@@ -25,6 +28,8 @@ public function getUserOrders(User $user, int $perPage = 10): CursorPaginator
     public function createOrder(User $user, array $data): Order
     {
         return DB::transaction(function () use ($user, $data) {
+
+            $car = $this->verifyUserCar($user, $data['car_id']);
             // 1. إنشاء الأوردر الأساسي
             $order = $this->storeOrder($user, $data);
 
@@ -39,8 +44,9 @@ public function getUserOrders(User $user, int $perPage = 10): CursorPaginator
     }
 
 
-    public function updateOrder(User $user, $orderId, array $data): Order
+    public function updateOrder(User $user,int $orderId, array $data): Order
     {
+       $car = $this->verifyUserCar($user, $data['car_id']);
         // 1. التأكد أن الأوردر قابل للتعديل (Pending)
         $order = $this->getOrderById($orderId, $user);
         $this->ensureOrderIsPending($order);
@@ -130,5 +136,26 @@ private function getOrderById(int $orderId, User $user): Order
             throw new \Exception('You cannot modify the order after it has started');
         }
     }
+
+
+
+
+/**
+ * Verify car exists and owned by user
+ */
+protected function verifyUserCar(User $user, int $carId): Car
+{
+    $car = Car::find($carId);
+
+    if (!$car) {
+        throw new CarNotFoundException();
+    }
+
+    if ($car->user_id !== $user->id) {
+        throw new CarNotOwnedByUserException();
+    }
+
+    return $car;
+}
 
 }

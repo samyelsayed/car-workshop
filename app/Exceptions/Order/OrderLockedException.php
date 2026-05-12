@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Exceptions\Orders;
+namespace App\Exceptions\Order;
 
 use App\Exceptions\BaseException;
 

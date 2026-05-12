@@ -1,6 +1,7 @@
 <?php
 namespace App\Services\Admin;
 
+use App\Exceptions\Car\CarNotFoundException;
 use App\Models\Car;
 
 class AdminCarService
@@ -39,12 +40,12 @@ public function getAllCars(array $filters, $search, int $perPage = 10)
 
 public function getCarById(int $id)
     {
-              $car =Car::withTrashed()
-                ->with(['user','orders'=> function ($query) {$query->latest();}])->find($id);
-                if (!$car) {
-                    throw new \Exception('Car not found');
-                }
-                return $car;
+        $car =Car::withTrashed()
+        ->with(['user','orders'=> function ($query) {$query->latest();}])->find($id);
+        if (!$car) {
+        throw new CarNotFoundException();
+        }
+            return $car;
 
     }
 
@@ -54,8 +55,25 @@ public function getCarById(int $id)
     {
     $car = Car::find($id);
         if (!$car) {
-            throw new \Exception('Car not found');
+            throw new CarNotFoundException();
         }
       $car->delete();
+    }
+
+
+        /**
+     * Restore deleted car
+     */
+    public function restoreCar(int $id): Car
+    {
+        $car = Car::withTrashed()->find($id);
+
+        if (!$car) {
+            throw new CarNotFoundException();
+        }
+
+        $car->restore();
+
+        return $car->fresh();
     }
 }

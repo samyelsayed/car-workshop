@@ -2,8 +2,9 @@
 
 namespace App\Services\Admin;
 
+use App\Exceptions\User\UserBlockedException;
+use App\Exceptions\User\UserNotFoundException;
 use App\Models\User;
-use App\Exceptions\Users\UserNotFoundException;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class AdminUserService
@@ -107,10 +108,44 @@ public function getAllUsers(array $filters, int $perPage = 10): LengthAwarePagin
     public function toggleUserBlock(int $id): User
     {
         $user = $this->getUserById($id);
-        
+
         $user->is_blocked = !$user->is_blocked;
         $user->save();
 
         return $user->fresh();
     }
+
+    public function blockUser(int $id): User
+{
+    $user = User::findOrFail($id);
+
+    // Already blocked?
+    if ($user->blocked_at) {
+        throw new UserBlockedException();
+    }
+
+    $user->blocked_at = now();
+    $user->save();
+
+    // Revoke all tokens
+    $user->tokens()->delete();
+
+    return $user;
+}
+
+
+public function unblockUser(int $id): User
+{
+    $user = User::findOrFail($id);
+
+    // Not blocked?
+    if (!$user->blocked_at) {
+        throw new UserBlockedException('User is not blocked');
+    }
+
+    $user->blocked_at = null;
+    $user->save();
+
+    return $user;
+}
 }
