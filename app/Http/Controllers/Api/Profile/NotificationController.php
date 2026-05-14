@@ -59,7 +59,7 @@ class NotificationController extends Controller
     }
 
     /**
-     * Mark all as read
+     * Mark all notifications as read
      */
     public function markAllAsRead(Request $request): JsonResponse
     {
@@ -76,5 +76,18 @@ class NotificationController extends Controller
         $this->notificationService->deleteUserNotification($request->user(), $id);
 
         return $this->successMessage('Notification deleted successfully');
+    }
+
+    /**
+     * Delete all read notifications
+     */
+    public function deleteAllRead(Request $request): JsonResponse
+    {
+        $count = $this->notificationService->deleteAllRead($request->user());
+
+        return $this->data(
+            ['deleted_count' => $count],
+            "{$count} notifications deleted successfully"
+        );
     }
 }
