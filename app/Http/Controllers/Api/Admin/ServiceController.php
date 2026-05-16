@@ -17,7 +17,7 @@ class ServiceController extends Controller
 {
     use ApiTrait;
 
-    protected $adminService;
+    protected AdminService $adminService;
 
     public function __construct(AdminService $adminService)
     {
@@ -77,4 +77,5 @@ public function restore($id)
 
     return $this->Data(new ServiceResource($service), 'Service Restored Successfully', 200);
 
+}
 }

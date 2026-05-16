@@ -1,0 +1,58 @@
+<?php
+
+return [
+    // Auth
+    'user_registered' => 'تم التسجيل بنجاح',
+    'login_successful' => 'تم تسجيل الدخول بنجاح',
+    'logout_successful' => 'تم تسجيل الخروج بنجاح',
+    'password_changed' => 'تم تغيير كلمة المرور بنجاح',
+    'password_reset' => 'تم إعادة تعيين كلمة المرور بنجاح',
+    'email_verified' => 'تم التحقق من البريد الإلكتروني بنجاح',
+    'verification_code_sent' => 'تم إرسال رمز التحقق إلى بريدك الإلكتروني',
+
+    // User Profile
+    'profile_updated' => 'تم تحديث الملف الشخصي بنجاح',
+    'address_added' => 'تم إضافة العنوان بنجاح',
+    'address_updated' => 'تم تحديث العنوان بنجاح',
+    'address_deleted' => 'تم حذف العنوان بنجاح',
+    'phone_added' => 'تم إضافة رقم الهاتف بنجاح',
+    'phone_deleted' => 'تم حذف رقم الهاتف بنجاح',
+
+    // Cars
+    'car_added' => 'تم إضافة السيارة بنجاح',
+    'car_updated' => 'تم تحديث بيانات السيارة بنجاح',
+    'car_deleted' => 'تم حذف السيارة بنجاح',
+    'cars_retrieved' => 'تم جلب السيارات بنجاح',
+
+    // Orders
+    'order_created' => 'تم إنشاء الطلب بنجاح',
+    'order_updated' => 'تم تحديث الطلب بنجاح',
+    'order_cancelled' => 'تم إلغاء الطلب بنجاح',
+    'orders_retrieved' => 'تم جلب الطلبات بنجاح',
+
+    // Services
+    'service_created' => 'تم إضافة الخدمة بنجاح',
+    'service_updated' => 'تم تحديث الخدمة بنجاح',
+    'service_deleted' => 'تم حذف الخدمة بنجاح',
+    'services_retrieved' => 'تم جلب الخدمات بنجاح',
+
+    // Notifications
+    'notification_sent' => 'تم إرسال الإشعار بنجاح',
+    'notification_deleted' => 'تم حذف الإشعار بنجاح',
+    'notification_marked_read' => 'تم وضع علامة مقروء على الإشعار',
+    'all_notifications_marked_read' => 'تم وضع علامة مقروء على جميع الإشعارات',
+
+    // Inspections
+    'inspection_created' => 'تم إنشاء الفحص بنجاح',
+    'inspection_updated' => 'تم تحديث الفحص بنجاح',
+    'inspection_deleted' => 'تم حذف الفحص بنجاح',
+
+    // Work Progress
+    'work_progress_created' => 'تم إنشاء مرحلة العمل بنجاح',
+    'work_progress_updated' => 'تم تحديث مرحلة العمل بنجاح',
+    'work_progress_completed' => 'تم إكمال مرحلة العمل بنجاح',
+
+    // Generic
+    'data_retrieved' => 'تم جلب البيانات بنجاح',
+    'operation_successful' => 'تمت العملية بنجاح',
+];

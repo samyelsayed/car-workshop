@@ -11,10 +11,15 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
-    ->withMiddleware(function (Middleware $middleware): void {
+    ->withMiddleware(function (Middleware $middleware) {
+        // 1. تعريف الـ Aliases
         $middleware->alias([
-    'isAdmin' => \App\Http\Middleware\IsAdmin::class,
-]);
+            'isAdmin' => \App\Http\Middleware\IsAdmin::class,
+        ]);
+
+        // 2. إضافة ميدل وير اللغة في بداية الـ Stack
+        // استخدمنا prepend عشان نضمن إن اللغة تتحدد "قبل" أي عملية تانية
+        $middleware->prepend(\App\Http\Middleware\LocaleMiddleware::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
