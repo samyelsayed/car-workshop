@@ -2,6 +2,8 @@
 
 namespace App\Services\User;
 
+use App\Exceptions\Notification\NotificationNotFoundException;
+use App\Exceptions\Notification\NotificationNotOwnedByUserException;
 use App\Models\User;
 use App\Models\Notification;
 use Illuminate\Database\Eloquent\Collection;
@@ -9,7 +11,7 @@ use Illuminate\Database\Eloquent\Collection;
 class NotificationService
 {
     /**
-     * Get user notifications (latest 50 without pagination)
+     * Get user notifications (latest 50)
      */
     public function getUserNotifications(User $user, int $limit = 50): Collection
     {
@@ -20,7 +22,7 @@ class NotificationService
     }
 
     /**
-     * Get unread count
+     * Get unread notifications count
      */
     public function getUnreadCount(User $user): int
     {
@@ -34,8 +36,8 @@ class NotificationService
      */
     public function markAsRead(User $user, int $notificationId): void
     {
-        $notification = $user->notifications()->findOrFail($notificationId);
-
+        $notification = $this->findUserNotificationOrFail($notificationId, $user);
+        
         $notification->update(['is_read' => true]);
     }
 
@@ -54,8 +56,38 @@ class NotificationService
      */
     public function deleteUserNotification(User $user, int $notificationId): void
     {
-        $notification = $user->notifications()->findOrFail($notificationId);
-
+        $notification = $this->findUserNotificationOrFail($notificationId, $user);
+        
         $notification->delete();
+    }
+
+    /**
+     * Delete all read notifications
+     */
+    public function deleteAllRead(User $user): int
+    {
+        return $user->notifications()
+            ->where('is_read', true)
+            ->delete();
+    }
+
+    /**
+     * Find user notification or fail
+     */
+    protected function findUserNotificationOrFail(int $notificationId, User $user): Notification
+    {
+        // 1. Check if notification exists
+        $notification = Notification::find($notificationId);
+
+        if (!$notification) {
+            throw new NotificationNotFoundException();
+        }
+
+        // 2. Check ownership
+        if ($notification->user_id !== $user->id) {
+            throw new NotificationNotOwnedByUserException();
+        }
+
+        return $notification;
     }
 }
