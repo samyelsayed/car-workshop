@@ -54,7 +54,7 @@ class RegisterController extends Controller
 {
     use ApiTrait;
 
-    protected $registerService;
+    protected RegisterService $registerService;
 
     public function __construct(RegisterService $registerService)
     {
@@ -70,7 +70,7 @@ class RegisterController extends Controller
 
         return $this->Data(
             new UserResource($user),
-            'User registered successfully'
+            __('messages.register_success')
         );
     }
 }

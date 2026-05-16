@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
-
 use App\Http\Requests\Api\Admin\Notification\BroadcastNotificationRequest;
 use App\Http\Requests\Api\Admin\Notification\SendNotificationRequest;
 use App\Http\Resources\Admin\NotificationResource;
@@ -24,7 +23,7 @@ class NotificationController extends Controller
     {
         $notification = $this->notificationService->sendNotificationToUser($request->validated());
         
-        return $this->Data(new NotificationResource($notification), 'Notification sent to user successfully', 201);
+        return $this->Data(new NotificationResource($notification), __('messages.notification_sent'), 201);
     }
 
     /**
@@ -34,7 +33,7 @@ class NotificationController extends Controller
     {
         $this->notificationService->broadcastNotification($request->validated());
         
-        return $this->SuccessMessage('Broadcast notification initiated successfully');
+        return $this->SuccessMessage(__('messages.notification_broadcast_initiated'));
     }
 
     /**
@@ -47,7 +46,7 @@ class NotificationController extends Controller
         
         return $this->Data(
             NotificationResource::collection($notifications)->response()->getData(true),
-            'Your notifications retrieved successfully'
+            __('messages.notifications_retrieved')
         );
     }
 
@@ -58,7 +57,7 @@ class NotificationController extends Controller
     {
         $this->notificationService->markAsRead($id);
         
-        return $this->SuccessMessage('Notification marked as read');
+        return $this->SuccessMessage(__('messages.notification_marked_as_read'));
     }
 
     /**
@@ -68,6 +67,6 @@ class NotificationController extends Controller
     {
         $this->notificationService->deleteNotification($id);
         
-        return $this->SuccessMessage('Notification deleted successfully');
+        return $this->SuccessMessage(__('messages.notification_deleted'));
     }
 }

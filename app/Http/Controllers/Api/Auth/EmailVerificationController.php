@@ -7,7 +7,6 @@ use App\Http\Requests\Api\Auth\SendOtpRequest;
 use App\Http\Requests\Api\Auth\VerifyCodeRequest;
 use App\Http\Resources\Api\Auth\AuthResource;
 use App\Http\Traits\ApiTrait;
-use App\Notifications\SendOtpNotification;
 use App\Services\Auth\EmailVerificationService;
 
 class EmailVerificationController extends Controller
@@ -18,38 +17,31 @@ class EmailVerificationController extends Controller
 
     public function __construct(EmailVerificationService $emailVerificationService)
     {
-        // تأكد من تطابق اسم المتغير تماماً
         $this->emailVerificationService = $emailVerificationService;
     }
 
     public function sendCode(SendOtpRequest $request)
     {
-        // لازم تنادي السيرفس الأول
         $this->emailVerificationService->sendOtpFlow($request->validated());
 
-        return $this->SuccessMessage('OTP sent successfully to your email');
+        return $this->SuccessMessage(__('messages.otp_sent'));
     }
 
-
-
-        public function checkCode(VerifyCodeRequest $request)
+    public function checkCode(VerifyCodeRequest $request)
     {
-        // نداء السيرفس كالعادة
         $result = $this->emailVerificationService->verifyOtpFlow($request->validated(), $request->code);
 
-        // بنمرر الـ result للريسورس قبل ما نبعته للـ Data method
         return $this->Data(
             new AuthResource($result), 
-            'Code verified successfully. Your email is now verified.'
+            __('messages.otp_verified')
         );
     }
 
     public function reSendCode(SendOtpRequest $request)
     {
-        // نداء السيرفس لإعادة الإرسال
         $this->emailVerificationService->resendOtpFlow($request->validated());
 
-        return $this->SuccessMessage('OTP re-sent successfully to your email');
+        return $this->SuccessMessage(__('messages.otp_resent'));
     }
 }
 

@@ -27,9 +27,9 @@ class UpdatePasswordController extends Controller
             $request->validated()
         );
 
-        return $this->data([
+        return $this->Data([
             'user' => new UserResource($request->user()->fresh()),
             'token' => $token
-        ], 'Password changed successfully');
+        ], __('messages.password_updated'));
     }
 }

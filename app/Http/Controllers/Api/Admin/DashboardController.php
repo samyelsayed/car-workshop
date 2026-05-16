@@ -20,6 +20,6 @@ class DashboardController extends Controller
     {
         $stats = $this->dashboardService->getDashboardStats();
 
-        return $this->Data($stats, 'Dashboard statistics retrieved successfully');
+        return $this->Data($stats, __('messages.dashboard_stats_retrieved'));
     }
 }

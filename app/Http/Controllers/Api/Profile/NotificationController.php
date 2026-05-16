@@ -29,9 +29,9 @@ class NotificationController extends Controller
             $request->user()
         );
 
-        return $this->data(
+        return $this->Data(
             ['notifications' => NotificationResource::collection($notifications)],
-            'Notifications retrieved successfully'
+            __('messages.notifications_retrieved')
         );
     }
 
@@ -42,9 +42,9 @@ class NotificationController extends Controller
     {
         $count = $this->notificationService->getUnreadCount($request->user());
 
-        return $this->data(
+        return $this->Data(
             ['unread_count' => $count],
-            'Unread count retrieved successfully'
+            __('messages.unread_count_retrieved')
         );
     }
 
@@ -55,7 +55,7 @@ class NotificationController extends Controller
     {
         $this->notificationService->markAsRead($request->user(), $id);
 
-        return $this->successMessage('Notification marked as read');
+        return $this->successMessage(__('messages.notification_marked_as_read'));
     }
 
     /**
@@ -65,7 +65,7 @@ class NotificationController extends Controller
     {
         $this->notificationService->markAllAsRead($request->user());
 
-        return $this->successMessage('All notifications marked as read');
+        return $this->successMessage(__('messages.all_notifications_marked_as_read'));
     }
 
     /**
@@ -75,7 +75,7 @@ class NotificationController extends Controller
     {
         $this->notificationService->deleteUserNotification($request->user(), $id);
 
-        return $this->successMessage('Notification deleted successfully');
+        return $this->successMessage(__('messages.notification_deleted'));
     }
 
     /**
@@ -85,9 +85,9 @@ class NotificationController extends Controller
     {
         $count = $this->notificationService->deleteAllRead($request->user());
 
-        return $this->data(
+        return $this->Data(
             ['deleted_count' => $count],
-            "{$count} notifications deleted successfully"
+            __('messages.all_read_notifications_deleted', ['count' => $count])
         );
     }
 }

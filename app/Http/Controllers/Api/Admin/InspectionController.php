@@ -14,48 +14,42 @@ class InspectionController extends Controller
 {
     use ApiTrait;
 
-        protected $inspectionService;
+    protected $inspectionService;
 
-        public function __construct(InspectionService $inspectionService)
-        {
-            $this->inspectionService = $inspectionService;
-        }
+    public function __construct(InspectionService $inspectionService)
+    {
+        $this->inspectionService = $inspectionService;
+    }
 
+    public function index(int $orderId)
+    {
+        $inspections = $this->inspectionService->getInspectionsByOrder($orderId);
 
-            public function index(int $orderId)
-        {
-            $inspections = $this->inspectionService->getInspectionsByOrder($orderId);
+        // بنحولها للـ Resource عشان تترتب وتتنسق
+        return $this->Data(AdminInspectionResource::collection($inspections), __('messages.inspections_retrieved'));
+    }
 
-            // بنحولها للـ Resource عشان تترتب وتتنسق
-            return $this->Data(AdminInspectionResource::collection($inspections),'Inspections retrieved successfully');
-        }
+    public function store(CreateInspectionRequest $request)
+    {
+        $inspection = $this->inspectionService->createInspection($request->validated());
+        return $this->Data(new AdminInspectionResource($inspection), __('messages.inspection_created'), 201);
+    }
 
+    public function show(int $id)
+    {
+        $inspection = $this->inspectionService->findInspectionById($id);
+        return $this->Data(new AdminInspectionResource($inspection), __('messages.inspection_retrieved'));
+    }
 
-            public function store(CreateInspectionRequest $request)
-        {
-            $inspection= $this->inspectionService->createInspection($request->validated());
-            return $this->Data(new AdminInspectionResource($inspection), 'Inspection created successfully', 201);
+    public function update(UpdateInspectionRequest $request, int $id)
+    {
+        $inspection = $this->inspectionService->updateInspection($id, $request->validated());
+        return $this->Data(new AdminInspectionResource($inspection), __('messages.inspection_updated'), 200);
+    }
 
-        }
-
-            public function show(int $id)
-        {
-            $inspection = $this->inspectionService->findInspectionById($id);
-            return $this->Data(new AdminInspectionResource($inspection), 'Inspection retrieved successfully');
-        }
-
-            public function update(UpdateInspectionRequest $request, int $id)
-        {
-            $inspection= $this->inspectionService->updateInspection($id,$request->validated());
-                return $this->Data(new AdminInspectionResource($inspection), 'Inspection updated successfully', 200);
-
-        }
-
-            public function destroy(int $id)
-        {
-            $this->inspectionService->deleteInspection($id);
-
-            return $this->successMessage('Inspection deleted successfully');
-        }
-
+    public function destroy(int $id)
+    {
+        $this->inspectionService->deleteInspection($id);
+        return $this->successMessage(__('messages.inspection_deleted'));
+    }
 }

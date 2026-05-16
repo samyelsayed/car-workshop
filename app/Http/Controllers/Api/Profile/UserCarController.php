@@ -29,24 +29,24 @@ class UserCarController extends Controller
     {
         $cars = $this->carService->getUserCars($request->user());
 
-        return $this->data(
+        return $this->Data(
             ['cars' => UserCarResource::collection($cars)],
-            'Cars retrieved successfully'
+            __('messages.cars_retrieved')
         );
     }
 
-      /**
+    /**
      * Show car
      */
-        public function show(int $id,Request $request): JsonResponse
-        {
-            $car = $this->carService->getCarById($request->user(), $id);
+    public function show(int $id, Request $request): JsonResponse
+    {
+        $car = $this->carService->getCarById($request->user(), $id);
 
-            return $this->data(
-                ['car' => new UserCarResource($car)],
-                'Car details retrieved successfully'
-            );
-
+        return $this->Data(
+            ['car' => new UserCarResource($car)],
+            __('messages.car_details_retrieved')
+        );
+    } // القوس ده كان ناقص وظبطناه هنا
 
     /**
      * Create new car
@@ -58,9 +58,9 @@ class UserCarController extends Controller
             $request->validated()
         );
 
-        return $this->data(
+        return $this->Data(
             ['car' => new UserCarResource($car)],
-            'Car added successfully',
+            __('messages.car_created'),
             201
         );
     }
@@ -76,9 +76,9 @@ class UserCarController extends Controller
             $request->validated()
         );
 
-        return $this->data(
+        return $this->Data(
             ['car' => new UserCarResource($car)],
-            'Car updated successfully'
+            __('messages.car_updated')
         );
     }
 
@@ -89,6 +89,6 @@ class UserCarController extends Controller
     {
         $this->carService->deleteCar($request->user(), $id);
 
-        return $this->successMessage('Car deleted successfully');
+        return $this->successMessage(__('messages.car_deleted'));
     }
 }

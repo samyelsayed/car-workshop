@@ -24,58 +24,56 @@ class ServiceController extends Controller
         $this->adminService = $adminService;
     }
 
-
-    public function index(Request $request){
-
-    $services =$this->adminService->getAllServices($request->all());
-      $resourceCollection = ServiceResource::collection($services);
-      return $this->Data($resourceCollection, 'Services retrieved successfully', 200);
+    public function index(Request $request)
+    {
+        $services = $this->adminService->getAllServices($request->all());
+        $resourceCollection = ServiceResource::collection($services);
+        
+        return $this->Data($resourceCollection, __('messages.services_retrieved'), 200);
     }
 
+    public function store(ServiceRequest $request)
+    {
+        $service = $this->adminService->storeService($request->validated());
 
-    public function store(ServiceRequest $request){
-
-    $service = $this->adminService->storeService($request->validated());
-
-        return $this->Data(new ServiceResource($service), 'Service Added Successfully', 201);
-
+        return $this->Data(new ServiceResource($service), __('messages.service_created'), 201);
     }
 
-public function show(int $id)
+    public function show(int $id)
     {
         $service = $this->adminService->getServiceById($id);
 
-        return $this->Data(new ServiceResource($service), 'Service details retrieved successfully', 200);
+        return $this->Data(new ServiceResource($service), __('messages.service_details_retrieved'), 200);
     }
 
-      public function update(UpdateServiceRequest $request, $id){
-
+    public function update(UpdateServiceRequest $request, $id)
+    {
         $service = $this->adminService->updateService($id, $request->validated());
-        return $this->Data(new ServiceResource($service), 'Service Updated Successfully', 200);
+        
+        return $this->Data(new ServiceResource($service), __('messages.service_updated'), 200);
     }
 
- public function destroy($id){
+    public function destroy($id)
+    {
+        $this->adminService->deleteService($id);
+        
+        return $this->SuccessMessage(__('messages.service_deleted'), 200);
+    }
 
-           $this->adminService->deleteService($id);
-        return $this->SuccessMessage('Service Deleted Successfully', 200);
-}
+    public function toggleStatus($id)
+    {
+        $service = $this->adminService->toggleServiceStatus($id);
 
+        // ربط ديناميكي بالـ Key المناسب بناءً على حالة الـ active
+        $key = 'messages.service_' . ($service->is_active ? 'activated' : 'deactivated');
 
-public function toggleStatus($id)
-{
-    $service = $this->adminService->toggleServiceStatus($id);
+        return $this->Data(new ServiceResource($service), __($key), 200);
+    }
 
-    $statusMessage = $service->is_active ? 'Activated' : 'Deactivated';
+    public function restore($id)
+    {
+        $service = $this->adminService->restoreService($id);
 
-    return $this->Data(new ServiceResource($service),"Service $statusMessage Successfully",200);
-}
-
-
-public function restore($id)
-{
-    $service = $this->adminService->restoreService($id);
-
-    return $this->Data(new ServiceResource($service), 'Service Restored Successfully', 200);
-
-}
+        return $this->Data(new ServiceResource($service), __('messages.service_restored'), 200);
+    }
 }

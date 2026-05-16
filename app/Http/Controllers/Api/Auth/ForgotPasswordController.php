@@ -80,13 +80,15 @@
 
 // }
 
+
+
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Auth\ResetPasswordRequest;
 use App\Http\Requests\Api\Auth\SendOtpRequest;
 use App\Http\Requests\Api\Auth\VerifyCodeRequest;
-use App\Http\Resources\Api\Auth\AuthResource; // نستخدم الريسورس الموحد
+use App\Http\Resources\Api\Auth\AuthResource;
 use App\Http\Resources\UserResource;
 use App\Http\Traits\ApiTrait;
 use App\Services\Auth\ForgotPasswordService;
@@ -99,33 +101,30 @@ class ForgotPasswordController extends Controller
 
     public function __construct(ForgotPasswordService $forgotPasswordService)
     {
-        // تصليح اسم المتغير ليتطابق مع التعريف فوق
         $this->forgotPasswordService = $forgotPasswordService;
     }
 
     public function sendCode(SendOtpRequest $request)
     {
         $this->forgotPasswordService->sendOtpFlow($request->validated());
-        return $this->SuccessMessage('OTP sent successfully to your email');
+        
+        return $this->SuccessMessage(__('messages.otp_sent'));
     }
 
     public function checkCode(VerifyCodeRequest $request)
     {
         $result = $this->forgotPasswordService->verifyOtpFlow($request->validated(), $request->code);
 
-        // تطبيق النقطة رقم 2: استخدام Resource بدل الـ Array
         return $this->Data(
             new AuthResource($result), 
-            'Code verified successfully. Use this token to reset your password.'
+            __('messages.otp_verified')
         );
     }
 
     public function resetPassword(ResetPasswordRequest $request)
     {
-        // نبعت الداتا للسيرفس ونستقبل اليوزر اللي تم تحديث باسورده
         $user = $this->forgotPasswordService->resetPasswordFlow($request->validated());
 
-        // نرجعه في UserResource عشان نحافظ على توحيد الردود
-        return $this->Data(new UserResource($user), 'Password reset successfully');
+        return $this->Data(new UserResource($user), __('messages.password_reset'));
     }
 }

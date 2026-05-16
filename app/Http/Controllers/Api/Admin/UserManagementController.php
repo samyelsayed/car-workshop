@@ -14,10 +14,7 @@ class UserManagementController extends Controller
     use ApiTrait;
 
     // حقن السيرفس في الكنترولر عشان نستخدمها في كل الميثودز
-    public function __construct(protected AdminUserService $userService) {
-
-    }
-
+    public function __construct(protected AdminUserService $userService) {}
 
     public function index(Request $request)
     {
@@ -26,48 +23,45 @@ class UserManagementController extends Controller
 
         return $this->Data(
             AdminUserResource::collection($users)->resource,
-            'Users retrieved successfully'
+            __('messages.users_retrieved')
         );
     }
-
 
     public function show(int $id)
     {
         $user = $this->userService->getUserById($id);
 
-        return $this->Data(new AdminUserResource($user), 'User details retrieved successfully');
+        return $this->Data(new AdminUserResource($user), __('messages.user_details_retrieved'));
     }
 
     public function update(AdminUpdateUserRequest $request, $id)
     {
         $user = $this->userService->updateUser($id, $request->validated());
 
-        return $this->SuccessMessage('User updated successfully', 200);
+        return $this->SuccessMessage(__('messages.user_updated'), 200);
     }
-
 
     public function destroy($id)
     {
         $this->userService->deleteUser($id);
 
-        return $this->SuccessMessage('User deleted successfully', 200);
+        return $this->SuccessMessage(__('messages.user_deleted'), 200);
     }
-
 
     public function Restore($id)
     {
         $this->userService->restoreUser($id);
 
-        return $this->SuccessMessage('User restored successfully', 200);
+        return $this->SuccessMessage(__('messages.user_restored'), 200);
     }
-
 
     public function toggleBlock($id)
     {
         $user = $this->userService->toggleUserBlock($id);
 
-        $message = $user->is_blocked ? 'User blocked successfully' : 'User unblocked successfully';
+        // ربط ديناميكي بالـ Key المناسب بناءً على حالة الحظر
+        $key = 'messages.user_' . ($user->is_blocked ? 'blocked' : 'unblocked');
 
-        return $this->SuccessMessage($message, 200);
+        return $this->SuccessMessage(__($key), 200);
     }
 }

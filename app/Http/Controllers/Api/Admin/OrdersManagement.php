@@ -1,7 +1,5 @@
 <?php
 
-
-
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
@@ -29,7 +27,7 @@ class OrdersManagement extends Controller
 
         return $this->Data(
             OrderResource::collection($orders)->response()->getData(true),
-            'Orders retrieved successfully'
+            __('messages.orders_retrieved')
         ); 
     }
 
@@ -37,32 +35,27 @@ class OrdersManagement extends Controller
     {
         $order = $this->orderService->getOrderDetails($id);
 
-        return $this->Data(new OrderDetailsResource($order), 'Order details retrieved successfully');
+        return $this->Data(new OrderDetailsResource($order), __('messages.order_details_retrieved'));
     }
 
+    // public function assignOrder(Request $request, int $id)
+    // {
+    //     $order = $this->orderService->assignOrderToTechnician($id, $request->technician_id);
 
-    public function assignOrder(Request $request, int $id)
-    {
-        $order = $this->orderService->assignOrderToTechnician($id, $request->technician_id);
+    //     return $this->Data(new OrderDetailsResource($order), __('messages.order_assigned'));
+    // }
 
-        return $this->Data(new OrderDetailsResource($order), 'Order assigned successfully');
-    }
-
-public function updateStatus(UpdateStatusRequest $request,int $id)
+    public function updateStatus(UpdateStatusRequest $request, int $id)
     {
         $order = $this->orderService->updateOrderStatus($id, $request->status);
 
-        return $this->Data(new OrderDetailsResource($order), 'Order status updated successfully');
+        return $this->Data(new OrderDetailsResource($order), __('messages.order_status_updated'));
     }
 
-
-
-public function cancelOrder(int $id)
+    public function cancelOrder(int $id)
     {
         $order = $this->orderService->cancelOrder($id);
 
-        return $this->Data(new OrderDetailsResource($order), 'Order canceled successfully');
+        return $this->Data(new OrderDetailsResource($order), __('messages.order_canceled'));
     }
-
-
-    }
+}

@@ -16,37 +16,35 @@ class WorkProgressController extends Controller
 
     public function __construct(protected WorkProgressService $workProgressService ){}
 
-    public function index(int $orderId){
+    public function index(int $orderId)
+    {
         $stages = $this->workProgressService->getWorkProgressByOrder($orderId);
-        return $this->Data(WorkProgressResource::collection($stages));
+        
+        // ضفنا رسالة النجاح المترجمة هنا عشان توحيد شكل الريسبونس
+        return $this->Data(WorkProgressResource::collection($stages), __('messages.work_stages_retrieved'));
     }
-
-
 
     public function store(CreateWorkProgressRequest $request)
     {
         $stage = $this->workProgressService->createWorkProgress($request->validated());
-        return $this->Data(new WorkProgressResource($stage), 'Work stage created successfully', 201);
+        return $this->Data(new WorkProgressResource($stage), __('messages.work_stage_created'), 201);
     }
-
 
     public function show(int $id)
     {
         $stage = $this->workProgressService->getWorkProgressById($id);
-        return $this->Data(new WorkProgressResource($stage), 'Work stage details retrieved');
+        return $this->Data(new WorkProgressResource($stage), __('messages.work_stage_details_retrieved'));
     }
 
     public function update(UpdateWorkProgressRequest $request, int $id)
     {
         $stage = $this->workProgressService->updateWorkProgress($id, $request->validated());
-        return $this->Data(new WorkProgressResource($stage), 'Work stage updated successfully');
+        return $this->Data(new WorkProgressResource($stage), __('messages.work_stage_updated'));
     }
-
 
     public function complete(int $id)
     {
         $stage = $this->workProgressService->completeWorkProgress($id);
-        return $this->Data(new WorkProgressResource($stage), 'Work stage marked as completed');
+        return $this->Data(new WorkProgressResource($stage), __('messages.work_stage_completed'));
     }
-
 }

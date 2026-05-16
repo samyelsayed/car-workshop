@@ -19,35 +19,30 @@ class CarController extends Controller
     {
         $this->adminCarService = $adminCarService;
     }
-    public function index(Request $request){
 
-     $cars =$this->adminCarService->getAllCars($request->all());
-     $carsData= UserResource::collection($cars)->response()->getData(true);
+    public function index(Request $request)
+    {
+        $cars = $this->adminCarService->getAllCars($request->all());
+        $carsData = UserResource::collection($cars)->response()->getData(true);
 
-     return $this->Data($carsData,'cars retrieved successfully',200);
+        return $this->Data($carsData, __('messages.cars_retrieved'), 200);
+    }
 
-     }
+    public function show(int $id)
+    {
+        $car = $this->adminCarService->getCarById($id);
+        return $this->Data(new UserResource($car), __('messages.car_details_retrieved'), 200); // تعديل الـ Status Code لـ 200 لأنه عرض بيانات مش إنشاء
+    }
 
-
-
-
-     public function show(int $id){
-      $car = $this->adminCarService->getCarById($id);
-       return $this->Data( new UserResource($car), 'Car details retrieved successfully', 201);
-     }
-
-
-    public function destroy(Request $request , int $id){
+    public function destroy(Request $request, int $id)
+    {
         $this->adminCarService->deleteCar($id);
+        return $this->SuccessMessage(__('messages.car_deleted'));
+    }
 
-        return $this->SuccessMessage('Car deleted successfully');
-
-     }
-
-    public function restore(Request $request , int $id){
-       $car=  $this->adminCarService->restoreCar($id);
-        return $this->Data(new UserResource($car), 'Car restored successfully', 200);
-
-     }
-
+    public function restore(Request $request, int $id)
+    {
+        $car = $this->adminCarService->restoreCar($id);
+        return $this->Data(new UserResource($car), __('messages.car_restored'), 200);
+    }
 }

@@ -134,40 +134,45 @@ class LoginController extends Controller
 {
     use ApiTrait;
 
+   class LoginController extends Controller
+{
+    use ApiTrait;
+
     protected LoginService $loginService;
+
     public function __construct(LoginService $loginService)
-        {
-            $this->loginService = $loginService;
-        }
+    {
+        $this->loginService = $loginService;
+    }
 
-    public function login(loginRequest $request)
-        {
-            $user = $this->loginService->login($request->validated());
+    public function login(LoginRequest $request)
+    {
+        $user = $this->loginService->login($request->validated());
 
-            return $this->Data(new UserResource($user), 'Logged in successfully');
-        }
+        return $this->Data(new UserResource($user), __('messages.login_success'));
+    }
 
-    public function adminLogin(loginRequest $request)
-        {
-            $user = $this->loginService->adminLogin($request->validated());
+    public function adminLogin(LoginRequest $request)
+    {
+        $user = $this->loginService->adminLogin($request->validated());
 
-            return $this->Data(new UserResource($user), 'Admin logged in successfully');
-        }
+        return $this->Data(new UserResource($user), __('messages.admin_login_success'));
+    }
+
     public function logout()
-        {
-            // Auth::user() بيرجع اليوزر اللي عامل لوجن حالياً
-            $this->loginService->logout(Auth::user());
+    {
+        // Auth::user() بيرجع اليوزر اللي عامل لوجن حالياً
+        $this->loginService->logout(Auth::user());
 
-            return $this->SuccessMessage('Logged out from this device');
-        }
+        return $this->SuccessMessage(__('messages.logout_device_success'));
+    }
 
     public function logoutAllDevices()
     {
         $this->loginService->logoutAllDevices(Auth::user());
 
-        return $this->SuccessMessage('Logged out from all devices successfully');
+        return $this->SuccessMessage(__('messages.logout_all_devices_success'));
     }
-
 }
 
 
