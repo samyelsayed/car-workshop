@@ -6,6 +6,10 @@ use App\Exceptions\BaseException;
 
 class ServiceNotFoundException extends BaseException
 {
-    protected $message = 'The requested service could not be found.';
     protected $code = 404;
+
+    public function __construct()
+    {
+        parent::__construct('errors.service_not_found');
+    }
 }

@@ -6,6 +6,10 @@ use App\Exceptions\BaseException;
 
 class UserBlockedException extends BaseException
 {
-    protected $message = 'Your account has been suspended. Please contact the workshop management.';
-    protected $code = 403; // Forbidden
+    protected $code = 403;
+
+    public function __construct()
+    {
+        parent::__construct('errors.user_blocked');
+    }
 }

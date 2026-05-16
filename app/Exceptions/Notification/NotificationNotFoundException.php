@@ -1,11 +1,15 @@
 <?php
 
-namespace App\Exceptions\Inspections;
+namespace App\Exceptions\Notification;
 
 use App\Exceptions\BaseException;
 
 class NotificationNotFoundException extends BaseException
 {
-    protected $message = 'Notification not found or may have been deleted.';
     protected $code = 404;
+
+    public function __construct()
+    {
+        parent::__construct('errors.notification_not_found');
+    }
 }

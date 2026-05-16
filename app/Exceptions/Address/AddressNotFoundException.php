@@ -6,6 +6,10 @@ use App\Exceptions\BaseException;
 
 class AddressNotFoundException extends BaseException
 {
-    protected $message = 'The specified address could not be found in our records.';
     protected $code = 404;
+
+    public function __construct()
+    {
+        parent::__construct('errors.address_not_found');
+    }
 }

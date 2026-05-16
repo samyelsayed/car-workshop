@@ -2,10 +2,14 @@
 
 namespace App\Exceptions\Order;
 
-use App\Exceptions\BaseException;
+ use App\Exceptions\BaseException;
 
 class OrderNotOwnedByUserException extends BaseException
 {
-    protected $message = 'You do not have permission to access or modify this order.';
-    protected $code = 403; // Forbidden
+    protected $code = 403;
+
+    public function __construct()
+    {
+        parent::__construct('errors.order_not_owned');
+    }
 }

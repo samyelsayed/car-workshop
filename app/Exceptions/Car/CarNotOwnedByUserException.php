@@ -6,6 +6,10 @@ use App\Exceptions\BaseException;
 
 class CarNotOwnedByUserException extends BaseException
 {
-    protected $message = 'Access Denied. This vehicle does not belong to your account.';
-    protected $code = 403; // Forbidden
+    protected $code = 403;
+
+    public function __construct()
+    {
+        parent::__construct('errors.car_not_owned');
+    }
 }

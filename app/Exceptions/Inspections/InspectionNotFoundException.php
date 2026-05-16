@@ -6,6 +6,10 @@ use App\Exceptions\BaseException;
 
 class InspectionNotFoundException extends BaseException
 {
-    protected $message = 'Sorry, no data was found to check this request.';
     protected $code = 404;
+
+    public function __construct()
+    {
+        parent::__construct('errors.inspection_not_found');
+    }
 }

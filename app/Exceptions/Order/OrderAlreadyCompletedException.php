@@ -6,6 +6,10 @@ use App\Exceptions\BaseException;
 
 class OrderAlreadyCompletedException extends BaseException
 {
-    protected $message = 'This order is already completed and cannot be modified.';
-    protected $code = 422; // Unprocessable Entity
+    protected $code = 422;
+
+    public function __construct()
+    {
+        parent::__construct('errors.order_already_completed');
+    }
 }

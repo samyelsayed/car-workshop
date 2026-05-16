@@ -6,6 +6,10 @@ use App\Exceptions\BaseException;
 
 class UserNotFoundException extends BaseException
 {
-    protected $message = 'The requested user could not be found in our records.';
-    protected $code = 404; // Not Found
+    protected $code = 404;
+
+    public function __construct()
+    {
+        parent::__construct('errors.user_not_found');
+    }
 }

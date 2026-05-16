@@ -6,6 +6,10 @@ use App\Exceptions\BaseException;
 
 class UserNotVerifiedException extends BaseException
 {
-    protected $message = 'Please verify your account to access this service.';
-    protected $code = 403; // Forbidden
+    protected $code = 403;
+
+    public function __construct()
+    {
+        parent::__construct('errors.user_not_verified');
+    }
 }

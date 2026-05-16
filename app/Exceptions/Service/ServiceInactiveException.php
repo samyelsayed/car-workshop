@@ -6,6 +6,10 @@ use App\Exceptions\BaseException;
 
 class ServiceInactiveException extends BaseException
 {
-    protected $message = 'This service is temporarily unavailable.';
-    protected $code = 400; // Bad Request
+    protected $code = 400;
+
+    public function __construct()
+    {
+        parent::__construct('errors.service_inactive');
+    }
 }

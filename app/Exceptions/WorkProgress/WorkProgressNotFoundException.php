@@ -6,6 +6,10 @@ use App\Exceptions\BaseException;
 
 class WorkProgressNotFoundException extends BaseException
 {
-    protected $message = 'Sorry, the requested work stage was not found.';
     protected $code = 404;
+
+    public function __construct()
+    {
+        parent::__construct('errors.work_progress_not_found');
+    }
 }
