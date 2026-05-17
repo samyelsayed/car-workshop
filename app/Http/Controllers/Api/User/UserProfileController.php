@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Profile;
+namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\User\updateProfile; // يفضل لاحقاً تعديلها لتبدأ بحرف كابيتال UpdateProfile لتتبع المعايير
@@ -23,9 +23,9 @@ class UserProfileController extends Controller
     public function view(Request $request)
     {
         $user = $request->user();
-        
+
         return $this->Data(
-            ['user' => new UserDetailedResource($user)], 
+            ['user' => new UserDetailedResource($user)],
             __('messages.profile_retrieved')
         );
     }
@@ -36,7 +36,7 @@ class UserProfileController extends Controller
         $updatedUser = $this->userProfileService->update($user, $request->validated());
 
         return $this->Data(
-            ['user' => new UserDetailedResource($updatedUser)], 
+            ['user' => new UserDetailedResource($updatedUser)],
             __('messages.profile_updated')
         );
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Profile;
+namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Phone\PhoneRequest;
@@ -30,7 +30,7 @@ class UserPhoneController extends Controller
         }
 
         return $this->Data(
-            ['mobiles' => UserMobileResource::collection($mobiles)], 
+            ['mobiles' => UserMobileResource::collection($mobiles)],
             __('messages.mobiles_retrieved')
         );
     }
@@ -38,9 +38,9 @@ class UserPhoneController extends Controller
     public function show(int $id, Request $request)
     {
         $mobile = $this->userMobileService->getMobileById($request->user(), $id);
-        
+
         return $this->Data(
-            ['mobile' => new UserMobileResource($mobile)], 
+            ['mobile' => new UserMobileResource($mobile)],
             __('messages.mobile_details_retrieved')
         );
     }
@@ -48,9 +48,9 @@ class UserPhoneController extends Controller
     public function store(PhoneRequest $request)
     {
         $mobile = $this->userMobileService->createMobile($request->user(), $request->validated());
-        
+
         return $this->Data(
-            ['mobiles' => new UserMobileResource($mobile)], 
+            ['mobiles' => new UserMobileResource($mobile)],
             __('messages.mobile_added')
         );
     }
@@ -58,7 +58,7 @@ class UserPhoneController extends Controller
     public function destroy(Request $request, int $id)
     {
         $this->userMobileService->deleteMobile($request->user(), $id);
-        
+
         return $this->SuccessMessage(__('messages.mobile_deleted'));
     }
 }

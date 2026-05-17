@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Profile;
+namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Address\StoreAddressRequest;
@@ -24,18 +24,18 @@ class UserAddressController extends Controller
     public function index(Request $request)
     {
         $addresses = $this->addressService->getAddresses($request->user());
-        
+
         if ($addresses->isEmpty()) {
             return $this->SuccessMessage(__('messages.no_addresses_found'));
         }
-        
+
         return $this->Data(['addresses' => UserAddressResource::collection($addresses)], __('messages.addresses_retrieved'));
     }
 
     public function show(int $id, Request $request)
     {
         $addresse = $this->addressService->showAddresses($id, $request->user());
-        
+
         return $this->Data(['address' => new UserAddressResource($addresse)], __('messages.address_details_retrieved'));
     }
 
