@@ -22,7 +22,7 @@ class LoginService
         }
 
         // 3. توليد التوكن (استخدمنا ميثود خاصة عشان لو حبيت تغير شكل التوكن مستقبلاً)
-        $user->token = $this->createDeviceToken($user, $data['deviceName']);
+        $user->token = $this->createDeviceToken($user, $data['device_name']);
 
         return $user;
     }

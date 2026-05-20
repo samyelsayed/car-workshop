@@ -4,14 +4,15 @@ namespace App\Http\Requests\Api\Auth;
 
 use App\Http\Traits\MapsCamelCase;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
-class LoginRequest extends FormRequest
+class RegisterRequest extends FormRequest
 {
     use MapsCamelCase;
 
     protected array $map = [
+        'firstName' => 'first_name',
+        'lastName' => 'last_name',
         'deviceName' => 'device_name',
     ];
 
@@ -23,22 +24,37 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'first_name' => ['required', 'string', 'min:3', 'max:50'],
+            'last_name' => ['required', 'string', 'min:3', 'max:50'],
             'email' => [
                 'required',
                 'email',
-                Rule::exists('users', 'email')
+                'unique:users,email'
             ],
             'password' => [
                 'required',
-                'string',
                 'confirmed',
                 Password::min(8)
+                    ->letters()
                     ->mixedCase()
                     ->numbers()
-                    ->symbols() // يفضل إضافة الرموز لزيادة الأمان
-                    ->uncompromised(), // حماية إضافية ضد التسريبات
+                    ->symbols()
             ],
-            'device_name' => ['required', 'string']
+            'phone' => [
+                'required',
+                'regex:/^01[0-2,5,9]{1}[0-9]{8}$/',
+                'unique:user_mobiles,mobile_number'
+            ],
+            'device_name' => ['nullable', 'string', 'max:100']
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'first_name' => 'first name',
+            'last_name' => 'last name',
+            'device_name' => 'device name',
         ];
     }
 }

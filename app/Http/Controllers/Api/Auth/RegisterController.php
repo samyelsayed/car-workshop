@@ -44,10 +44,16 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\Auth\RegisterRequest;
-use App\Http\Resources\UserResource;
-use App\Http\Traits\ApiTrait;
+use Illuminate\Support\Facades\Hash;
+
+use App\Http\Resources\User\Profile\UserResource;
+
+use App\Notifications\SendOtpNotification;
+
 use App\Services\Auth\RegisterService;
+use App\Http\Requests\Api\Auth\RegisterRequest;
+
+use App\Http\Traits\ApiTrait;
 use Illuminate\Http\JsonResponse;
 
 class RegisterController extends Controller
@@ -70,7 +76,7 @@ class RegisterController extends Controller
 
         return $this->Data(
             new UserResource($user),
-            __('messages.register_success')
+            __('messages.user_registered')
         );
     }
 }

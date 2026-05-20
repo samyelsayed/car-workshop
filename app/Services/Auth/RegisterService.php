@@ -21,19 +21,23 @@ class RegisterService
 
             $this->sendVerificationNotification($user);
 
-            return $user;
+            // 🔥 التعديل السحري هنا قبل ما الـ transaction تقفل وترجع اليوزر:
+        // ==========================================
+        $user->refresh();                                          // سحب الـ default role من الداتابيز
+
+        return $user;
         });
     }
 
-    protected function createUser(array $data): User
-    {
-        return User::create([
-            'first_name' => $data['firstName'],
-            'last_name'  => $data['lastName'],
-            'email'      => $data['email'],
-            'password'   => $data['password'],
-        ]);
-    }
+protected function createUser(array $data): User
+{
+    return User::create([
+        'first_name' => $data['first_name'], 
+        'last_name'  => $data['last_name'],  
+        'email'      => $data['email'],
+        'password'   => $data['password'], 
+    ]);
+}
 
     protected function createUserMobile(User $user, string $phone): void
     {
@@ -43,16 +47,20 @@ class RegisterService
         ]);
     }
 
+
+
+
     protected function sendVerificationNotification(User $user): void
     {
         $code = random_int(1000, 9999);
 
+        // تعديل الحقول هنا عشان تطابق أسماء أعمدة جدول الـ users الجديد بالملي 👇
         $user->forceFill([
             'code'            => $code,
             'code_expires_at' => now()->addMinutes(5),
-            'code_purpose'    => 'email_verification',
         ])->save();
 
         $user->notify(new SendOtpNotification($code));
+        
     }
 }

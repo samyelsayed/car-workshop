@@ -7,6 +7,7 @@ return [
     'user_blocked' => 'Your account has been blocked. Please contact support.',
     'email_not_verified' => 'Please verify your email address before continuing',
     'incorrect_password' => 'Current password is incorrect',
+    'invalid_or_expired_code' => 'The verification code is invalid or has expired.',
 
     // Order
     'order_not_found' => 'Order not found',

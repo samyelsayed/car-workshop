@@ -9,8 +9,10 @@ return [
     'password_reset' => 'Password reset successfully',
     'email_verified' => 'Email verified successfully',
     'verification_code_sent' => 'Verification code sent to your email',
+    'otp_sent' => 'Verification code sent to your email',
 
     // User Profile
+    'profile_retrieved' => 'Profile retrieved successfully',
     'profile_updated' => 'Profile updated successfully',
     'address_added' => 'Address added successfully',
     'address_updated' => 'Address updated successfully',

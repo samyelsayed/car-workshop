@@ -130,9 +130,6 @@ use Illuminate\Support\Facades\Hash;
 // }
 
 
-class LoginController extends Controller
-{
-    use ApiTrait;
 
    class LoginController extends Controller
 {
@@ -149,14 +146,14 @@ class LoginController extends Controller
     {
         $user = $this->loginService->login($request->validated());
 
-        return $this->Data(new UserResource($user), __('messages.login_success'));
+        return $this->Data(new UserResource($user), __('messages.login_successful'));
     }
 
     public function adminLogin(LoginRequest $request)
     {
         $user = $this->loginService->adminLogin($request->validated());
 
-        return $this->Data(new UserResource($user), __('messages.admin_login_success'));
+        return $this->Data(new UserResource($user), __('messages.login_successful'));
     }
 
     public function logout()

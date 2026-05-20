@@ -11,6 +11,7 @@ return [
     'verification_code_sent' => 'تم إرسال رمز التحقق إلى بريدك الإلكتروني',
 
     // User Profile
+    'profile_retrieved' => 'تم استرجاع بيانات الملف الشخصي بنجاح',
     'profile_updated' => 'تم تحديث الملف الشخصي بنجاح',
     'address_added' => 'تم إضافة العنوان بنجاح',
     'address_updated' => 'تم تحديث العنوان بنجاح',

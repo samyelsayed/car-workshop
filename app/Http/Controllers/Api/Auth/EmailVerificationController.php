@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Auth\SendOtpRequest;
 use App\Http\Requests\Api\Auth\VerifyCodeRequest;
-use App\Http\Resources\Api\Auth\AuthResource;
+use App\Http\Resources\Auth\AuthResource;
 use App\Http\Traits\ApiTrait;
 use App\Services\Auth\EmailVerificationService;
 
@@ -31,10 +31,7 @@ class EmailVerificationController extends Controller
     {
         $result = $this->emailVerificationService->verifyOtpFlow($request->validated(), $request->code);
 
-        return $this->Data(
-            new AuthResource($result), 
-            __('messages.otp_verified')
-        );
+        return $this->Data(new AuthResource($result), __('messages.otp_verified'));
     }
 
     public function reSendCode(SendOtpRequest $request)
