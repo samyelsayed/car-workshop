@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api\User\Orders;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\StoreOrderRequest;
-use App\Http\Requests\Api\UpdateOrderRequest;
-use App\Http\Resources\OrderResource;
+use App\Http\Requests\Order\StoreOrderRequest;
+use App\Http\Requests\Order\UpdateOrderRequest;
+use App\Http\Resources\Api\User\Orders\OrderResource;
 use App\Http\Traits\ApiTrait;
 use App\Services\Order\OrderService;
 use Illuminate\Http\Request;
@@ -21,10 +21,10 @@ class OrderController extends Controller
         $this->orderService = $orderService;
     }
 
-    public function create(StoreOrderRequest $request)
+    public function store(StoreOrderRequest $request)
     {
         $order = $this->orderService->createOrder($request->user(), $request->validated());
-        
+
         return $this->Data(new OrderResource($order), __('messages.order_created'), 201);
     }
 
@@ -33,7 +33,7 @@ class OrderController extends Controller
         $user = $request->user();
         $orders = $this->orderService->getUserOrders($user);
         $data = OrderResource::collection($orders)->response()->getData(true);
-        
+
         return $this->Data($data, __('messages.orders_retrieved'), 200);
     }
 
@@ -48,7 +48,7 @@ class OrderController extends Controller
     {
         $user = $request->user();
         $order = $this->orderService->updateOrder($user, $id, $request->validated());
-        
+
         return $this->Data(new OrderResource($order), __('messages.order_updated'), 200);
     }
 
@@ -56,7 +56,7 @@ class OrderController extends Controller
     {
         $user = $request->user();
         $this->orderService->deleteOrder($user, $id);
-        
+
         return $this->SuccessMessage(__('messages.order_deleted'), 200);
     }
 }

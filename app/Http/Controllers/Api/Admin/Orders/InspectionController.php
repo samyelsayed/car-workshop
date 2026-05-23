@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\Admin\Orders;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Admin\Inspection\CreateInspectionRequest;
 use App\Http\Requests\Api\Admin\Inspection\UpdateInspectionRequest;
-use App\Http\Resources\Admin\AdminInspectionResource;
+use App\Http\Resources\Api\Admin\Orders\AdminInspectionResource;
 use App\Http\Traits\ApiTrait;
 use App\Services\Admin\InspectionService;
 use Illuminate\Http\Request;

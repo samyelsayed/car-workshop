@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\User\Services;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ServiceResource;
+use App\Http\Resources\Api\User\Services\ServiceResource;
 use App\Http\Traits\ApiTrait;
 use App\Services\Workshop\WorkshopService;
 use Illuminate\Http\Request;
@@ -29,7 +29,7 @@ class ServicesController extends Controller
         }
 
         $transformedService = ServiceResource::collection($services);
-        
+
         return $this->Data(['service' => $transformedService], __('messages.services_retrieved'));
     }
 

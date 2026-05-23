@@ -1,7 +1,6 @@
 <?php
 
-namespace App\Exceptions\User;
-
+namespace App\Exceptions\User\Email;
 use App\Exceptions\BaseException;
 
 class UserBlockedException extends BaseException

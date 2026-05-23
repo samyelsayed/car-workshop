@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\User\Addresses;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Address\StoreAddressRequest;
 use App\Http\Requests\Api\Address\UpdateAddressRequest;
-use App\Http\Resources\UserAddressResource;
+use App\Http\Resources\Api\User\Addresses\UserAddressResource;
 use App\Http\Traits\ApiTrait;
 use App\Services\User\UserAddressService;
 use Illuminate\Http\Request;
@@ -43,7 +43,7 @@ class UserAddressController extends Controller
     {
         $add_address = $this->addressService->createAddress($request->user(), $request->validated());
 
-        return $this->Data(['address' => new UserAddressResource($add_address)], __('messages.address_created'));
+        return $this->Data(['address' => new UserAddressResource($add_address)], __('messages.address_added'));
     }
 
     public function update(UpdateAddressRequest $request, int $id)

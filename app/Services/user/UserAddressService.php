@@ -2,6 +2,7 @@
 
 namespace App\Services\User;
 
+use App\Exceptions\User\Address\AddressNotFoundException;
 use App\Models\User;
 use App\Models\UserAddress;
 use Illuminate\Database\Eloquent\Collection;
@@ -86,7 +87,7 @@ class UserAddressService
         $address = $user->addresses()->find($addressId);
 
         if (!$address) {
-            throw new \Exception('Address not found', 404);
+            throw new AddressNotFoundException();
         }
 
         return $address;

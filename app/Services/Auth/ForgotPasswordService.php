@@ -2,12 +2,13 @@
 
 namespace App\Services\Auth;
 
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
+use App\Exceptions\Auth\InvalidOrExpiredCodeException;
 use App\Mail\ResetPasswordMail;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 
 class ForgotPasswordService
@@ -80,7 +81,7 @@ public function resetPasswordFlow(array $data ): User
         protected function checkCode(User $user, int $code): void
     {
         if($user->code != $code || now()->greaterThan($user->code_expires_at) ){
-        throw new \Exception('Invalid or expired verification code', 400);  }
+        throw new InvalidOrExpiredCodeException(); }
     }
 
 

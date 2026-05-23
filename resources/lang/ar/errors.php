@@ -7,6 +7,7 @@ return [
     'user_blocked' => 'تم حظر حسابك. يرجى التواصل مع الدعم الفني.',
     'email_not_verified' => 'يرجى التحقق من بريدك الإلكتروني قبل المتابعة',
     'incorrect_password' => 'كلمة المرور الحالية غير صحيحة',
+    'email_already_verified' => 'هذا الحساب مفعّل بالفعل.',
 
     // Order
     'order_not_found' => 'الطلب غير موجود',
@@ -35,6 +36,10 @@ return [
 
     // Address
     'address_not_found' => 'العنوان غير موجود',
+
+    //mobile
+    'mobile_not_found' => 'رقم الهاتف هذا غير مسجل أو لا ينتمي لهذا المستخدم.',
+
 
     // Generic
     'resource_not_found' => 'المورد غير موجود',

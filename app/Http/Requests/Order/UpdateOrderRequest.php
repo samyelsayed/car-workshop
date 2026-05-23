@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Api;
+namespace App\Http\Requests\Order;
 
 use App\Http\Traits\MapsCamelCase;
 use Illuminate\Foundation\Http\FormRequest;
@@ -20,7 +20,18 @@ class UpdateOrderRequest extends FormRequest
 
     public function authorize(): bool
     {
-        return true;
+        $orderId = $this->route('id') ?? $this->route('order');
+
+        if (!$orderId) {
+            return true;
+        }
+
+        $order = auth()->user()
+            ->orders()
+            ->where('id', $orderId)
+            ->first();
+
+        return $order !== null;
     }
 
     public function rules(): array

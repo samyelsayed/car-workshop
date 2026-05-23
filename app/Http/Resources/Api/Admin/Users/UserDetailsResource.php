@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources\Admin;
+namespace App\Http\Resources\Api\Admin\Users;
 
-use App\Http\Resources\OrderResource;
-use App\Http\Resources\UserAddressResource;
-use App\Http\Resources\UserCarResource;
-use App\Http\Resources\UserMobileResource;
+use App\Http\Resources\Api\User\Orders\OrderResource;
+use App\Http\Resources\Api\User\Addresses\UserAddressResource;
+use App\Http\Resources\Api\User\Cars\UserCarResource;
+use App\Http\Resources\Api\User\Phones\UserMobileResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 

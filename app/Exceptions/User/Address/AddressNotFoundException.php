@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Exceptions\Address;
+namespace App\Exceptions\User\Address;
 
 use App\Exceptions\BaseException;
 

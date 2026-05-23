@@ -89,7 +89,7 @@ use App\Http\Requests\Api\Auth\ResetPasswordRequest;
 use App\Http\Requests\Api\Auth\SendOtpRequest;
 use App\Http\Requests\Api\Auth\VerifyCodeRequest;
 use App\Http\Resources\Api\Auth\AuthResource;
-use App\Http\Resources\UserResource;
+use App\Http\Resources\Api\User\Profile\UserResource;
 use App\Http\Traits\ApiTrait;
 use App\Services\Auth\ForgotPasswordService;
 
@@ -107,7 +107,7 @@ class ForgotPasswordController extends Controller
     public function sendCode(SendOtpRequest $request)
     {
         $this->forgotPasswordService->sendOtpFlow($request->validated());
-        
+
         return $this->SuccessMessage(__('messages.otp_sent'));
     }
 
@@ -116,7 +116,7 @@ class ForgotPasswordController extends Controller
         $result = $this->forgotPasswordService->verifyOtpFlow($request->validated(), $request->code);
 
         return $this->Data(
-            new AuthResource($result), 
+            new AuthResource($result),
             __('messages.otp_verified')
         );
     }

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\User\UpdatePasswordRequest;
-use App\Http\Resources\User\Profile\UserResource;
+use App\Http\Resources\Api\User\Profile\UserResource;
 
 use App\Http\Traits\ApiTrait;
 use App\Services\Auth\UpdatePasswordService;
@@ -31,6 +31,6 @@ class UpdatePasswordController extends Controller
         return $this->Data([
             'user' => new UserResource($request->user()->fresh()),
             'token' => $token
-        ], __('messages.password_updated'));
+        ], __('messages.password_changed'));
     }
 }

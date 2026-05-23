@@ -5,17 +5,24 @@ return [
     'user_registered' => 'تم التسجيل بنجاح',
     'login_successful' => 'تم تسجيل الدخول بنجاح',
     'logout_successful' => 'تم تسجيل الخروج بنجاح',
+    'logout_all_devices_success' => 'تم تسجيل الخروج من جميع الأجهزة بنجاح.',
     'password_changed' => 'تم تغيير كلمة المرور بنجاح',
     'password_reset' => 'تم إعادة تعيين كلمة المرور بنجاح',
     'email_verified' => 'تم التحقق من البريد الإلكتروني بنجاح',
     'verification_code_sent' => 'تم إرسال رمز التحقق إلى بريدك الإلكتروني',
+    'otp_verified' => 'تم التحقق من كود التأكيد بنجاح.',
+    'invalid_credentials' => 'بيانات الدخول غير صحيحة، يرجى التحقق من الإيميل أو كلمة المرور.',
+
+
 
     // User Profile
     'profile_retrieved' => 'تم استرجاع بيانات الملف الشخصي بنجاح',
     'profile_updated' => 'تم تحديث الملف الشخصي بنجاح',
+    'no_addresses_found' => 'لا توجد عناوين مسجلة حالياً.',
     'address_added' => 'تم إضافة العنوان بنجاح',
     'address_updated' => 'تم تحديث العنوان بنجاح',
     'address_deleted' => 'تم حذف العنوان بنجاح',
+    'mobiles_retrieved' => 'تم استرجاع أرقام الهواتف بنجاح.',
     'phone_added' => 'تم إضافة رقم الهاتف بنجاح',
     'phone_deleted' => 'تم حذف رقم الهاتف بنجاح',
 
@@ -36,6 +43,10 @@ return [
     'service_updated' => 'تم تحديث الخدمة بنجاح',
     'service_deleted' => 'تم حذف الخدمة بنجاح',
     'services_retrieved' => 'تم جلب الخدمات بنجاح',
+    'no_services_found' => 'لا توجد خدمات أو إصلاحات متاحة حالياً.',
+    'service_details_retrieved' => 'تم جلب تفاصيل الخدمة بنجاح.',
+    'service_activated' => 'تم تفعيل الخدمة بنجاح وإتاحتها للعملاء.',
+    'service_deactivated' => 'تم إلغاء تفعيل الخدمة بنجاح وحجبها عن العملاء.',
 
     // Notifications
     'notification_sent' => 'تم إرسال الإشعار بنجاح',

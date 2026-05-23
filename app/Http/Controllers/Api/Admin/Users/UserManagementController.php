@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\Admin\Users;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Admin\User\AdminUpdateUserRequest;
-use App\Http\Resources\Admin\AdminUserResource;
+use App\Http\Resources\Api\Admin\Users\AdminUserResource;
 use App\Http\Traits\ApiTrait;
 use App\Services\Admin\AdminUserService;
 use Illuminate\Http\Request;

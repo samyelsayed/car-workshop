@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\User\Phones;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Phone\PhoneRequest;
 
-use App\Http\Resources\User\Phones\UserMobileResource;
+use App\Http\Resources\Api\User\Phones\UserMobileResource;
 use App\Http\Traits\ApiTrait;
 use App\Services\User\UserMobileService;
 use Illuminate\Http\Request;
@@ -52,7 +52,7 @@ class UserPhoneController extends Controller
 
         return $this->Data(
             ['mobiles' => new UserMobileResource($mobile)],
-            __('messages.mobile_added')
+            __('messages.phone_added')
         );
     }
 
@@ -60,6 +60,6 @@ class UserPhoneController extends Controller
     {
         $this->userMobileService->deleteMobile($request->user(), $id);
 
-        return $this->SuccessMessage(__('messages.mobile_deleted'));
+        return $this->SuccessMessage(__('messages.phone_deleted'));
     }
 }

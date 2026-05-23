@@ -8,19 +8,18 @@ use App\Http\Controllers\Api\Admin\Orders\OrdersManagement;
 use App\Http\Controllers\Api\Admin\Orders\WorkProgressController;
 use App\Http\Controllers\Api\Admin\Services\ServiceController;
 use App\Http\Controllers\Api\Admin\Users\UserManagementController;
-
 use App\Http\Controllers\Api\Auth\EmailVerificationController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\RegisterController;
-
 use App\Http\Controllers\Api\Auth\UpdatePasswordController;
 use App\Http\Controllers\Api\User\Addresses\UserAddressController;
 use App\Http\Controllers\Api\User\Cars\UserCarController;
 use App\Http\Controllers\Api\User\Notifications\NotificationController as UserNotificationController;
+use App\Http\Controllers\Api\User\Orders\OrderController;
 use App\Http\Controllers\Api\User\Phones\UserPhoneController;
-
 use App\Http\Controllers\Api\User\Profile\UserProfileController;
+use App\Http\Controllers\Api\User\Services\ServicesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -36,7 +35,7 @@ Route::get('/user', function (Request $request) {
 // Public Auth Routes
 // ========================================
 Route::prefix('auth')->group(function () {
-    
+
     // Registration
     Route::post('register', RegisterController::class);
 
@@ -60,7 +59,7 @@ Route::prefix('auth')->group(function () {
 // Protected User Routes
 // ========================================
 Route::prefix('user')->middleware('auth:sanctum')->group(function () {
-    
+
     // Auth Operations
     Route::delete('logout', [LoginController::class, 'logout']);
     Route::delete('logout-all-devices', [LoginController::class, 'logoutAllDevices']);
@@ -93,6 +92,21 @@ Route::prefix('user')->middleware('auth:sanctum')->group(function () {
         Route::delete('{id}', [UserCarController::class, 'destroy']);
     });
 
+    // User Services (Read Only)
+    Route::prefix('services')->group(function () {
+        Route::get('/', [ServicesController::class, 'index']);
+        Route::get('{id}', [ServicesController::class, 'show']);
+    });
+
+    // User Orders
+    Route::prefix('orders')->group(function () {
+        Route::get('/', [OrderController::class, 'index']);
+        Route::post('/', [OrderController::class, 'store']);
+        Route::get('{id}', [OrderController::class, 'show']);
+        Route::put('{id}', [OrderController::class, 'update']); 
+        Route::post('{id}/cancel', [OrderController::class, 'cancel']);
+    });
+
     // User Notifications
     Route::prefix('notifications')->group(function () {
         Route::get('/', [UserNotificationController::class, 'index']);
@@ -108,7 +122,7 @@ Route::prefix('user')->middleware('auth:sanctum')->group(function () {
 // Admin Routes
 // ========================================
 Route::prefix('admin')->middleware(['auth:sanctum', 'isAdmin'])->group(function () {
-    
+
     // Dashboard & Statistics
     Route::get('dashboard/stats', [DashboardController::class, 'index']);
 

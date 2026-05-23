@@ -21,14 +21,17 @@ class UpdateServiceRequest extends FormRequest
     }
 
     public function rules(): array
-    {
-        return [
-            // الـ ID غالباً بيجي في الـ URL (Route Parameter) بس لو هتبعتة في الـ Body خليه موجود
-            'id' => ['required', Rule::exists('services', 'id')],
 
-            'name' => ['sometimes','string','max:20',
+    {
+         $serviceId = $this->route('id') ?? $this->route('service');
+        return [
+
+            'name' => [
+                'sometimes',
+                'string',
+                'max:100',
                 Rule::unique('services', 'name')
-                    ->ignore($this->id)
+                    ->ignore($serviceId) // 🔥 كدة الـ ignore شغال صح بنسبة 100%
                     ->whereNull('deleted_at')
             ],
 

@@ -46,7 +46,7 @@ namespace App\Http\Controllers\Api\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 
-use App\Http\Resources\User\Profile\UserResource;
+use App\Http\Resources\Api\User\Profile\UserResource;
 
 use App\Notifications\SendOtpNotification;
 

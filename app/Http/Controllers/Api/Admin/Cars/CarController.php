@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Admin\Cars;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\UserResource;
+use App\Http\Resources\Api\User\Profile\UserResource;
 use App\Http\Traits\ApiTrait;
 use App\Services\Admin\AdminCarService;
 use Illuminate\Http\Request;

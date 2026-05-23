@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\Api\User\Cars;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\User\Car\StoreCarRequest;
-use App\Http\Requests\Api\User\Car\UpdateCarRequest;
-use App\Http\Resources\UserCarResource;
+use App\Http\Requests\Api\Car\UpdateCarRequest;
+use App\Http\Requests\Api\Car\StoreCarRequest;
+use App\Http\Resources\Api\User\Cars\UserCarResource;
 use App\Http\Traits\ApiTrait;
-use App\Services\User\UserCarService;
+use App\Services\User\Car\UserCarService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+
 
 class UserCarController extends Controller
 {
@@ -60,7 +61,7 @@ class UserCarController extends Controller
 
         return $this->Data(
             ['car' => new UserCarResource($car)],
-            __('messages.car_created'),
+            __('messages.car_added'),
             201
         );
     }

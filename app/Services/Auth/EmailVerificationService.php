@@ -2,7 +2,9 @@
 
 namespace App\Services\Auth;
 
+use App\Exceptions\Auth\EmailAlreadyVerifiedException;
 use App\Exceptions\Auth\InvalidOrExpiredCodeException;
+use App\Exceptions\User\UserNotFoundException;
 use App\Models\User;
 use App\Notifications\SendOtpNotification;
 use Illuminate\Support\Facades\DB;
@@ -18,18 +20,23 @@ class EmailVerificationService
         $this->sendCode($user, $code);
         return $user;
     }
+public function verifyOtpFlow(array $data, int $code): array {
+    $user = $this->findUserByEmail($data['email']);
 
-    // الفانكشن الكبيرة: تجمع الميثودز اللي دورها تتشيك ع الكود ولو تمام تخلي الإيميل مفعل
-    public function verifyOtpFlow(array $data, int $code): array {
-        $user = $this->findUserByEmail($data['email']);
-        $this->checkCode($user, $code);
-        $this->verifyEmail($user);
-        $token = $this->generateToken($user);
-        return [
-            'user'  => $user,
-            'token' => $token
-        ];
-    }
+    // 1️⃣ اسأل الأول: هل هو متفعل؟ لو متفعل هيضرب إيرور "Email already verified" ويوقف هنا
+    $this->isEmailVerified($user);
+
+    // 2️⃣ لو مش متفعل؟ يكمل عادي ويدخل يتشيك على صحة الكود
+    $this->checkCode($user, $code);
+
+    $this->verifyEmail($user);
+    $token = $this->generateToken($user);
+    return [
+        'user'  => $user,
+        'token' => $token
+    ];
+}
+
 
     // الفانكشن الكبيرة: تجمع الميثودز اللي دورها تعمل إعادة إرسال الكود بتشوف الإيميل مفعل ولا لأ ولو لأ تعيد إرسال الكود
     public function resendOtpFlow(array $data): User {
@@ -44,7 +51,7 @@ class EmailVerificationService
     protected function findUserByEmail(string $email): User {
         $user = User::where('email', $email)->first();
         if (!$user) {
-            throw new \Exception('Invalid Credentials', 401);
+           throw new UserNotFoundException();
         }
         return $user;
     }
@@ -61,7 +68,7 @@ class EmailVerificationService
     // ميثود تتشيك هل الإيميل متفعل ولا لا
     protected function isEmailVerified(User $user): void {
         if ($user->email_verified_at) {
-            throw new \Exception('Email already verified', 400);
+           throw new EmailAlreadyVerifiedException();
         }
     }
 

@@ -8,6 +8,8 @@ return [
     'email_not_verified' => 'Please verify your email address before continuing',
     'incorrect_password' => 'Current password is incorrect',
     'invalid_or_expired_code' => 'The verification code is invalid or has expired.',
+    'email_already_verified' => 'This email is already verified.',
+
 
     // Order
     'order_not_found' => 'Order not found',
@@ -36,6 +38,10 @@ return [
 
     // Address
     'address_not_found' => 'Address not found',
+
+    //mobile
+    'mobile_not_found' => 'This mobile number was not found or does not belong to this user.',
+
 
     // Generic
     'resource_not_found' => 'Resource not found',

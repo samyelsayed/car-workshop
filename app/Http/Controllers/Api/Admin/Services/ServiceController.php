@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\Admin\Services;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Admin\Service\ServiceRequest;
 use App\Http\Requests\Api\Admin\Service\UpdateServiceRequest;
-use App\Http\Resources\Admin\ServiceResource;
+use App\Http\Resources\Api\Admin\Services\ServiceResource;
 use App\Http\Traits\ApiTrait;
 use App\Models\Service;
 use App\Services\Admin\AdminService;
@@ -28,7 +28,7 @@ class ServiceController extends Controller
     {
         $services = $this->adminService->getAllServices($request->all());
         $resourceCollection = ServiceResource::collection($services);
-        
+
         return $this->Data($resourceCollection, __('messages.services_retrieved'), 200);
     }
 
@@ -49,14 +49,14 @@ class ServiceController extends Controller
     public function update(UpdateServiceRequest $request, $id)
     {
         $service = $this->adminService->updateService($id, $request->validated());
-        
+
         return $this->Data(new ServiceResource($service), __('messages.service_updated'), 200);
     }
 
     public function destroy($id)
     {
         $this->adminService->deleteService($id);
-        
+
         return $this->SuccessMessage(__('messages.service_deleted'), 200);
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Api;
+namespace App\Http\Requests\Order;
 
 use App\Http\Traits\MapsCamelCase;
 use Illuminate\Foundation\Http\FormRequest;

@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Resources\Admin\Orders;
+namespace App\Http\Resources\Api\Admin\Orders;
 
 
-use App\Http\Resources\Admin\Orders\InspectionResource;
-use App\Http\Resources\Admin\Orders\WorkProgressResource;
-use App\Http\Resources\User\Cars\UserCarResource;
-use App\Http\Resources\User\Orders\OrderItemResource;
-use App\Http\Resources\User\Profile\UserResource;
+use App\Http\Resources\Api\Admin\Orders\InspectionResource;
+use App\Http\Resources\Api\Admin\Orders\WorkProgressResource;
+use App\Http\Resources\Api\User\Cars\UserCarResource;
+use App\Http\Resources\Api\User\Orders\OrderItemResource;
+use App\Http\Resources\Api\User\Profile\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 

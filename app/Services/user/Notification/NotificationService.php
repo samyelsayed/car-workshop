@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\User;
+namespace App\Services\User\Notification;
 
 use App\Exceptions\Notification\NotificationNotFoundException;
 use App\Exceptions\Notification\NotificationNotOwnedByUserException;

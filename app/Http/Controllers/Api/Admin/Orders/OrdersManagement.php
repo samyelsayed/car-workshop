@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api\Admin\Orders;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Admin\Order\UpdateStatusRequest;
-use App\Http\Resources\Admin\OrderDetailsResource;
-use App\Http\Resources\OrderResource;
+use App\Http\Resources\Api\Admin\Orders\OrderDetailsResource;
+use App\Http\Resources\Api\User\Orders\OrderResource;
 use App\Http\Traits\ApiTrait;
 use App\Services\Admin\AdminOrderService;
 use Illuminate\Http\Request;
@@ -28,7 +28,7 @@ class OrdersManagement extends Controller
         return $this->Data(
             OrderResource::collection($orders)->response()->getData(true),
             __('messages.orders_retrieved')
-        ); 
+        );
     }
 
     public function show(int $id)

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\Auth\loginRequest;
-use App\Http\Resources\UserResource;
+use App\Http\Requests\Api\Auth\LoginRequest;
+use App\Http\Resources\Api\User\Profile\UserResource;
 use App\Http\Traits\ApiTrait;
 use App\Models\User;
 use App\Services\Auth\LoginService;
@@ -161,7 +161,7 @@ use Illuminate\Support\Facades\Hash;
         // Auth::user() بيرجع اليوزر اللي عامل لوجن حالياً
         $this->loginService->logout(Auth::user());
 
-        return $this->SuccessMessage(__('messages.logout_device_success'));
+        return $this->SuccessMessage(__('messages.logout_successful'));
     }
 
     public function logoutAllDevices()

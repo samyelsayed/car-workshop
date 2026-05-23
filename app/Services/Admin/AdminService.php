@@ -86,7 +86,7 @@ private function uploadImage($image)
 
 
 
-    private function deleteOldImage(int $imageName)
+    private function deleteOldImage(string $imageName)
     {
        if($imageName && $imageName !=='default.png'){
         $path = public_path('images/services/' . $imageName);

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\User\Profile;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\User\Profile\UserResource;
+use App\Http\Resources\Api\User\Profile\UserResource;
 use App\Http\Traits\ApiTrait;
 use App\Services\User\UserProfileService;
 use Illuminate\Http\Request;

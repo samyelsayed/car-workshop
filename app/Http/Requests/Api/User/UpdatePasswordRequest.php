@@ -35,7 +35,7 @@ class UpdatePasswordRequest extends FormRequest
                     ->mixedCase()
                     ->numbers()
                     ->symbols() // يفضل إضافة الرموز لزيادة الأمان
-                    ->uncompromised(), // حماية إضافية ضد التسريبات
+                    // ->uncompromised(), // حماية إضافية ضد التسريبات
             ],
 
             'device_name' => ['nullable', 'string'],

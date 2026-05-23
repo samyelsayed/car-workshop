@@ -76,7 +76,10 @@ public function getUserOrders(User $user, int $perPage = 10): CursorPaginator
 
     public function updateOrder(User $user,int $orderId, array $data): Order
     {
-       $car = $this->verifyUserCar($user, $data['car_id']);
+        if (isset($data['car_id'])) {
+            $this->verifyUserCar($user, $data['car_id']);
+        }
+
         // 1. التأكد أن الأوردر قابل للتعديل (Pending)
         $order = $this->getOrderById($orderId, $user);
         $this->ensureOrderIsPending($order);

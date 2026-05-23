@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Resources\Admin\Users;
+namespace App\Http\Resources\Api\Admin\Users;
 
-use App\Http\Resources\User\Phones\UserMobileResource;
+use App\Http\Resources\Api\User\Phones\UserMobileResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 

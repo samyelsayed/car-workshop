@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\Admin\Notifications;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Admin\Notification\BroadcastNotificationRequest;
 use App\Http\Requests\Api\Admin\Notification\SendNotificationRequest;
-use App\Http\Resources\Admin\NotificationResource;
+use App\Http\Resources\Api\Admin\Notifications\NotificationResource;
 use App\Http\Traits\ApiTrait;
 use App\Services\Admin\NotificationService;
 use Illuminate\Http\Request;
@@ -22,7 +22,7 @@ class NotificationController extends Controller
     public function sendToUser(SendNotificationRequest $request)
     {
         $notification = $this->notificationService->sendNotificationToUser($request->validated());
-        
+
         return $this->Data(new NotificationResource($notification), __('messages.notification_sent'), 201);
     }
 
@@ -32,7 +32,7 @@ class NotificationController extends Controller
     public function broadcast(BroadcastNotificationRequest $request)
     {
         $this->notificationService->broadcastNotification($request->validated());
-        
+
         return $this->SuccessMessage(__('messages.notification_broadcast_initiated'));
     }
 
@@ -43,7 +43,7 @@ class NotificationController extends Controller
     {
         $filters = ['user_id' => auth()->id()];
         $notifications = $this->notificationService->getAllNotifications($filters);
-        
+
         return $this->Data(
             NotificationResource::collection($notifications)->response()->getData(true),
             __('messages.notifications_retrieved')
@@ -56,7 +56,7 @@ class NotificationController extends Controller
     public function markAsRead(int $id)
     {
         $this->notificationService->markAsRead($id);
-        
+
         return $this->SuccessMessage(__('messages.notification_marked_as_read'));
     }
 
@@ -66,7 +66,7 @@ class NotificationController extends Controller
     public function destroy(int $id)
     {
         $this->notificationService->deleteNotification($id);
-        
+
         return $this->SuccessMessage(__('messages.notification_deleted'));
     }
 }

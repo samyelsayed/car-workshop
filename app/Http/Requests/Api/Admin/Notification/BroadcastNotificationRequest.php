@@ -6,7 +6,7 @@ use App\Http\Traits\MapsCamelCase;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class SendNotificationRequest extends FormRequest
+class BroadcastNotificationRequest extends FormRequest
 {
     use MapsCamelCase;
 

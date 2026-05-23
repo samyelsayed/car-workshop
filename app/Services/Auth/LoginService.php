@@ -2,6 +2,7 @@
 
 namespace App\Services\Auth;
 
+use App\Exceptions\Auth\InvalidCredentialsException;
 use App\Exceptions\User\UserBlockedException;
 use App\Exceptions\User\UserNotVerifiedException;
 use App\Models\User;
@@ -43,7 +44,7 @@ class LoginService
     {
         $user = User::where('email', $email)->first();
         if (!$user) {
-            throw new \Exception('Invalid Credentials', 401);
+            throw new InvalidCredentialsException();
         }
         return $user;
     }
@@ -51,7 +52,7 @@ class LoginService
     protected function verifyCredentials(User $user, string $password): void
     {
         if (!Hash::check($password, $user->password)) {
-            throw new \Exception('Invalid Credentials', 401);
+            throw new InvalidCredentialsException();
         }
     }
 

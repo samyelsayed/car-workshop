@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Admin;
+namespace App\Services\Admin\Dashboard;
 
 use App\Models\User;
 use App\Models\Order;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\User;
+namespace App\Services\User\Car;
 
 use App\Exceptions\Car\CarNotFoundException;
 use App\Exceptions\Car\CarNotOwnedByUserException;

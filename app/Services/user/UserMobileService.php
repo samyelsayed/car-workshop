@@ -1,6 +1,7 @@
 <?php
 namespace App\Services\User;
 
+use App\Exceptions\User\mobile\MobileNotFoundException;
 use App\Models\User;
 use App\Models\UserMobile;
 use Illuminate\Database\Eloquent\Collection;
@@ -30,8 +31,7 @@ class UserMobileService
     protected function findUserMobileOrFail(int $mobileId, User $user): UserMobile {
         $mobile = $user->mobiles()->find($mobileId);
         if (!$mobile) {
-            throw new \Exception('Mobile number not found', 404);
-        }
+           throw new MobileNotFoundException();        }
         return $mobile;
      }
 }
