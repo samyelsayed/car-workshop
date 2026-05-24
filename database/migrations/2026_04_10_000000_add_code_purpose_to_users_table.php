@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('code_purpose')->nullable()->after('email_verification_expires_at'); 
+       $table->string('code_purpose')->nullable();
         });
     }
 

@@ -123,8 +123,8 @@ class ForgotPasswordController extends Controller
 
     public function resetPassword(ResetPasswordRequest $request)
     {
-        $user = $this->forgotPasswordService->resetPasswordFlow($request->validated());
+        $result = $this->forgotPasswordService->resetPasswordFlow($request->validated());
 
-        return $this->Data(new UserResource($user), __('messages.password_reset'));
+        return $this->Data(new UserResource($resul['user'],$resul['token']), __('messages.password_reset'));
     }
 }

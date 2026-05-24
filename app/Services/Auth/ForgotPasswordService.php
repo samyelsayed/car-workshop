@@ -39,14 +39,21 @@ class ForgotPasswordService
 
 
 //القانشكن الكبيرة  الي هجمع فيها الميثود الي دورها تعمل ريسيت باسورد
-public function resetPasswordFlow(array $data ): User
-    {
-        $user= $this->findUserByEmail($data['email']);
-        $this->checkToken($user,$data['token']);
-        $this->hashNewPassword($user,$data['password']);
-        $this->createDeviceToken($user,'Reset Password Token');
-        return $user;
-    }
+public function resetPasswordFlow(array $data): array
+{
+    $user = $this->findUserByEmail($data['email']);
+    $this->checkToken($user, $data['token']);
+    $this->hashNewPassword($user, $data['password']);
+    
+    // توليد التوكن وحفظه في متغير
+    $token = $this->createDeviceToken($user, 'Reset Password Token');
+    
+    // نرجع الـ array بالبيانات كاملة للكنترولر
+    return [
+        'user'  => $user,
+        'token' => $token
+    ];
+}
 
 
 
@@ -138,8 +145,6 @@ public function resetPasswordFlow(array $data ): User
     protected function createDeviceToken(User $user, string $deviceName): string
     {
         $token=  'Bearer ' . $user->createToken($deviceName)->plainTextToken;
-$user->token = $token;
-$user->save();
         return $token;
 
     }
