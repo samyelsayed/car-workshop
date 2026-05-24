@@ -14,6 +14,8 @@ return [
     'order_locked' => 'لا يمكن تعديل الطلبات المكتملة أو الملغاة',
     'invalid_order_status' => 'حالة الطلب غير صالحة',
     'order_not_owned' => 'عذراً، هذا الطلب لا يخص حسابك أو غير موجود.',
+    'order_cannot_be_modified' => 'لا يمكن تعديل أو إلغاء هذا الطلب في حالته الحالية.',
+    'order_already_cancelled' => 'هذا الطلب ملغي بالفعل.',    
 
 
     // Car

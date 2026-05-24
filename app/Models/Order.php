@@ -46,12 +46,12 @@ class Order extends Model
         return $this->hasMany(WorkProgress::class);
     }
 
-        public function inspection()
+        public function inspections()
     {
         return $this->hasMany(Inspection::class);
     }
 
-        public function items()
+        public function orderItems()
     {
         return $this->hasMany(OrderItem::class);
     }

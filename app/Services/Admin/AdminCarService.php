@@ -7,35 +7,40 @@ use App\Models\Car;
 class AdminCarService
 {
 
-public function getAllCars(array $filters, $search, int $perPage = 10)
-    {
-     $query =Car::withTrashed()->with([ 'user']);
-             if(!empty($filters['brand'])){
-            $query->where('brand',$filters['brand']);
-        }
-        if(!empty($filters['year'])){
-            $query->where('year',$filters['year']);
-        }
-        if(!empty($filters['user_id'])){
-            $query->where('user_id',$filters['user_id']);
-        }
+public function getAllCars(array $filters)
+{
+    $query = Car::withTrashed()->with(['user']);
 
-        if(!empty($search)){
-
-            $query->where(function ($q) use($search){
-
-         $q->where('plate_number','like', "%$search%")
-            ->orWhere('model','like', "%$search%")
-                ->orWhereHas('user', function ($q) use($search) {
-                    $q->where('first_name', 'like', "%$search%")
-                    ->orWhere('last_name', 'like', "%$search%");
-            });
-            });
-        }
-
-        return $cars =$query->paginate($perPage);
-
+    if (!empty($filters['brand'])) {
+        $query->where('brand', $filters['brand']);
     }
+
+    if (!empty($filters['year'])) {
+        $query->where('year', $filters['year']);
+    }
+
+    if (!empty($filters['user_id'])) {
+        $query->where('user_id', $filters['user_id']);
+    }
+
+    // هنا لقطنا السيرش من جوه الأراي مباشرة
+    if (!empty($filters['search'])) {
+        $search = $filters['search'];
+        $query->where(function ($q) use ($search) {
+            $q->where('plate_number', 'like', "%$search%")
+              ->orWhere('model', 'like', "%$search%")
+              ->orWhereHas('user', function ($q) use ($search) {
+                  $q->where('first_name', 'like', "%$search%")
+                    ->orWhere('last_name', 'like', "%$search%");
+              });
+        });
+    }
+
+    // لقطنا الـ perPage لو مبعوتة، أو بتنزل بـ 10 أوتوماتيك
+    $perPage = $filters['per_page'] ?? 10;
+
+    return $query->paginate($perPage);
+}
 
 
 public function getCarById(int $id)

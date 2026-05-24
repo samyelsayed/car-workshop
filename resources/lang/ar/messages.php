@@ -37,6 +37,8 @@ return [
     'order_updated' => 'تم تحديث الطلب بنجاح',
     'order_cancelled' => 'تم إلغاء الطلب بنجاح',
     'orders_retrieved' => 'تم جلب الطلبات بنجاح',
+    'order_status_updated' => 'تم تحديث حالة الطلب بنجاح.',
+    'order_details_retrieved' => 'تم جلب تفاصيل الطلب بنجاح.',
 
     // Services
     'service_created' => 'تم إضافة الخدمة بنجاح',

@@ -4,6 +4,7 @@ namespace App\Services\Order;
 
 use App\Exceptions\Car\CarNotFoundException;
 use App\Exceptions\Car\CarNotOwnedByUserException;
+use App\Exceptions\Order\OrderAlreadyCancelledException;
 use App\Exceptions\Order\OrderCannotBeModifiedException;
 use App\Exceptions\Order\OrderNotFoundException;
 use App\Exceptions\Order\OrderNotOwnedByUserException;
@@ -127,17 +128,26 @@ public function getUserOrders(User $user, int $perPage = 10): CursorPaginator
     }
 
 
-    public function cancelOrder(User $user,int $orderId ){
-             $order = $this->getOrderById($orderId,$user);
-            $this->ensureOrderIsPending($order);
-           $order->update([
-        'status' => 'cancelled',
+
+    public function cancelOrder(User $user, int $orderId)
+{
+    $order = $this->getOrderById($orderId, $user);
+
+    // التشيك الذكي والمخصص بـ الـ Exception الجديد بتاعك
+    if ($order->status === 'cancelled') {
+        throw new OrderAlreadyCancelledException();
+    }
+
+    $this->ensureOrderIsPending($order);
+
+    $order->update([
+        'status'       => 'cancelled',
         'cancelled_at' => now(),
         'cancelled_by' => $user->id
     ]);
 
     return $order->fresh();
-    }
+}
 
     private function processOrderItems(Order $order, array $serviceIds): float
     {

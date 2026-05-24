@@ -36,7 +36,8 @@ return [
     'order_updated' => 'Order updated successfully',
     'order_cancelled' => 'Order cancelled successfully',
     'orders_retrieved' => 'Orders retrieved successfully',
-    
+    'order_status_updated' => 'Order status updated successfully.',
+    'order_details_retrieved' => 'Order details retrieved successfully.',
 
     // Services
     'service_created' => 'Service created successfully',

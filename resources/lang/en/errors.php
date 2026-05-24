@@ -16,6 +16,8 @@ return [
     'order_locked' => 'Cannot modify completed or cancelled orders',
     'invalid_order_status' => 'Invalid order status',
     'order_not_owned' => 'Sorry, this order does not belong to your account or does not exist.',
+    'order_cannot_be_modified' => 'This order cannot be modified or cancelled.',
+    'order_already_cancelled' => 'This order is already cancelled.',
 
     // Car
     'car_not_found' => 'Car not found',

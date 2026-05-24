@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Admin\Cars;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\Admin\Cars\AdminCarResource;
 use App\Http\Resources\Api\User\Profile\UserResource;
 use App\Http\Traits\ApiTrait;
 use App\Services\Admin\AdminCarService;
@@ -23,7 +24,7 @@ class CarController extends Controller
     public function index(Request $request)
     {
         $cars = $this->adminCarService->getAllCars($request->all());
-        $carsData = UserResource::collection($cars)->response()->getData(true);
+        $carsData = AdminCarResource::collection($cars)->response()->getData(true);
 
         return $this->Data($carsData, __('messages.cars_retrieved'), 200);
     }
