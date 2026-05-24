@@ -37,6 +37,12 @@ class OrderController extends Controller
         return $this->Data($data, __('messages.orders_retrieved'), 200);
     }
 
+    public function show(Request $request, int $id)
+    {
+        $order = $this->orderService->show($request->user(), $id);
+        return $this->Data(new OrderResource($order), __('messages.orders_retrieved'), 200);
+    }
+
     public function edit(Request $request, int $id)
     {
         $order = $this->orderService->show($request->user(), $id);
@@ -55,8 +61,11 @@ class OrderController extends Controller
     public function destroy(Request $request, int $id)
     {
         $user = $request->user();
-        $this->orderService->deleteOrder($user, $id);
+        $order = $this->orderService->cancelOrder($user, $id);
 
-        return $this->SuccessMessage(__('messages.order_deleted'), 200);
-    }
+       return $this->Data(
+        new OrderResource($order),
+        __('messages.order_cancelled'),
+        200
+    );    }
 }

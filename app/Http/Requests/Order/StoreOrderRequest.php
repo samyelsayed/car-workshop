@@ -50,6 +50,11 @@ class StoreOrderRequest extends FormRequest
                 'string',
                 'max:255'
             ],
+                'address_id' => [
+                'required_if:pickup_required,true', // 🔥 لو طالب استلام، العنوان إجباري
+                'nullable',
+                Rule::exists('user_addresses', 'id')->where('user_id', auth()->id()) // تأكيد إن العنوان موجود ويخص اليوزر
+                ],
 
             'pickup_datetime' => [
                 'required_if:pickup_required,true',

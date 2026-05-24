@@ -15,6 +15,7 @@ return [
     'order_not_found' => 'Order not found',
     'order_locked' => 'Cannot modify completed or cancelled orders',
     'invalid_order_status' => 'Invalid order status',
+    'order_not_owned' => 'Sorry, this order does not belong to your account or does not exist.',
 
     // Car
     'car_not_found' => 'Car not found',

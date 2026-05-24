@@ -31,7 +31,12 @@ class UpdateOrderRequest extends FormRequest
             ->where('id', $orderId)
             ->first();
 
-        return $order !== null;
+    if (!$order) {
+        // 🔥 ارمي الـ الـ Exception بتاعك هنا فوراً وهيشتغل بالملي!
+        throw new \App\Exceptions\Order\OrderNotOwnedByUserException();
+    }
+
+    return true; // كدة تمام واليوزر يملك الأوردر
     }
 
     public function rules(): array

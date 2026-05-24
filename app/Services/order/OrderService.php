@@ -2,16 +2,20 @@
 
 namespace App\Services\Order;
 
-use App\Exceptions\Address\AddressNotFoundException;
-use App\Exceptions\Address\AddressNotOwnedByUserException;
 use App\Exceptions\Car\CarNotFoundException;
 use App\Exceptions\Car\CarNotOwnedByUserException;
+use App\Exceptions\Order\OrderCannotBeModifiedException;
+use App\Exceptions\Order\OrderNotFoundException;
+use App\Exceptions\Order\OrderNotOwnedByUserException;
 use App\Exceptions\Service\ServiceInactiveException;
 use App\Exceptions\Service\ServiceNotFoundException;
+use App\Exceptions\User\Address\AddressNotFoundException;
+use App\Exceptions\User\Address\AddressNotOwnedByUserException;
 use App\Models\Car;
 use App\Models\Order;
 use App\Models\Service;
 use App\Models\User;
+use App\Models\UserAddress;
 use Illuminate\Pagination\CursorPaginator;
 use Illuminate\Support\Facades\DB;
 
@@ -26,7 +30,6 @@ public function getUserOrders(User $user, int $perPage = 10): CursorPaginator
 
 
     }
-
 
 
     public function createOrder(User $user, array $data): Order
@@ -44,7 +47,7 @@ public function getUserOrders(User $user, int $perPage = 10): CursorPaginator
                 }
 
                // 2. Verify services (active + exist)
-            $services = $this->verifyServices($data['service_ids']);
+            $services = $this->verifyServices($data['services']);
 
             // 2. جلب الخدمات وحساب التكلفة وإنشاء العناصر (اللوجيك الدسم)
             $totalCost = $this->processOrderItems($order, $data['services']);
@@ -56,9 +59,9 @@ public function getUserOrders(User $user, int $perPage = 10): CursorPaginator
         });
     }
 
-    protected function requestHomePickup(int $addressId, User $user): Address
+    protected function requestHomePickup(int $addressId, User $user): UserAddress
 {
-    $address = Address::find($addressId);
+    $address = UserAddress::find($addressId);
 
     // 1. هل العنوان موجود؟
     if (!$address) {
@@ -120,15 +123,20 @@ public function getUserOrders(User $user, int $perPage = 10): CursorPaginator
     public function show(User $user,int $orderId ): Order
     {
         $order = $this->getOrderById($orderId, $user);
-        $this->ensureOrderIsPending($order);
         return $order->load(['items', 'car']);
     }
 
 
-    public function deleteOrder(User $user,int $orderId ){
+    public function cancelOrder(User $user,int $orderId ){
              $order = $this->getOrderById($orderId,$user);
             $this->ensureOrderIsPending($order);
+           $order->update([
+        'status' => 'cancelled',
+        'cancelled_at' => now(),
+        'cancelled_by' => $user->id
+    ]);
 
+    return $order->fresh();
     }
 
     private function processOrderItems(Order $order, array $serviceIds): float
@@ -142,11 +150,11 @@ public function getUserOrders(User $user, int $perPage = 10): CursorPaginator
                         'service_id'    => $service->id,
                         'service_name'  => $service->name,
                         'service_image' => $service->image,
-                        'unit_price'    => $service->price,
+                        'unit_price'    => $service->base_price,
                         'quantity'      => 1,
-                        'subtotal'      => $service->price,
+                        'subtotal'      => $service->base_price,
                     ]);
-                    $total += $service->price;
+                    $total += $service->base_price;
                 }
         return $total;
 
@@ -156,17 +164,25 @@ public function getUserOrders(User $user, int $perPage = 10): CursorPaginator
 
 private function getOrderById(int $orderId, User $user): Order
     {
-         $order =$user->orders()->find($orderId);
-        if (!$order) {
-            throw new \Exception('Order not found');
-        }
+     // 1. ابحث في كل الأوردرات اللي في السيستم الأول (بدون تحديد اليوزر)
+    $order = Order::find($orderId); // أو استخدام الـ Repository لو عامل واحد
+
+    // 2. لو مش موجود في السيستم كلو.. ارمي "Order NotFound"
+    if (!$order) {
+        throw new OrderNotFoundException();
+    }
+
+    // 3. لو موجود، بس الـ user_id بتاعه مش مطابق لليوزر الحالي.. ارمي "Order Not Owned"
+    if ($order->user_id !== $user->id) {
+        throw new OrderNotOwnedByUserException(); // 🔥 هنا هيشتغل الـ Exception بتاعك بالملي!
+    }
         return $order;
     }
 
     private function ensureOrderIsPending(Order $order): void
     {
         if ($order->status !== 'pending') {
-            throw new \Exception('You cannot modify the order after it has started');
+            throw new OrderCannotBeModifiedException();
         }
     }
 

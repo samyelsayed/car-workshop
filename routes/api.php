@@ -103,8 +103,8 @@ Route::prefix('user')->middleware('auth:sanctum')->group(function () {
         Route::get('/', [OrderController::class, 'index']);
         Route::post('/', [OrderController::class, 'store']);
         Route::get('{id}', [OrderController::class, 'show']);
-        Route::put('{id}', [OrderController::class, 'update']); 
-        Route::post('{id}/cancel', [OrderController::class, 'cancel']);
+        Route::put('{id}', [OrderController::class, 'update']);
+        Route::patch('{id}/cancel', [OrderController::class, 'destroy']);
     });
 
     // User Notifications
