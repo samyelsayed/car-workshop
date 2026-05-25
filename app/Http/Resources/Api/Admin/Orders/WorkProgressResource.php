@@ -10,22 +10,17 @@ class WorkProgressResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        return [
-            'id' => $this->id,
-            'order_id' => $this->order_id,
-            'stage' => $this->stage,
-            'status' => $this->status,
-            'notes' => $this->notes,
-
-            // تنسيق التواريخ
-            'started_at' => $this->started_at ? Carbon::parse($this->started_at)->format('Y-m-d H:i') : null,
-            'completed_at' => $this->completed_at ? Carbon::parse($this->completed_at)->format('Y-m-d H:i') : null,
-
-            // حقل إضافي "محسوب" يعرض مدة التنفيذ بشكل مقروء
-            'duration' => $this->calculateDuration(),
-
-            'created_at' => $this->created_at->format('Y-m-d H:i'),
-        ];
+      return [
+        'id'          => $this->id,
+        'orderId'     => $this->order_id,      // تحويل لـ camelCase ✨
+        'stage'       => $this->stage,
+        'status'      => $this->status,
+        'notes'       => $this->notes,
+        'startedAt'   => $this->started_at ? $this->started_at->format('Y-m-d H:i') : null,   // تحويل لـ camelCase ✨
+        'completedAt' => $this->completed_at ? $this->completed_at->format('Y-m-d H:i') : null, // تحويل لـ camelCase ✨
+        'duration'    => $this->duration,
+        'createdAt'   => $this->created_at->format('Y-m-d H:i'), // تحويل لـ camelCase ✨
+         ];
     }
 
     /**

@@ -83,7 +83,7 @@ class User extends Authenticatable
         return $this->hasMany(UserAddress::class);
     }
 
-    public function mobiles()
+    public function user_mobiles()
 {
     return $this->hasMany( UserMobile::class);
 }
@@ -97,7 +97,7 @@ class User extends Authenticatable
             // حذف كل العربيات (Soft Delete)
         $user->cars()->delete();
         // Hard Delete (واضح)
-        $user->mobiles()->delete();
+        $user->user_mobiles()->delete();
         $user->addresses()->delete();
         $user->notifications()->delete();
         });

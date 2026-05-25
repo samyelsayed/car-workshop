@@ -68,4 +68,12 @@ return [
     // Generic
     'data_retrieved' => 'Data retrieved successfully',
     'operation_successful' => 'Operation completed successfully',
+
+     //admin-user
+    'user_details_retrieved' => 'User details retrieved successfully.',
+    'users_retrieved' => 'Users list retrieved successfully.',
+    'user_deleted'  => 'User has been deleted successfully.',
+    'user_restored' => 'Soft-deleted user has been restored successfully.',
+    'user_blocked'   => 'User has been blocked and all active sessions have been revoked successfully.',
+    'user_unblocked' => 'User has been unblocked successfully.',
 ];

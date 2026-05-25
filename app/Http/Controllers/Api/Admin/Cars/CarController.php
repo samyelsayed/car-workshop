@@ -32,7 +32,7 @@ class CarController extends Controller
     public function show(int $id)
     {
         $car = $this->adminCarService->getCarById($id);
-        return $this->Data(new UserResource($car), __('messages.car_details_retrieved'), 200); // تعديل الـ Status Code لـ 200 لأنه عرض بيانات مش إنشاء
+        return $this->Data(new AdminCarResource($car), __('messages.car_details_retrieved'), 200); // تعديل الـ Status Code لـ 200 لأنه عرض بيانات مش إنشاء
     }
 
     public function destroy(Request $request, int $id)

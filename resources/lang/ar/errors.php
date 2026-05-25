@@ -31,6 +31,7 @@ return [
     'technician_not_found' => 'الفني غير موجود',
     'invalid_technician' => 'المستخدم ليس فنياً',
 
+
     // Notification
     'notification_not_found' => 'الإشعار غير موجود',
     'notification_not_owned' => 'ليس لديك صلاحية الوصول لهذا الإشعار',

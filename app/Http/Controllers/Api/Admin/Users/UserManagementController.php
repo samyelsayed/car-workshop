@@ -38,7 +38,7 @@ class UserManagementController extends Controller
     {
         $user = $this->userService->updateUser($id, $request->validated());
 
-        return $this->SuccessMessage(__('messages.user_updated'), 200);
+        return $this->SuccessMessage(__('messages.profile_updated'), 200);
     }
 
     public function destroy($id)

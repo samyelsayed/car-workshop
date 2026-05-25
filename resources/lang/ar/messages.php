@@ -69,4 +69,14 @@ return [
     // Generic
     'data_retrieved' => 'تم جلب البيانات بنجاح',
     'operation_successful' => 'تمت العملية بنجاح',
+
+
+
+    //admin-user
+    'user_details_retrieved' => 'تم استرجاع بيانات المستخدم بنجاح.',
+    'users_retrieved' => 'تم استرجاع قائمة المستخدمين بنجاح.',
+    'user_deleted'  => 'تم حذف المستخدم بنجاح.',
+    'user_restored' => 'تم استعادة المستخدم المحذوف بنجاح.',
+    'user_blocked'   => 'تم حظر المستخدم وإلغاء جميع صلاحيات الدخول بنجاح.',
+    'user_unblocked' => 'تم فك الحظر عن المستخدم بنجاح.',
 ];

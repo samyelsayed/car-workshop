@@ -27,7 +27,7 @@ class OrderService
 public function getUserOrders(User $user, int $perPage = 10): CursorPaginator
     {
 
-       return $user->orders()->with(['items','car'])->latest()->cursorPaginate($perPage);
+       return $user->orders()->with(['orderItems','car'])->latest()->cursorPaginate($perPage);
 
 
     }
@@ -56,7 +56,7 @@ public function getUserOrders(User $user, int $perPage = 10): CursorPaginator
             // 3. تحديث المجموع النهائي
             $order->update(['total_cost' => $totalCost]);
 
-            return $order->load(['items', 'car']);
+            return $order->load(['orderItems', 'car']);
         });
     }
 
@@ -98,12 +98,12 @@ public function getUserOrders(User $user, int $perPage = 10): CursorPaginator
 
             // 3. تحديث الخدمات لو مبعوثة
             if (isset($data['services']) && is_array($data['services'])) {
-                $order->items()->delete(); // مسح القديم
+                $order->orderItems()->delete(); // مسح القديم
                 $totalCost = $this->processOrderItems($order, $data['services']);
                 $order->update(['total_cost' => $totalCost]);
             }
 
-            return $order->load(['items', 'car']);
+            return $order->load(['orderItems', 'car']);
         });
     }
 
@@ -124,7 +124,7 @@ public function getUserOrders(User $user, int $perPage = 10): CursorPaginator
     public function show(User $user,int $orderId ): Order
     {
         $order = $this->getOrderById($orderId, $user);
-        return $order->load(['items', 'car']);
+        return $order->load(['orderItems', 'car']);
     }
 
 
@@ -156,7 +156,7 @@ public function getUserOrders(User $user, int $perPage = 10): CursorPaginator
                 $total = 0;
 
                 foreach ($services as $service) {
-                    $order->items()->create([
+                    $order->orderItems()->create([
                         'service_id'    => $service->id,
                         'service_name'  => $service->name,
                         'service_image' => $service->image,

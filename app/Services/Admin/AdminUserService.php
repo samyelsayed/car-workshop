@@ -2,8 +2,10 @@
 
 namespace App\Services\Admin;
 
-use App\Exceptions\User\UserBlockedException;
-use App\Exceptions\User\UserNotFoundException;
+use App\Exceptions\User\Email\UserBlockedException;
+
+
+use App\Exceptions\User\Email\UserNotFoundException;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
@@ -14,7 +16,7 @@ class AdminUserService
      */
 public function getAllUsers(array $filters, int $perPage = 10): LengthAwarePaginator
 {
-    return User::withTrashed()->with(['user_mobiles'])
+    return User::withTrashed()->with(['user_mobiles', 'cars', 'addresses'])
         ->when(filled($filters['trashed_status'] ?? null), function ($query) use ($filters) {
         if ($filters['trashed_status'] === 'only') {
             // يجلب المحذوفين فقط
@@ -41,7 +43,7 @@ public function getAllUsers(array $filters, int $perPage = 10): LengthAwarePagin
                   ->orWhere('last_name', 'like', "%$search%")
                   ->orWhere('email', 'like', "%$search%")
                   ->orWhereHas('user_mobiles', function ($mobileQuery) use ($search) {
-                      $mobileQuery->where('number', 'like', "%$search%");
+                      $mobileQuery->where('mobile_number', 'like', "%$search%");
                   });
             });
         })

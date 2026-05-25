@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources\Api\Admin\Users;
 
+use App\Http\Resources\Api\User\Addresses\UserAddressResource;
+use App\Http\Resources\Api\User\Cars\UserCarResource;
 use App\Http\Resources\Api\User\Phones\UserMobileResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -25,8 +27,12 @@ class AdminUserResource extends JsonResource
             'role'              => $this->role,
 
             // 2. بيانات التواصل (الأساسي والإضافي)
-            'primary_phone'     => $this->phone,
             'all_phones'        => UserMobileResource::collection($this->whenLoaded('user_mobiles')),
+            // 5. عربيات اليوزر (الجديد ✨)
+            'cars'              => UserCarResource::collection($this->whenLoaded('cars')),
+
+            // 6. عناوين اليوزر (الجديد ✨)
+            'addresses'         => UserAddressResource::collection($this->whenLoaded('addresses')),
 
             // 3. حالات الحساب (Status Flags)
             'status'            => [

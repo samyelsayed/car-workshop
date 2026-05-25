@@ -2,7 +2,8 @@
 
 namespace App\Services\Admin;
 
-use App\Exceptions\Orders\OrderNotFoundException;
+
+use App\Exceptions\Order\OrderNotFoundException;
 use App\Exceptions\WorkProgress\WorkProgressNotFoundException;
 use App\Models\Order;
 use App\Models\WorkProgress;
