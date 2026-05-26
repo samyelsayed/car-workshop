@@ -3,14 +3,8 @@ namespace App\Http\Traits;
 
 trait MapsCamelCase
 {
-    /**
-     * تحويل البيانات من camelCase إلى snake_case قبل عملية الـ Validation
-     */
-    protected function prepareForValidation(): void
+    protected function mapCamelCaseInputs(): void
     {
-
-    /** @var \Illuminate\Foundation\Http\FormRequest $this */
-    
         // 1. التأكد من وجود مصفوفة الخريطة (map) في الـ Request
         if (!property_exists($this, 'map')) {
             return;
@@ -30,5 +24,13 @@ trait MapsCamelCase
         if (!empty($toMerge)) {
             $this->merge($toMerge);
         }
+    }
+
+    /**
+     * تحويل البيانات من camelCase إلى snake_case قبل عملية الـ Validation
+     */
+    protected function prepareForValidation(): void
+    {
+        $this->mapCamelCaseInputs();
     }
 }

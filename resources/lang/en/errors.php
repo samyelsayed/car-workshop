@@ -50,4 +50,7 @@ return [
     'resource_not_found' => 'Resource not found',
     'unauthorized' => 'Unauthorized access',
     'operation_failed' => 'Operation failed',
+
+    //inspection
+    'inspection_not_found' => 'Sorry, this inspection record was not found.',
 ];

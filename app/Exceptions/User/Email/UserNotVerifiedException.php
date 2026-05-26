@@ -9,6 +9,6 @@ class UserNotVerifiedException extends BaseException
 
     public function __construct()
     {
-        parent::__construct('errors.user_not_verified');
+        parent::__construct('errors.email_not_verified');
     }
 }

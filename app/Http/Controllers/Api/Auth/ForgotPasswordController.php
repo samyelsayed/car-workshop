@@ -125,6 +125,6 @@ class ForgotPasswordController extends Controller
     {
         $result = $this->forgotPasswordService->resetPasswordFlow($request->validated());
 
-        return $this->Data(new UserResource($resul['user'],$resul['token']), __('messages.password_reset'));
+        return $this->Data(new UserResource($result['user'],$result['token']), __('messages.password_reset'));
     }
 }

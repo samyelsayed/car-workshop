@@ -15,7 +15,7 @@ return [
     'invalid_order_status' => 'حالة الطلب غير صالحة',
     'order_not_owned' => 'عذراً، هذا الطلب لا يخص حسابك أو غير موجود.',
     'order_cannot_be_modified' => 'لا يمكن تعديل أو إلغاء هذا الطلب في حالته الحالية.',
-    'order_already_cancelled' => 'هذا الطلب ملغي بالفعل.',    
+    'order_already_cancelled' => 'هذا الطلب ملغي بالفعل.',
 
 
     // Car
@@ -50,4 +50,9 @@ return [
     'resource_not_found' => 'المورد غير موجود',
     'unauthorized' => 'وصول غير مصرح به',
     'operation_failed' => 'فشلت العملية',
+
+
+
+    //inspection
+    'inspection_not_found' => 'عذراً، لم يتم العثور على بيانات هذا الفحص.',
 ];

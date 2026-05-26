@@ -2,9 +2,10 @@
 
 namespace App\Services\Auth;
 
+
 use App\Exceptions\Auth\InvalidCredentialsException;
-use App\Exceptions\User\UserBlockedException;
-use App\Exceptions\User\UserNotVerifiedException;
+use App\Exceptions\User\Email\UserBlockedException;
+use App\Exceptions\User\Email\UserNotVerifiedException;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 

@@ -29,7 +29,7 @@ class InspectionController extends Controller
         return $this->Data(AdminInspectionResource::collection($inspections), __('messages.inspections_retrieved'));
     }
 
-    public function store(CreateInspectionRequest $request)
+    public function store(CreateInspectionRequest $request, int $orderId)
     {
         $inspection = $this->inspectionService->createInspection($request->validated());
         return $this->Data(new AdminInspectionResource($inspection), __('messages.inspection_created'), 201);

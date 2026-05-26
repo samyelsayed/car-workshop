@@ -60,4 +60,15 @@ class CreateInspectionRequest extends FormRequest
             $this->merge(['estimated_cost' => 0]);
         }
     }
+
+    protected function prepareForValidation(): void
+    {
+        $this->mapCamelCaseInputs();
+
+        if (!$this->filled('order_id')) {
+            $this->merge([
+                'order_id' => $this->route('order'),
+            ]);
+        }
+    }
 }
