@@ -59,7 +59,9 @@ return [
     'inspection_created' => 'Inspection created successfully',
     'inspection_updated' => 'Inspection updated successfully',
     'inspection_deleted' => 'Inspection deleted successfully',
-'inspections_retrieved' => 'Inspection data retrieved successfully.',
+    'inspections_retrieved' => 'Inspection data retrieved successfully.',
+    'inspection_retrieved'  => 'Inspection data retrieved successfully.',
+    
     // Work Progress
     'work_progress_created' => 'Work progress created successfully',
     'work_progress_updated' => 'Work progress updated successfully',

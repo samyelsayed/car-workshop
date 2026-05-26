@@ -60,6 +60,8 @@ return [
     'inspection_created' => 'تم إنشاء الفحص بنجاح',
     'inspection_updated' => 'تم تحديث الفحص بنجاح',
     'inspection_deleted' => 'تم حذف الفحص بنجاح',
+    'inspection_retrieved'  => 'تم استرجاع بيانات الفحص بنجاح.',
+    'inspections_retrieved' => 'تم استرجاع بيانات الفحوصات بنجاح.', // المفتاح الجمع اللي عملناه أول
 
     // Work Progress
     'work_progress_created' => 'تم إنشاء مرحلة العمل بنجاح',
