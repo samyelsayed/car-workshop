@@ -10,10 +10,10 @@ class BroadcastNotificationRequest extends FormRequest
 {
     use MapsCamelCase;
 
+    // الخرائط لتحويل الـ camelCase من الفرونت إند لـ snake_case في الداتابيز
     protected array $map = [
-        'orderId'        => 'order_id',
-        'inspectionDate' => 'inspection_date',
-        'estimatedCost'  => 'estimated_cost',
+        'orderId'  => 'order_id',
+        'userRole' => 'user_role', // الخريطة الجديدة 🎯
     ];
 
     public function authorize(): bool
@@ -24,26 +24,17 @@ class BroadcastNotificationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'order_id' => [
-                'required',
-                Rule::exists('orders', 'id')
-            ],
-            'type' => [
+            'order_id'  => ['nullable', 'integer', 'exists:orders,id'],
+            'title'     => ['required', 'string', 'max:255'],
+            'message'   => ['required', 'string'],
+            'type'      => ['required', 'string', 'max:50'],
+
+            // تحديد الفئة المستهدفة (إجباري عشان الـ Service تشتغل صح)
+            'user_role' => [
                 'required',
                 'string',
-                Rule::in(['initial', 'detailed', 'follow_up'])
+                Rule::in(['all', 'client','admin', 'technician']) // الأدوار المتاحة عندك في السيستم
             ],
-            'inspection_date' => ['required', 'date'],
-            'findings'        => ['required', 'string'],
-            'estimated_cost'  => ['nullable', 'numeric', 'min:0'],
-            'notes'           => ['nullable', 'string'],
         ];
-    }
-
-    protected function passedValidation(): void
-    {
-        if (!$this->filled('estimated_cost')) {
-            $this->merge(['estimated_cost' => 0]);
-        }
     }
 }

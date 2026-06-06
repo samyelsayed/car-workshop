@@ -12,24 +12,24 @@ class NotificationResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user_id' => $this->user_id,
-            'order_id' => $this->order_id,
-            
+            'userId' => $this->user_id,
+            'orderId' => $this->order_id,
+
             // بيانات المستخدم (لو محملين العلاقة)
-            'user_name' => $this->whenLoaded('user', function() {
+            'userName' => $this->whenLoaded('user', function() {
                 return $this->user->first_name . ' ' . $this->user->last_name;
             }),
 
             'type' => $this->type,
             'title' => $this->title,
             'message' => $this->message,
-            'is_read' => (bool) $this->is_read,
+            'isRead' => (bool) $this->is_read,
 
             // التواريخ بتنسيقات مختلفة
-            'created_at' => $this->created_at->format('Y-m-d H:i'),
-            
+            'createdAt' => $this->created_at->format('Y-m-d H:i'),
+
             // "منذ دقيقتين" - دي أهم حتة للـ UX في الإشعارات
-            'created_at_human' => $this->created_at->diffForHumans(),
+            'createdAtHuman' => $this->created_at->diffForHumans(),
         ];
     }
 }

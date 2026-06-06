@@ -55,6 +55,10 @@ return [
     'notification_deleted' => 'تم حذف الإشعار بنجاح',
     'notification_marked_read' => 'تم وضع علامة مقروء على الإشعار',
     'all_notifications_marked_read' => 'تم وضع علامة مقروء على جميع الإشعارات',
+    'notification_broadcast_initiated' => 'تم البدء في بث الإشعار الجماعي بنجاح.',
+    'notifications_retrieved' => 'تم استرجاع قائمة الإشعارات بنجاح.',
+    'unread_count_retrieved' => 'تم استرجاع عدد الإشعارات غير المقروءة بنجاح.',
+    'all_read_notifications_deleted' => 'تم حذف جميع الإشعارات المقروءة بنجاح, العدد: :count.',
 
     // Inspections
     'inspection_created' => 'تم إنشاء الفحص بنجاح',
@@ -82,6 +86,5 @@ return [
     'user_blocked'   => 'تم حظر المستخدم وإلغاء جميع صلاحيات الدخول بنجاح.',
     'user_unblocked' => 'تم فك الحظر عن المستخدم بنجاح.',
 
-    //inspection
-    'inspections_retrieved' => 'تم استرجاع بيانات الفحص بنجاح.',
+
     ];

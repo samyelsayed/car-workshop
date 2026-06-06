@@ -55,7 +55,7 @@ class NotificationController extends Controller
     {
         $this->notificationService->markAsRead($request->user(), $id);
 
-        return $this->successMessage(__('messages.notification_marked_as_read'));
+        return $this->successMessage(__('messages.notification_marked_read'));
     }
 
     /**
@@ -65,7 +65,7 @@ class NotificationController extends Controller
     {
         $this->notificationService->markAllAsRead($request->user());
 
-        return $this->successMessage(__('messages.all_notifications_marked_as_read'));
+        return $this->successMessage(__('messages.all_notifications_marked_read'));
     }
 
     /**

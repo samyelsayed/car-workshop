@@ -15,16 +15,14 @@ class AdminInspectionResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'order_id' => $this->order_id,
-            'type' => $this->type,
-            'inspection_date' => $this->inspection_date,
-            'findings' => $this->findings,
-            'estimated_cost' => number_format($this->estimated_cost, 2),
-            'notes' => $this->notes,
-            'created_at' => $this->created_at->format('Y-m-d H:i'),
-
-
+            'id'             => $this->id,
+            'orderId'        => $this->order_id,          // تحويل لـ camelCase 🎯
+            'type'           => $this->type,              // جاهزة أصلًا
+            'inspectionDate' => $this->inspection_date,   // تحويل لـ camelCase
+            'findings'       => $this->findings,          // جاهزة أصلًا
+            'estimatedCost'  => number_format($this->estimated_cost, 2), // تنسيق الرقم مع الـ camelCase
+            'notes'          => $this->notes,             // جاهزة أصلًا
+            'createdAt'      => $this->created_at?->format('Y-m-d H:i'), // تحويل لـ camelCase وحمايتها بـ ?->
         ];
     }
 }

@@ -19,8 +19,8 @@ class ServiceResource extends JsonResource
         'name' => $this->name,
         'description' => $this->description,
         'image' => $this->image? asset('storage/' . $this->image): asset('images/default-service.png'),
-        'base_price' => $this->base_price,
-        'is_active' => $this->is_active,
+        'basePrice' => $this->base_price,
+        'isActive' => $this->is_active,
         ];
     }
 }

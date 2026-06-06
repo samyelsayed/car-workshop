@@ -16,8 +16,8 @@ class AuthResource extends JsonResource
             // بناخد الإيميل من أوبجكت الـ user اللي راجع من السيرفس
             'email' => $this['user']->email,
             // والتوكن اللي اتعمله generate
-            'access_token' => $this['token'],
-            'token_type'   => 'Bearer',
+            'accessToken' => $this['token'],
+            'tokenType'   => 'Bearer',
         ];
     }
 }

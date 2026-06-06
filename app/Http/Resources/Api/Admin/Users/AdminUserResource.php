@@ -20,14 +20,14 @@ class AdminUserResource extends JsonResource
         return [
             // 1. البيانات التعريفية الأساسية
             'id'                => $this->id,
-            'first_name'        => $this->first_name,
-            'last_name'         => $this->last_name,
-            'full_name'         => $this->first_name . ' ' . $this->last_name,
+            'firstName'        => $this->first_name,
+            'lastName'         => $this->last_name,
+            'fullName'         => $this->first_name . ' ' . $this->last_name,
             'email'             => $this->email,
             'role'              => $this->role,
 
             // 2. بيانات التواصل (الأساسي والإضافي)
-            'all_phones'        => UserMobileResource::collection($this->whenLoaded('user_mobiles')),
+            'allPhones'        => UserMobileResource::collection($this->whenLoaded('user_mobiles')),
             // 5. عربيات اليوزر (الجديد ✨)
             'cars'              => UserCarResource::collection($this->whenLoaded('cars')),
 
@@ -36,17 +36,17 @@ class AdminUserResource extends JsonResource
 
             // 3. حالات الحساب (Status Flags)
             'status'            => [
-                'is_verified'   => $this->email_verified_at !== null,
-                'is_deleted'    => $this->deleted_at !== null,
-                'is_admin'      => $this->role === 'admin',
+                'isVerified'   => $this->email_verified_at !== null,
+                'isDeleted'    => $this->deleted_at !== null,
+                'isAdmin'      => $this->role === 'admin',
             ],
 
             // 4. التواريخ التفصيلية (للتقارير)
             'dates'             => [
-                'registered_at' => $this->created_at?->format('Y-m-d H:i'),
-                'verified_at'   => $this->email_verified_at?->format('Y-m-d H:i'),
-                'last_update'   => $this->updated_at?->format('Y-m-d H:i'),
-                'deleted_at'    => $this->deleted_at?->format('Y-m-d H:i'), // بيظهر بس لو اليوزر محذوف
+                'registeredAt' => $this->created_at?->format('Y-m-d H:i'),
+                'verifiedAt'   => $this->email_verified_at?->format('Y-m-d H:i'),
+                'lastUpdate'   => $this->updated_at?->format('Y-m-d H:i'),
+                'deletedAt'    => $this->deleted_at?->format('Y-m-d H:i'), // بيظهر بس لو اليوزر محذوف
             ],
 
         ];

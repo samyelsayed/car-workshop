@@ -4,7 +4,7 @@ namespace App\Services\Auth;
 
 use App\Exceptions\Auth\EmailAlreadyVerifiedException;
 use App\Exceptions\Auth\InvalidOrExpiredCodeException;
-use App\Exceptions\User\UserNotFoundException;
+use App\Exceptions\User\Email\UserNotFoundException;
 use App\Models\User;
 use App\Notifications\SendOtpNotification;
 use Illuminate\Support\Facades\DB;

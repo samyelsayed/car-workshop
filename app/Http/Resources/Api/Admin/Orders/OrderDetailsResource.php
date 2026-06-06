@@ -24,11 +24,11 @@ class OrderDetailsResource extends JsonResource
             // 1. البيانات الأساسية للأوردر (من جدول orders)
             'id'                => $this->id,
             'status'            => $this->status,
-            'total_cost'        => (float) $this->total_cost,
-            'pickup_required'   => (bool) $this->pickup_required,
-            'pickup_location'   => $this->pickup_location,
-            'pickup_datetime'   => $this->pickup_datetime,
-            'created_at'        => $this->created_at?->format('Y-m-d H:i'),
+            'totalCost'        => (float) $this->total_cost,
+            'pickupRequired'   => (bool) $this->pickup_required,
+            'pickupLocation'   => $this->pickup_location,
+            'pickupDatetime'   => $this->pickup_datetime,
+            'createdAt'        => $this->created_at?->format('Y-m-d H:i'),
 
             // 2. بيانات العميل (علاقة user)
             'customer'          => new UserResource($this->whenLoaded('user')),

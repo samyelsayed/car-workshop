@@ -11,7 +11,11 @@ class SendNotificationRequest extends FormRequest
     use MapsCamelCase;
 
     protected array $map = [
-        'userRole' => 'user_role',
+
+    'userId'   => 'user_id',
+    'orderId'  => 'order_id',  
+    'userRole' => 'user_role',
+
     ];
 
     public function authorize(): bool
@@ -22,6 +26,8 @@ class SendNotificationRequest extends FormRequest
     public function rules(): array
     {
         return [
+        'user_id'  => ['required', 'integer', 'exists:users,id'], // إجباري عشان يروح لشخص محدد
+        'order_id' => ['nullable', 'integer', 'exists:orders,id'], // اختياري لو الإشعار يخص أوردر
             'type' => [
                 'required',
                 'string',

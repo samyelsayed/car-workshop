@@ -17,6 +17,27 @@ class NotificationController extends Controller
     public function __construct(protected NotificationService $notificationService) {}
 
     /**
+     * للأدمن: جلب كل الإشعارات في السيستم مع الفلترة والبحث
+     */
+public function index(Request $request)
+{
+    // لقط البيانات بـ camelCase وتحويلها لـ snake_case للسيرفس 🎯
+    $filters = [
+        'user_id' => $request->query('userId'),
+        'type'    => $request->query('type'),
+        'is_read' => $request->query('isRead'),
+        'search'  => $request->query('search'),
+    ];
+
+    $notifications = $this->notificationService->getAllNotifications($filters);
+
+    return $this->Data(
+        NotificationResource::collection($notifications)->response()->getData(true),
+        __('messages.notifications_retrieved')
+    );
+}
+
+    /**
      * للأدمن: إرسال إشعار لمستخدم واحد محدد
      */
     public function sendToUser(SendNotificationRequest $request)

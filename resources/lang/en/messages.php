@@ -54,14 +54,17 @@ return [
     'notification_deleted' => 'Notification deleted successfully',
     'notification_marked_read' => 'Notification marked as read',
     'all_notifications_marked_read' => 'All notifications marked as read',
-
+    'notification_broadcast_initiated' => 'Notification broadcast initiated successfully.',
+    'notifications_retrieved' => 'List of active notifications retrieved.',
+    'unread_count_retrieved' => 'Unread notifications count retrieved successfully.',
+'all_read_notifications_deleted' => 'All read notifications have been deleted successfully, count: :count.',
     // Inspections
     'inspection_created' => 'Inspection created successfully',
     'inspection_updated' => 'Inspection updated successfully',
     'inspection_deleted' => 'Inspection deleted successfully',
     'inspections_retrieved' => 'Inspection data retrieved successfully.',
     'inspection_retrieved'  => 'Inspection data retrieved successfully.',
-    
+
     // Work Progress
     'work_progress_created' => 'Work progress created successfully',
     'work_progress_updated' => 'Work progress updated successfully',
@@ -78,4 +81,7 @@ return [
     'user_restored' => 'Soft-deleted user has been restored successfully.',
     'user_blocked'   => 'User has been blocked and all active sessions have been revoked successfully.',
     'user_unblocked' => 'User has been unblocked successfully.',
+
+    //dashboard
+    'dashboard_stats_retrieved' => 'Dashboard statistics retrieved successfully.',
 ];

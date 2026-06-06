@@ -16,9 +16,9 @@ class UserMobileResource extends JsonResource
     {
 return [
             'id' => $this->id,
-            'mobile_number' => $this->mobile_number,
+            'mobileNumber' => $this->mobile_number,
             // 'user_id' => $this->user_id, // اختياري لو محتاجه
-            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
+            'createdAt' => $this->created_at->format('Y-m-d H:i:s'),
         ];
     }
 }

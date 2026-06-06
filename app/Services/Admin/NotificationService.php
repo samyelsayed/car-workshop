@@ -2,9 +2,9 @@
 
 namespace App\Services\Admin;
 
-use App\Exceptions\Inspections\NotificationNotFoundException;
+use App\Exceptions\Notification\NotificationNotFoundException;
 use App\Exceptions\Order\OrderNotFoundException;
-use App\Exceptions\User\UserNotFoundException;
+use App\Exceptions\User\Email\UserNotFoundException;
 use App\Models\Notification;
 use App\Models\Order;
 use App\Models\User;
@@ -46,7 +46,11 @@ public function broadcastNotification(array $data): void
     $now = now();
 
     User::query()
-        ->when(filled($data['user_role']), function ($query) use ($data) {
+        // ->when(filled($data['user_role']), function ($query) use ($data) {
+        //     $query->where('role', $data['user_role']);
+        // })
+        // التعديل هنا: يفلتر بالرول فقط لو مبعوت ومش بيساوي 'all' 🎯
+        ->when(filled($data['user_role']) && $data['user_role'] !== 'all', function ($query) use ($data) {
             $query->where('role', $data['user_role']);
         })
         ->chunk(1000, function ($users) use ($data, $now) {
@@ -72,18 +76,19 @@ public function broadcastNotification(array $data): void
 
 
 public function getAllNotifications(array $filters, int $perPage = 15): LengthAwarePaginator
-    {
-        return Notification::with(['user', 'order'])
-        ->when(filled($filters['user_id']), function ($query) use ($filters) {
+{
+    return Notification::with(['user', 'order'])
+        // استخدام data_get لحماية الكود من الـ Undefined Keys 🎯
+        ->when(filled(data_get($filters, 'user_id')), function ($query) use ($filters) {
                 $query->where('user_id', $filters['user_id']);
         })
-        ->when(filled($filters['type']), function ($query) use ($filters) {
+        ->when(filled(data_get($filters, 'type')), function ($query) use ($filters) {
                 $query->where('type', $filters['type']);
         })
-        ->when(filled($filters['is_read']), function ($query) use ($filters) {
+        ->when(filled(data_get($filters, 'is_read')), function ($query) use ($filters) {
                 $query->where('is_read', $filters['is_read']);
         })
-        ->when(filled($filters['search']), function ($query) use ($filters) {
+        ->when(filled(data_get($filters, 'search')), function ($query) use ($filters) {
                 $search = $filters['search'];
                 $query->where(function ($q) use ($search) {
                     $q->where('title', 'like', "%$search%")
@@ -93,15 +98,17 @@ public function getAllNotifications(array $filters, int $perPage = 15): LengthAw
                              ->orWhere('last_name', 'like', "%$search%");
                       });
                 });
-            })
+        })
         ->latest()
         ->paginate($perPage);
-
-    }
+}
 
    public function deleteNotification(int $id): void
     {
-        $notification = Notification::findOrFail($id);
+        $notification = Notification::find($id);
+        if(!$notification){
+            throw new NotificationNotFoundException();
+        }
         $notification->delete();
     }
 

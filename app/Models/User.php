@@ -121,9 +121,9 @@ protected function image(): Attribute
     return Attribute::make(
         get: function ($value) {
             if (empty($value)) {
-                return asset('images/users/default.png');
+                return asset('storage/images/users/default-user.png');
             }
-            return asset('images/users/' . $value);
+            return asset('storage/images/users/' . $value);
         }
     );
 }

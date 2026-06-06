@@ -1,8 +1,9 @@
 <?php
 namespace App\Services\User;
 
-use App\Exceptions\User\UserBlockedException;
-use App\Exceptions\User\UserNotVerifiedException;
+
+use App\Exceptions\User\Email\UserBlockedException;
+use App\Exceptions\User\Email\UserNotVerifiedException;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;

@@ -113,8 +113,8 @@ Route::prefix('user')->middleware('auth:sanctum')->group(function () {
         Route::get('unread-count', [UserNotificationController::class, 'unreadCount']);
         Route::post('{id}/read', [UserNotificationController::class, 'markAsRead']);
         Route::post('read-all', [UserNotificationController::class, 'markAllAsRead']);
-        Route::delete('{id}', [UserNotificationController::class, 'destroy']);
         Route::delete('clear-read', [UserNotificationController::class, 'deleteAllRead']);
+        Route::delete('{id}', [UserNotificationController::class, 'destroy']);
     });
 });
 

@@ -16,11 +16,11 @@ class ServiceResource extends JsonResource
     {
         return [
         'id'            => $this->id,
-        'service_name'  => $this->name,
+        'serviceName'  => $this->name,
         'details'       => $this->description,
         'price'         => $this->base_price,
-        'image_url'     =>asset('images/services/' . $this->image),
-        'is_active'     =>(bool)$this->is_active,
+        'imageUrl'     =>asset('images/services/' . $this->image),
+        'isActive'     =>(bool)$this->is_active,
         'date'          =>$this->created_at->format('Y-m-d')
         ];
     }

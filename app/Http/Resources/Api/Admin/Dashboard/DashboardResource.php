@@ -17,9 +17,9 @@ class DashboardResource extends JsonResource
             'users'            => $this['users'],
             'orders'           => $this['orders'],
             'revenue'          => $this['revenue'],
-            'popular_services' => $this['popular_services'],
-            'weekly_chart'     => $this['weekly_chart'] ?? [],
-            'last_updated'     => $this['last_updated'],
+            'popularServices' => $this['popular_services'],
+            'weeklyChart'     => $this['weekly_chart'] ?? [],
+            'lastUpdated'     => $this['last_updated'],
         ];
     }
 }
