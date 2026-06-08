@@ -1,68 +1,70 @@
 <?php
+
 namespace App\Services\User;
 
+<<<<<<< HEAD
 
 use App\Exceptions\User\Email\UserBlockedException;
 use App\Exceptions\User\Email\UserNotVerifiedException;
+=======
+use App\Exceptions\User\Email\UserBlockedException;
+use App\Exceptions\User\Email\UserNotVerifiedException;
+use App\Http\Traits\HandlesImageUpload;
+>>>>>>> beff65b (feat: implement reusable smart image upload system and refactor admin and user services)
 use App\Models\User;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
 class UserProfileService
 {
+    use HandlesImageUpload;
 
+    // مسار مجلد صور المستخدمين ثابت ومحدد
+    protected string $folder = 'images/users';
 
-
-    public function checkUserHealth(User $user)
-{
-    if ($user->status === 'blocked') {
-        throw new UserBlockedException();
-    }
-
-    if (!$user->hasVerifiedEmail()) {
-        throw new UserNotVerifiedException();
-    }
-}
-    protected $imagePath = 'images/users';
-
-
-    public function update(User $user , array $data)
+    /**
+     * فحص حالة المستخدم وصحته الحسابية
+     */
+    public function checkUserHealth(User $user): void
     {
-
-        return DB::transaction(function () use ($user, $data) {
-
-        if(isset($data['image'])){
-            $this->deleteOldImage($user);
-            $data['image']= $this->uploadImage($user,$data);
-
+        if ($user->status === 'blocked') {
+            throw new UserBlockedException();
         }
+
+        if (!$user->hasVerifiedEmail()) {
+            throw new UserNotVerifiedException();
+        }
+    }
+
+    /**
+     * تحديث بيانات المستخدم والصورة الشخصية
+     */
+    public function update(User $user, array $data): User
+    {
+        return DB::transaction(function () use ($user, $data) {
+            
+            // لو الـ Request فيه صورة جديدة
+            if (isset($data['image'])) {
+                // التريت هيمسح القديمة (لو مش ديفولت) ويرفع الجديدة ويرجع "المسار النصي" فقط
+                $data['image'] = $this->uploadImage( $data['image'],$this->folder, $user->image );// الصورة القديمة للـ Smart Delete
+            }
+
+            // تحديث البيانات كلها في خطوة واحدة خطافية
             $user->update($data);
+
             return $user->fresh();
         });
     }
 
-    protected function uploadImage(User $user , array $data){
-
-            // رفع الصورة الجديدة
-        $image = $data['image'];
-        $imageName = time().'.'.$image->getClientOriginalExtension();
-        $image->move(public_path($this->imagePath), $imageName);
-
-
-        return $imageName;
-
-    }
-
-
-
-
-    protected function deleteOldImage(User $user): void{
-        $oldImage = $user->getRawOriginal('image');
-
-        $fullPath = public_path($this->imagePath.'/'.$oldImage);
-        if ($oldImage && file_exists($fullPath) && $oldImage != 'default.png') {
-            unlink($fullPath);
+    /**
+     * دالة منفصلة فقط لو اليوزر حب يضغط على زرار "حذف الصورة الشخصية" 
+     */
+    public function removeProfileImage(User $user): User
+    {
+        if ($user->image) {
+            $this->deleteImage($user->image);
+            $user->update(['image' => null]);
         }
-    }
 
+        return $user->fresh();
+    }
 }

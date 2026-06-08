@@ -40,4 +40,23 @@ class UserProfileController extends Controller
             __('messages.profile_updated')
         );
     }
+
+    public function deleteImage(Request $request)
+    {
+        $user = $request->user();
+        
+        // استدعاء السيرفس لحذف الملف وتحديث الداتابيز
+        $updatedUser = $this->userProfileService->removeProfileImage($user);
+
+        // إرجاع البيانات المحدثة بالـ Resource الموحد
+        return $this->Data(
+            ['user' => new UserResource($updatedUser)],
+            __('messages.profile_image_removed')
+        );
+    }
+
+
+
+
+
 }

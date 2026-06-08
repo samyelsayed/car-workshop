@@ -55,4 +55,9 @@ return [
 
     //inspection
     'inspection_not_found' => 'عذراً، لم يتم العثور على بيانات هذا الفحص.',
+
+
+    //image
+    'image_upload_failed' => 'فشل رفع الصورة. يرجى المحاولة مرة أخرى.',
+
 ];

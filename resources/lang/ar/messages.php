@@ -87,4 +87,7 @@ return [
     'user_unblocked' => 'تم فك الحظر عن المستخدم بنجاح.',
 
 
+
+    //image
+    'profile_image_removed' => 'تم حذف الصورة الشخصية بنجاح.',
     ];

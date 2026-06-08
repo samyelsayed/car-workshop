@@ -84,4 +84,7 @@ return [
 
     //dashboard
     'dashboard_stats_retrieved' => 'Dashboard statistics retrieved successfully.',
+
+    //image
+    'profile_image_removed' => 'Profile image removed successfully.',
 ];

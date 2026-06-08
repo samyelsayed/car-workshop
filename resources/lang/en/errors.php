@@ -53,4 +53,8 @@ return [
 
     //inspection
     'inspection_not_found' => 'Sorry, this inspection record was not found.',
+
+    //image
+    'image_upload_failed' => 'Failed to upload image. Please try again.',
+
 ];
