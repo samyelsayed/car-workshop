@@ -8,6 +8,7 @@ return [
     'email_not_verified' => 'يرجى التحقق من بريدك الإلكتروني قبل المتابعة',
     'incorrect_password' => 'كلمة المرور الحالية غير صحيحة',
     'email_already_verified' => 'هذا الحساب مفعّل بالفعل.',
+    'too_many_attempts' => 'محاولات كثيرة جداً! من فضلك انتظر دقيقة ثم حاول مجدداً.',
 
     // Order
     'order_not_found' => 'الطلب غير موجود',

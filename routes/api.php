@@ -36,23 +36,29 @@ Route::get('/user', function (Request $request) {
 // ========================================
 Route::prefix('auth')->group(function () {
 
-    // Registration
-    Route::post('register', RegisterController::class);
+    Route::post('register', RegisterController::class)
+        ->middleware('throttle:register-limiter');
 
-    // Login
-    Route::post('login', [LoginController::class, 'login']);
+    Route::post('login', [LoginController::class, 'login'])
+        ->middleware('throttle:login-limiter');
 
-    // Forgot Password Flow
-    Route::post('forgot-password', [ForgotPasswordController::class, 'sendCode']);
-    Route::post('check-reset-code', [ForgotPasswordController::class, 'checkCode']);
-    Route::post('reset-password', [ForgotPasswordController::class, 'resetPassword']);
+    Route::post('forgot-password', [ForgotPasswordController::class, 'sendCode'])
+        ->middleware('throttle:password-reset-limiter');
 
-    // Email Verification Flow
-    Route::prefix('verify')->group(function () {
-        Route::post('send-code', [EmailVerificationController::class, 'sendCode']);
-        Route::post('check-code', [EmailVerificationController::class, 'checkCode']);
-        Route::post('resend-code', [EmailVerificationController::class, 'reSendCode']);
-    });
+    Route::post('check-reset-code', [ForgotPasswordController::class, 'checkCode'])
+        ->middleware('throttle:password-reset-limiter');
+
+    Route::post('reset-password', [ForgotPasswordController::class, 'resetPassword'])
+        ->middleware('throttle:password-reset-limiter');
+
+    Route::prefix('verify')
+        ->middleware('throttle:email-verification-limiter')
+        ->group(function () {
+
+            Route::post('send-code', [EmailVerificationController::class, 'sendCode']);
+            Route::post('check-code', [EmailVerificationController::class, 'checkCode']);
+            Route::post('resend-code', [EmailVerificationController::class, 'reSendCode']);
+        });
 });
 
 // ========================================

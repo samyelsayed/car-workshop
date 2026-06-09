@@ -2,15 +2,10 @@
 
 namespace App\Services\User;
 
-<<<<<<< HEAD
 
 use App\Exceptions\User\Email\UserBlockedException;
 use App\Exceptions\User\Email\UserNotVerifiedException;
-=======
-use App\Exceptions\User\Email\UserBlockedException;
-use App\Exceptions\User\Email\UserNotVerifiedException;
 use App\Http\Traits\HandlesImageUpload;
->>>>>>> beff65b (feat: implement reusable smart image upload system and refactor admin and user services)
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 

@@ -37,17 +37,17 @@ class Service extends Model
 
 
 
-protected function image(): Attribute
-{
-    return Attribute::make(
-        get: function ($value) {
-            if (empty($value)) {
-                return asset('images/services/default.png');
-            }
-            return asset('images/services/' . $value);
-        }
-    );
-}
+// protected function image(): Attribute
+// {
+//     return Attribute::make(
+//         get: function ($value) {
+//             if (empty($value)) {
+//                 return asset('images/services/default.png');
+//             }
+//             return asset('images/services/' . $value);
+//         }
+//     );
+// }
 
 public function scopeActive($query) {
         return $query->where('is_active', true);

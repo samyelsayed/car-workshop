@@ -116,16 +116,16 @@ class User extends Authenticatable
 
 
 
-protected function image(): Attribute
-{
-    return Attribute::make(
-        get: function ($value) {
-            if (empty($value)) {
-                return asset('storage/images/users/default-user.png');
-            }
-            return asset('storage/images/users/' . $value);
-        }
-    );
-}
+// protected function image(): Attribute
+// {
+//     return Attribute::make(
+//         get: function ($value) {
+//             if (empty($value)) {
+//                 return asset('storage/images/users/default-user.png');
+//             }
+//             return asset('storage/images/users/' . $value);
+//         }
+//     );
+// }
 
 }

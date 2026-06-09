@@ -9,6 +9,7 @@ return [
     'incorrect_password' => 'Current password is incorrect',
     'invalid_or_expired_code' => 'The verification code is invalid or has expired.',
     'email_already_verified' => 'This email is already verified.',
+    'too_many_attempts' => 'Too many attempts. Please try again after a minute.',
 
 
     // Order
